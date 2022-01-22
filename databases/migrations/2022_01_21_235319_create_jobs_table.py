@@ -1,4 +1,4 @@
-from orator.migrations import Migration
+from masoniteorm.migrations import Migration
 
 
 class CreateJobsTable(Migration):
@@ -7,21 +7,22 @@ class CreateJobsTable(Migration):
         """
         Run the migrations.
         """
+        self.schema.drop_table_if_exists("jobs")
+
         with self.schema.create('jobs') as table:
             table.increments('id')
-            table.medium_text('website').nullable()
-            table.long_text('comments').nullable()
             table.text('title').nullable()
+            table.text('website').nullable()
             table.datetime('closing_date').nullable()
-            table.double('salary', 15, 4).nullable()
-            table.double('rate', 15, 4).nullable()
+            table.double('salary', 8).nullable()
+            table.double('rate', 8).nullable()
             table.text('rate_unit').nullable()
+            table.text('employment_type').nullable()
+            table.long_text('comments').nullable()
 
             # Relations
-            table.integer('profession_id').unsigned().nullable()  # one-to-one
-            table.integer('employment_type_id').unsigned(
-            ).nullable()  # one-to-one
-            table.integer('address_id').unsigned().nullable()  # one-to-one
+            table.unsigned_integer('profession_id').nullable()  # one-to-one
+            table.unsigned_integer('address_id').nullable()  # one-to-one
 
             table.timestamps()
             table.soft_deletes()

@@ -1,4 +1,4 @@
-from orator.migrations import Migration
+from masoniteorm.migrations import Migration
 
 
 class CreateAddressesTable(Migration):
@@ -7,11 +7,14 @@ class CreateAddressesTable(Migration):
         """
         Run the migrations.
         """
+        self.schema.drop_table_if_exists("addresses")
+
         with self.schema.create('addresses') as table:
             table.increments('id')
-            table.medium_text('address_line_1')
-            table.medium_text('address_line_2').nullable()
+            table.text('address_line_1')
+            table.text('address_line_2').nullable()
             table.text('suburb').nullable()
+            table.text('city').nullable()
             table.text('state').nullable()
             table.text('postcode').nullable()
             table.text('country').nullable()

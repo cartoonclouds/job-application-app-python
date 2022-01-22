@@ -1,6 +1,6 @@
-from orator import DatabaseManager, Schema
+from masoniteorm.connections import ConnectionResolver
 
-databases = {
+DATABASES = {
     'default': 'sqlite',
     'sqlite': {
         'driver': 'sqlite',
@@ -10,6 +10,4 @@ databases = {
     }
 }
 
-db = DatabaseManager(databases)
-# https://orator-orm.com/docs/0.9/schema_builder.html#adding-columns
-schema = Schema(db)
+DB = ConnectionResolver().set_connection_details(DATABASES)

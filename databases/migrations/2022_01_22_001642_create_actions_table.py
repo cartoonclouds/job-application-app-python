@@ -1,4 +1,4 @@
-from orator.migrations import Migration
+from masoniteorm.migrations import Migration
 
 
 class CreateActionsTable(Migration):
@@ -7,16 +7,18 @@ class CreateActionsTable(Migration):
         """
         Run the migrations.
         """
+        self.schema.drop_table_if_exists("actions")
+
         with self.schema.create('actions') as table:
             table.increments('id')
-            table.boolean('requires_followup').default(False)
             table.text('title').nullable()
+            table.boolean('requires_followup').default(False)
             table.text('contact_method').nullable()
 
             table.morphs('actionable')
 
             # Relations
-            table.integer('person_id').unsigned().nullable()
+            table.unsigned_integer('person_id').nullable()
 
             table.timestamps()
 

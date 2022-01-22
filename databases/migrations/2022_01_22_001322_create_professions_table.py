@@ -1,4 +1,4 @@
-from orator.migrations import Migration
+from masoniteorm.migrations import Migration
 
 
 class CreateProfessionsTable(Migration):
@@ -7,6 +7,8 @@ class CreateProfessionsTable(Migration):
         """
         Run the migrations.
         """
+        self.schema.drop_table_if_exists("professions")
+        
         with self.schema.create('professions') as table:
             table.increments('id')
             table.text('profession')
