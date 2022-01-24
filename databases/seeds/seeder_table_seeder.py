@@ -2,13 +2,10 @@
 
 # from colorama import init, deinit, Fore, Back, Style
 from masoniteorm.seeds import Seeder
+from app.models.Address import Address
+from config.factories import Factory
 
-from databases.seeds.job_application_table_seeder import JobApplicationTableSeeder
-from databases.seeds.job_table_seeder import JobTableSeeder
-from databases.seeds.company_table_seeder import CompanyTableSeeder
-from databases.seeds.person_table_seeder import PersonTableSeeder
-from databases.seeds.profession_table_seeder import ProfessionTableSeeder
-from databases.seeds.address_table_seeder import AddressTableSeeder
+from app.models.JobApplication import JobApplication
 
 
 class SeederTableSeeder(Seeder):
@@ -16,23 +13,10 @@ class SeederTableSeeder(Seeder):
         """Run the database seeds."""
         # init()
 
-        ProfessionTableSeeder(Seeder).run()
-        # # print(Fore.GREEN + 'ProfessionTableSeeder seeded!')
+        # Creates job applications with relationships (eg, jobs, addresses, companies)
+        Factory(JobApplication, 10).create()
+        # print(Fore.GREEN + 'JobApplicationTableSeeder seeded!')
 
-        # JobApplicationTableSeeder(Seeder).run()
-        # # print(Fore.GREEN + 'JobApplicationTableSeeder seeded!')
+        # print(Address.hasWith('jobs').all().random().id)
 
-        # JobTableSeeder(Seeder).run()
-        # # print(Fore.GREEN + 'JobTableSeeder seeded!')
-
-        # CompanyTableSeeder(Seeder).run()
-        # # print(Fore.GREEN + 'CompanyTableSeeder seeded!')
-
-        # AddressTableSeeder(Seeder).run()
-        # # print(Fore.GREEN + 'AddressTableSeeder seeded!')
-
-        # PersonTableSeeder(Seeder).run()
-        # print(Fore.GREEN + 'PersonTableSeeder seeded!')
-
-        # print(Style.RESET_ALL)
         # deinit()

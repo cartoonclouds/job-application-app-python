@@ -1,5 +1,4 @@
 
-from markupsafe import re
 from masoniteorm import Factory
 
 from app.models.Job import Job
@@ -10,45 +9,13 @@ from app.models.Profession import Profession
 from app.models.Address import Address
 
 
-def job_application_factory(faker):
-    return {
-        'title': faker.sentence(),
-        'requires_followup': faker.boolean(),
-        'pinned': faker.boolean(),
-        'job_id': faker.random_int(),
-        'company_id': faker.random_int(),
-    }
-
-
-def job_factory(faker):
-    return {
-        'website': faker.url(),
-        'comments': faker.paragraph(),
-        'title': faker.job(),
-        'closing_date': faker.future_datetime().isoformat(),
-        'salary': faker.random_int(),
-        'rate': faker.random_int(),
-        'rate_unit': faker.random_element(elements=('minute', 'hour', 'day')),
-        'employment_type': faker.random_element(elements=("Full-time", "Part-time", "Casual", "Fixed Term", "Shiftworker", "Daily/Weekly Hire", "Probation", "Apprentice/Trainee", "Outworker"))
-    }
-
-
-def company_factory(faker):
-    return {
-        'name': faker.company(),
-        'email': faker.ascii_company_email(),
-        'phone': faker.phone_number(),
-        'website': faker.url(),
-        'comments': faker.paragraph(),
-        'address_id': faker.random_int(),
-        'person_id': faker.random_int(),
-    }
-
-
 def profession_factory(faker):
     return {
         'profession': faker.job()
     }
+
+
+Factory.register(Profession, profession_factory)
 
 
 def address_factory(faker):
@@ -63,6 +30,27 @@ def address_factory(faker):
     }
 
 
+Factory.register(Address, address_factory)
+
+
+def job_factory(faker):
+    return {
+        'website': faker.url(),
+        'comments': faker.paragraph(),
+        'title': faker.job(),
+        'closing_date': faker.future_datetime().isoformat(),
+        'salary': faker.random_int(),
+        'rate': faker.random_int(),
+        'rate_unit': faker.random_element(elements=('minute', 'hour', 'day')),
+        'employment_type': faker.random_element(elements=("Full-time", "Part-time", "Casual", "Fixed Term", "Shiftworker", "Daily/Weekly Hire", "Probation", "Apprentice/Trainee", "Outworker")),
+        'profession_id': Factory(Profession).create().id,
+        'address_id': Factory(Address).create().id,
+    }
+
+
+Factory.register(Job, job_factory)
+
+
 def person_factory(faker):
     return {
         'name': faker.name(),
@@ -71,9 +59,32 @@ def person_factory(faker):
     }
 
 
-Factory.register(JobApplication, job_application_factory)
-Factory.register(Job, job_factory)
-Factory.register(Company, company_factory)
-Factory.register(Profession, profession_factory)
-Factory.register(Address, address_factory)
 Factory.register(Person, person_factory)
+
+
+def company_factory(faker):
+    return {
+        'name': faker.company(),
+        'email': faker.ascii_company_email(),
+        'phone': faker.phone_number(),
+        'website': faker.url(),
+        'comments': faker.paragraph(),
+        'address_id': Factory(Address).create().id,
+        'person_id': Factory(Person).create().id,
+    }
+
+
+Factory.register(Company, company_factory)
+
+
+def job_application_factory(faker):
+    return {
+        'title': faker.sentence(),
+        'requires_followup': faker.boolean(),
+        'pinned': faker.boolean(),
+        'job_id': Factory(Job).create().id,
+        'company_id': Factory(Company).create().id,
+    }
+
+
+Factory.register(JobApplication, job_application_factory)

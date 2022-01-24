@@ -13,20 +13,20 @@ class TestCompany():
 
     # Test Cases
     def test_company_has_many_job_applications(self, get_company):
-        company = get_company()
+        company = get_company('job_applications')
         job_applications = company.job_applications
-        
+
         assert job_applications.count() > 0
         assert isinstance(job_applications.get(0), JobApplication)
 
-    def test_job_has_an_address(self, get_company):
-        company = get_company()
-        address = company.address
-        
-        assert isinstance(address, Address)
+    # def test_company_has_an_address(self, get_company):
+    #     company = get_company('address')
+    #     address = company.address
 
-    def test_job_has_a_person(self, get_company):
-        company = get_company()
-        person = company.person
-        
-        assert isinstance(person, Person)
+    #     assert isinstance(address, Address)
+
+    # def test_company_has_a_person(self, get_company):
+    #     company = get_company('person')
+    #     person = company.person
+
+    #     assert isinstance(person, Person)

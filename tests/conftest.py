@@ -4,7 +4,12 @@
 import pytest
 import time
 
-from app.models import JobApplication, Job, Person, Company, Profession, Address
+from app.models.JobApplication import JobApplication
+from app.models.Job import Job
+from app.models.Person import Person
+from app.models.Company import Company
+from app.models.Profession import Profession
+from app.models.Address import Address
 
 
 def pytest_terminal_summary(terminalreporter, exitstatus, config):
@@ -36,84 +41,79 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
 
 # Global Fixtures
 
-""" Returns a function to find a JobApplication with ID. If no ID is passed a random JobApplication is returned. """
-
 
 @pytest.fixture(scope="module")
 def get_job_application():
+    """ Returns a function to find a JobApplication with ID. If no ID is passed a random JobApplication is returned. """
     def _get_job_application(id=None):
         if (id is None):
-            return JobApplication.all().random()
+            return JobApplication.get().random()
         else:
             return JobApplication.find(id)
 
     return _get_job_application
 
 
-""" Returns a function to find a Job with ID. If no ID is passed a random Job is returned. """
-
-
 @pytest.fixture(scope="module")
 def get_job():
+    """ Returns a function to find a Job with ID. If no ID is passed a random Job is returned. """
     def _get_job(id=None):
         if (id is None):
-            return Job.all().random()
+            return Job.get().random()
         else:
             return Job.find(id)
 
     return _get_job
 
 
-""" Returns a function to find a Person with ID. If no ID is passed a random Person is returned. """
-
-
 @pytest.fixture(scope="module")
 def get_person():
+    """ Returns a function to find a Person with ID. If no ID is passed a random Person is returned. """
     def _get_person(id=None):
         if (id is None):
-            return Person.all().random()
+            return Person.get().random()
         else:
             return Person.find(id)
 
     return _get_person
 
 
-""" Returns a function to find a Company with ID. If no ID is passed a random Company is returned. """
-
-
 @pytest.fixture(scope="module")
 def get_company():
-    def _get_company(id=None):
+    """ Returns a function to find a Company with ID. If no ID is passed a random Company is returned. """
+    def _get_company(withHas=None, id=None):
         if (id is None):
-            return Company.all().random()
+            if (withHas is not None):
+                return Company.hasWith(withHas).get().random()
+            else:
+                return Company.get().random()
         else:
             return Company.find(id)
 
     return _get_company
 
 
-""" Returns a function to find a Profession with ID. If no ID is passed a random Profession is returned. """
-
-
 @pytest.fixture(scope="module")
 def get_profession():
+    """ Returns a function to find a Profession with ID. If no ID is passed a random Profession is returned. """
     def _get_profession(id=None):
         if (id is None):
-            return Profession.all().random()
+            return Profession.get().random()
         else:
             return Profession.find(id)
 
     return _get_profession
 
 
-""" Returns a function to find a Address with ID. If no ID is passed a random Address is returned. """
-
-
 @pytest.fixture(scope="module")
 def get_address():
-    def _get_address(id=None):
+    """ Returns a function to find a Address with ID. If no ID is passed a random Address is returned. """
+    def _get_address(withHas=None, id=None):
         if (id is None):
-            return Address.with_('companies').with_('jobs').all().random()
+            if (withHas is not None):
+                return Address.hasWith(withHas).get().random()
+            else:
+                return Address.get().random()
         else:
             return Address.find(id)
 

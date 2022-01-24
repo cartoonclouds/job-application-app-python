@@ -102,3 +102,8 @@ pytest --durations=10 --durations-min=1.0
 ```
 
 https://github.com/pytest-dev/pytest-reportlog
+
+
+
+        with capsys.disabled():
+            print('))))))))))))))))' + address.id)
