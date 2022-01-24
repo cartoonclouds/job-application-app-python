@@ -28,10 +28,12 @@ class Company(SoftDeletesMixin, Model):
         p = inflect.engine()
         relationTable = p.plural(relationship)
 
-        # hasColumn = Company.statement(
-        #     "SELECT COUNT(*) AS columnExists FROM pragma_table_info('companies') WHERE name = '?'", [relationship]).first()
+        hasColumn = QueryBuilder().statement(
+            "SELECT 1 FROM pragma_table_info('?') WHERE name = '?'", [self.get_table_name(), relationship + '_id'])
 
-        # if hasColumn:
-        #     return query.join(p.plural(relationship), self.get_table_name() + '.' + self.__class__.__name__.lower() + '_id', '=', relationship + ".id")
-        # else:
-        return query.join(relationTable, relationTable + '.' + self.__class__.__name__.lower() + '_id', '=', self.get_table_name() + "." + self.get_primary_key())
+        print(")))))))))))))))))", hasColumn)
+
+        if hasColumn is None:
+            return query.join(relationTable, relationTable + '.' + self.__class__.__name__.lower() + '_id', '=', self.get_table_name() + "." + self.get_primary_key())
+        else:
+            return query.join(relationTable, relationTable + ".id", '=', self.get_table_name() + "." + relationship + '_id')

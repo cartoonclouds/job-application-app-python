@@ -18,8 +18,16 @@ class Address(Model):
         return Job
 
     @scope
-    def hasWith(self, query, relationship):
+    def has(self, query, relationship):
         p = inflect.engine()
-        relationTable = p.plural(relationship)
 
-        return query.join(relationTable, relationTable + '.' + self.__class__.__name__.lower() + '_id', '=', self.get_table_name() + "." + self.get_primary_key())
+        # if p.get_count(relationship) == 0:
+        relationTable = p.plural_noun(relationship)
+
+        hasColumn = QueryBuilder().statement(
+            "SELECT 1 FROM pragma_table_info('?') WHERE name = '?'", [self.get_table_name(), relationTable + '_id'])
+
+        if hasColumn is None:
+            return query.join(relationTable, relationTable + ".id", '=', self.get_table_name() + "." + relationship + '_id')
+        else:
+            return query.join(relationTable, relationTable + '.' + self.__class__.__name__.lower() + '_id', '=', self.get_table_name() + "." + self.get_primary_key())

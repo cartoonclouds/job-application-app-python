@@ -111,7 +111,7 @@ def get_address():
     def _get_address(withHas=None, id=None):
         if (id is None):
             if (withHas is not None):
-                return Address.hasWith(withHas).get().random()
+                return Address.has(withHas).get().random()
             else:
                 return Address.get().random()
         else:

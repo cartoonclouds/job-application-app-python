@@ -13,7 +13,7 @@ class TestAddress():
 
     # Test Cases
     def test_address_has_many_companies(self, get_address, capsys):
-        address = get_address('companies')
+        address = get_address('company')
         companies = address.companies
 
         if (companies.count() <= 0):
@@ -24,7 +24,7 @@ class TestAddress():
         assert isinstance(companies.get(0), Company)
 
     def test_address_has_many_jobs(self, get_address, capsys):
-        address = get_address('jobs')
+        address = get_address('job')
         jobs = address.jobs
 
         assert jobs.count() > 0
