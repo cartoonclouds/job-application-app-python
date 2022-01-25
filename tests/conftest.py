@@ -47,7 +47,7 @@ def get_job_application():
     """ Returns a function to find a JobApplication with ID. If no ID is passed a random JobApplication is returned. """
     def _get_job_application(id=None):
         if (id is None):
-            return JobApplication.get().random()
+            return JobApplication.first()
         else:
             return JobApplication.find(id)
 
@@ -59,7 +59,7 @@ def get_job():
     """ Returns a function to find a Job with ID. If no ID is passed a random Job is returned. """
     def _get_job(id=None):
         if (id is None):
-            return Job.get().random()
+            return Job.first()
         else:
             return Job.find(id)
 
@@ -71,7 +71,7 @@ def get_person():
     """ Returns a function to find a Person with ID. If no ID is passed a random Person is returned. """
     def _get_person(id=None):
         if (id is None):
-            return Person.get().random()
+            return Person.first()
         else:
             return Person.find(id)
 
@@ -84,9 +84,9 @@ def get_company():
     def _get_company(withHas=None, id=None):
         if (id is None):
             if (withHas is not None):
-                return Company.has(withHas).get().random()
+                return Company.has(withHas).first()
             else:
-                return Company.get().random()
+                return Company.first()
         else:
             return Company.find(id)
 
@@ -98,23 +98,23 @@ def get_profession():
     """ Returns a function to find a Profession with ID. If no ID is passed a random Profession is returned. """
     def _get_profession(id=None):
         if (id is None):
-            return Profession.get().random()
+            return Profession.first()
         else:
             return Profession.find(id)
 
     return _get_profession
 
 
-@pytest.fixture(scope="module")
-def get_address():
-    """ Returns a function to find a Address with ID. If no ID is passed a random Address is returned. """
-    def _get_address(withHas=None, id=None):
-        if (id is None):
-            if (withHas is not None):
-                return Address.has(withHas).get().random()
-            else:
-                return Address.get().random()
-        else:
-            return Address.find(id)
+# @pytest.fixture(scope="module")
+# def get_address():
+#     """ Returns a function to find a Address with ID. If no ID is passed a random Address is returned. """
+#     def _get_address(withHas=None, id=None):
+#         if (id is None):
+#             if (withHas is not None):
+#                 return Address.has(withHas).first()
+#             else:
+#                 return Address.first()
+#         else:
+#             return Address.find(id)
 
-    return _get_address
+#     return _get_address

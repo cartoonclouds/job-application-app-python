@@ -1,28 +1,29 @@
-
-from masoniteorm.scopes import scope
-from masoniteorm.scopes import SoftDeletesMixin
-from masoniteorm.relationships import has_one, has_many
+from orator import SoftDeletes
+from orator.orm import has_one, has_many, scope
 
 from app.models.Model import Model
 
 
-class Company(SoftDeletesMixin, Model):
+class Company(SoftDeletes, Model):
+    __fillable__ = ["*"]
 
-    @has_many('id', 'company_id')
+    __dates__ = ['deleted_at']
+
+    @has_many
     def job_applications(self):
         from app.models.JobApplication import JobApplication
         return JobApplication
 
-    @has_one('id', 'address_id')
+    @has_one
     def address(self):
         from app.models.Address import Address
         return Address
 
-    @has_one('id', 'person_id')
+    @has_one
     def person(self):
         from app.models.Person import Person
         return Person
 
-    @scope
-    def has(self, query, relationship):
-        return super().has(query, relationship)
+    # @scope
+    # def has(self, query, relationship):
+    #     return super().has(query, relationship)

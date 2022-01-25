@@ -58,26 +58,27 @@ masonite-orm migration create_job_applications_table --create job_applications
 - Migrate
 
 ```bash
-masonite-orm migrate
+orator migrate --config ./config/database.py --path ./databases/migrations/
 ```
 
 - Create seeders
 
 ```bash
-masonite-orm seed JobApplication
-masonite-orm seed Job
-masonite-orm seed Company
-masonite-orm seed Profession
-masonite-orm seed EmploymentType
-masonite-orm seed Action
-masonite-orm seed Address
-masonite-orm seed Person
+orator make:seed job_application_table_seeder
+orator make:seed job_table_seeder
+orator make:seed company_table_seeder
+orator make:seed profession_table_seeder
+orator make:seed action_table_seeder
+orator make:seed address_table_seeder
+orator make:seed person_table_seeder
 ```
 
 - Seed
 
 ```bash
-masonite-orm seed:run Seeder
+# https://bic-berkeley.github.io/psych-214-fall-2016/using_pythonpath.html
+# export PYTHONPATH="$PWD/app/models:$PYTHONPATH"
+orator db:seed --config ./config/database.py
 ```
 
 # Testing
@@ -102,8 +103,6 @@ pytest --durations=10 --durations-min=1.0
 ```
 
 https://github.com/pytest-dev/pytest-reportlog
-
-
 
         with capsys.disabled():
             print('))))))))))))))))' + address.id)

@@ -1,13 +1,16 @@
 
-from masoniteorm.scopes import SoftDeletesMixin
-from masoniteorm.relationships import has_many
+from orator import SoftDeletes
+from orator.orm import has_many
 
 from app.models.Model import Model
 
 
-class Person(SoftDeletesMixin, Model):
+class Person(SoftDeletes, Model):
+    __fillable__ = ["*"]
 
-    @has_many("id", "person_id")
+    __dates__ = ['deleted_at']
+
+    @has_many
     def companies(self):
         from app.models.Company import Company
         return Company

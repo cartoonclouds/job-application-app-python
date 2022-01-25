@@ -1,6 +1,6 @@
 """CreateJobApplicationsTable Migration."""
 
-from masoniteorm.migrations import Migration
+from orator.migrations import Migration
 
 
 class CreateJobApplicationsTable(Migration):
@@ -8,7 +8,7 @@ class CreateJobApplicationsTable(Migration):
         """
         Run the migrations.
         """
-        self.schema.drop_table_if_exists("job_applications")
+        self.schema.drop_if_exists("job_applications")
 
         with self.schema.create('job_applications') as table:
             table.increments('id')
@@ -17,10 +17,10 @@ class CreateJobApplicationsTable(Migration):
             table.boolean('pinned').default(False)
 
             # Relations
-            table.unsigned_integer('job_id')  # one-to-one
+            table.integer('job_id').unsigned()  # one-to-one
             # table.foreign('job_id').references('id').on('jobs')
 
-            table.unsigned_integer('company_id')  # belongs-to-one
+            table.integer('company_id').unsigned()  # belongs-to-one
 
             table.timestamps()
             table.soft_deletes()

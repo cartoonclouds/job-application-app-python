@@ -1,7 +1,7 @@
-from masoniteorm.connections import ConnectionResolver
+from orator import DatabaseManager, Model, Schema
 
-DATABASES = {
-    'default': 'sqlite',
+
+databases = {
     'sqlite': {
         'driver': 'sqlite',
         'database': 'jaa_database.sqlite',
@@ -10,4 +10,7 @@ DATABASES = {
     }
 }
 
-DB = ConnectionResolver().set_connection_details(DATABASES)
+db = DatabaseManager(databases)
+schema = Schema(db)
+
+Model.set_connection_resolver(db)

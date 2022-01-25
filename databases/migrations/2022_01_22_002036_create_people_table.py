@@ -1,4 +1,4 @@
-from masoniteorm.migrations import Migration
+from orator.migrations import Migration
 
 
 class CreatePeopleTable(Migration):
@@ -7,7 +7,7 @@ class CreatePeopleTable(Migration):
         """
         Run the migrations.
         """
-        self.schema.drop_table_if_exists("people")
+        self.schema.drop_if_exists("people")
 
         with self.schema.create('people') as table:
             table.increments('id')

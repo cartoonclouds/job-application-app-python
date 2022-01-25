@@ -1,12 +1,13 @@
 """Actions model"""
 
-from masoniteorm.relationships import morph_to
+from orator.orm import morph_to, morph_one, morph_many
 
 from app.models.Model import Model
-# from app.models.Job import Job
 
 
 class Action(Model):
+    __fillable__ = ["*"]
+
     __casts__ = {
         "requires_followup": "boolean",
         "pinned": "boolean",
@@ -15,3 +16,7 @@ class Action(Model):
     @morph_to
     def actionable(self):
         return
+
+    @morph_many('actionable')
+    def following_actions(self):
+        return Action

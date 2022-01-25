@@ -1,5 +1,5 @@
 
-from masoniteorm import Factory
+from orator.orm import Factory
 
 from app.models.Job import Job
 from app.models.Company import Company
@@ -9,16 +9,17 @@ from app.models.Profession import Profession
 from app.models.Address import Address
 from app.models.Action import Action
 
+factory = Factory()
 
+
+@factory.define(Profession)
 def profession_factory(faker):
     return {
         'profession': faker.job()
     }
 
 
-Factory.register(Profession, profession_factory)
-
-
+@factory.define(Address)
 def address_factory(faker):
     return {
         'address_line_1': faker.street_address(),
@@ -31,9 +32,7 @@ def address_factory(faker):
     }
 
 
-Factory.register(Address, address_factory)
-
-
+@factory.define(Job)
 def job_factory(faker):
     return {
         'website': faker.url(),
@@ -44,14 +43,12 @@ def job_factory(faker):
         'rate': faker.random_int(),
         'rate_unit': faker.random_element(elements=('minute', 'hour', 'day')),
         'employment_type': faker.random_element(elements=("Full-time", "Part-time", "Casual", "Fixed Term", "Shiftworker", "Daily/Weekly Hire", "Probation", "Apprentice/Trainee", "Outworker")),
-        'profession_id': Factory(Profession).create().id,
-        'address_id': Factory(Address).create().id,
+        'profession_id': factory(Profession).create().id,
+        'address_id': factory(Address).create().id,
     }
 
 
-Factory.register(Job, job_factory)
-
-
+@factory.define(Person)
 def person_factory(faker):
     return {
         'name': faker.name(),
@@ -60,9 +57,7 @@ def person_factory(faker):
     }
 
 
-Factory.register(Person, person_factory)
-
-
+@factory.define(Company)
 def company_factory(faker):
     return {
         'name': faker.company(),
@@ -70,40 +65,34 @@ def company_factory(faker):
         'phone': faker.phone_number(),
         'website': faker.url(),
         'comments': faker.paragraph(),
-        'address_id': Factory(Address).create().id,
-        'person_id': Factory(Person).create().id,
+        'address_id': factory(Address).create().id,
+        'person_id': factory(Person).create().id,
     }
 
 
-Factory.register(Company, company_factory)
-
-
+@factory.define(JobApplication)
 def job_application_factory(faker):
     return {
         'title': faker.sentence(),
         'requires_followup': faker.boolean(),
         'pinned': faker.boolean(),
-        'job_id': Factory(Job).create().id,
-        'company_id': Factory(Company).create().id,
+        'job_id': factory(Job).create().id,
+        'company_id': factory(Company).create().id,
     }
 
 
-Factory.register(JobApplication, job_application_factory)
-
-
+@factory.define(Action)
 def actions_factory(faker):
-    actionable = Factory(Job).create()
+    actionableModel = faker.random_element(elements=(Job, Action))
+    actionable = factory(actionableModel).create()
 
     return {
         'title': faker.sentence(),
         'requires_followup': faker.boolean(),
         'pinned': faker.boolean(),
         'contact_method': faker.random_element(elements=("Phone call", "Received phone call", "E-mail", "Recruiter", "In-person", "Company website", "Employment website", "Letter", "Online forum")),
-        'person_id': Factory(Person).create().id,
+        'person_id': factory(Person).create().id,
         # Can be either Action or Job
-        'actionable_id': actionable.id,
-        'actionable_type': actionable.__class__.__name__
+        'actionable_id': actionable.get_key(),
+        'actionable_type': actionable.get_table()
     }
-
-
-Factory.register(Action, actions_factory)

@@ -1,12 +1,12 @@
 
-from masoniteorm.scopes import SoftDeletesMixin
-from masoniteorm.relationships import belongs_to, has_one
+from orator import SoftDeletes
+from orator.orm import belongs_to, has_one
 
 from app.models.Model import Model
 
 
-class JobApplication(SoftDeletesMixin, Model):
-    __guarded__ = []
+class JobApplication(SoftDeletes, Model):
+    __fillable__ = ["*"]
 
     __with__ = ['job', 'company']
 
@@ -15,12 +15,14 @@ class JobApplication(SoftDeletesMixin, Model):
         "pinned": "bool"
     }
 
-    @has_one('id', 'job_id')
+    __dates__ = ['deleted_at']
+
+    @belongs_to
     def job(self):
         from app.models.Job import Job
         return Job
 
-    @has_one('id', 'company_id')
+    @belongs_to
     def company(self):
         from app.models.Company import Company
         return Company

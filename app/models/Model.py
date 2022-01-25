@@ -1,10 +1,11 @@
 
-from masoniteorm.models import Model as mModel
-from masoniteorm.query import QueryBuilder
+from orator import Model as oratorModel
 import inflect
 
+from config.database import db
 
-class Model(mModel):
+
+class Model(oratorModel):
 
     def has(self, query, relationship):
         p = inflect.engine()
@@ -13,7 +14,7 @@ class Model(mModel):
         modelTable = p.plural(modelClass)
         relationTable = p.plural(relationship)
 
-        hasColumn = QueryBuilder().statement(
+        hasColumn = db.raw(
             "SELECT 1 FROM pragma_table_info('?') WHERE name = '?'", [modelTable, relationship + '_id'])
 
         if hasColumn is None:
