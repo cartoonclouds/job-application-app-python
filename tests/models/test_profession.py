@@ -26,12 +26,10 @@ class TestProfession():
     def test_profession_has_many_jobs(self, setup_teardown):
         profession = setup_teardown
 
-        profession.jobs().save(
+        profession.jobs().save_many([
+            factory(Job).make(),
             factory(Job).make()
-        )
-        profession.jobs().save(
-            factory(Job).make()
-        )
+        ])
 
         assert profession.jobs.count() == 2
         assert isinstance(profession.jobs.get(0), Job)
