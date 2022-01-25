@@ -1,6 +1,9 @@
-from masoniteorm.models import Model
+
 from masoniteorm.scopes import SoftDeletesMixin
-from masoniteorm.relationships import has_one, belongs_to
+from masoniteorm.relationships import has_one, belongs_to, morph_to
+
+from app.models.Model import Model
+from app.models.Action import Action
 
 
 class Job(SoftDeletesMixin, Model):
@@ -21,6 +24,6 @@ class Job(SoftDeletesMixin, Model):
         from app.models.Address import Address
         return Address
 
-    # @morph_many('actionable')
-    # def actions(self):
-    #     return Action
+    @morph_to('actionable')
+    def actions(self):
+        return Action

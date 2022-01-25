@@ -1,8 +1,7 @@
-from masoniteorm.models import Model
-from masoniteorm.query import QueryBuilder
+
+from app.models.Model import Model
 from masoniteorm.scopes import scope
-from masoniteorm.relationships import belongs_to, has_many
-import inflect
+from masoniteorm.relationships import has_many
 
 
 class Address(Model):
@@ -19,15 +18,4 @@ class Address(Model):
 
     @scope
     def has(self, query, relationship):
-        p = inflect.engine()
-
-        # if p.get_count(relationship) == 0:
-        relationTable = p.plural_noun(relationship)
-
-        hasColumn = QueryBuilder().statement(
-            "SELECT 1 FROM pragma_table_info('?') WHERE name = '?'", [self.get_table_name(), relationTable + '_id'])
-
-        if hasColumn is None:
-            return query.join(relationTable, relationTable + ".id", '=', self.get_table_name() + "." + relationship + '_id')
-        else:
-            return query.join(relationTable, relationTable + '.' + self.__class__.__name__.lower() + '_id', '=', self.get_table_name() + "." + self.get_primary_key())
+        return super().has(query, relationship)

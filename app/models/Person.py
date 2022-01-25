@@ -1,6 +1,8 @@
-from masoniteorm.models import Model
+
 from masoniteorm.scopes import SoftDeletesMixin
 from masoniteorm.relationships import has_many
+
+from app.models.Model import Model
 
 
 class Person(SoftDeletesMixin, Model):

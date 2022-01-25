@@ -84,7 +84,7 @@ def get_company():
     def _get_company(withHas=None, id=None):
         if (id is None):
             if (withHas is not None):
-                return Company.hasWith(withHas).get().random()
+                return Company.has(withHas).get().random()
             else:
                 return Company.get().random()
         else:

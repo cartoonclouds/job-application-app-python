@@ -7,6 +7,7 @@ from app.models.JobApplication import JobApplication
 from app.models.Person import Person
 from app.models.Profession import Profession
 from app.models.Address import Address
+from app.models.Action import Action
 
 
 def profession_factory(faker):
@@ -88,3 +89,21 @@ def job_application_factory(faker):
 
 
 Factory.register(JobApplication, job_application_factory)
+
+
+def actions_factory(faker):
+    actionable = Factory(Job).create()
+
+    return {
+        'title': faker.sentence(),
+        'requires_followup': faker.boolean(),
+        'pinned': faker.boolean(),
+        'contact_method': faker.random_element(elements=("Phone call", "Received phone call", "E-mail", "Recruiter", "In-person", "Company website", "Employment website", "Letter", "Online forum")),
+        'person_id': Factory(Person).create().id,
+        # Can be either Action or Job
+        'actionable_id': actionable.id,
+        'actionable_type': actionable.__class__.__name__
+    }
+
+
+Factory.register(Action, actions_factory)

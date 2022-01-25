@@ -1,6 +1,8 @@
-from masoniteorm.models import Model
+
 from masoniteorm.scopes import SoftDeletesMixin
 from masoniteorm.relationships import belongs_to, has_one
+
+from app.models.Model import Model
 
 
 class JobApplication(SoftDeletesMixin, Model):
