@@ -83,8 +83,8 @@ def job_application_factory(faker):
 
 @factory.define(Action)
 def actions_factory(faker):
-    actionableModel = faker.random_element(elements=(Job, Action))
-    actionable = factory(actionableModel).create()
+    # actionableModel = faker.random_element(elements=(Job, Action))
+    # actionable = factory(actionableModel).create()
 
     return {
         'title': faker.sentence(),
@@ -93,6 +93,6 @@ def actions_factory(faker):
         'contact_method': faker.random_element(elements=("Phone call", "Received phone call", "E-mail", "Recruiter", "In-person", "Company website", "Employment website", "Letter", "Online forum")),
         'person_id': factory(Person).create().id,
         # Can be either Action or Job
-        'actionable_id': actionable.get_key(),
-        'actionable_type': actionable.get_table()
+        # 'actionable_id': actionable.get_key(),
+        # 'actionable_type': actionable.get_table()
     }

@@ -1,7 +1,12 @@
 
 from app.models.Address import Address
+from app.models.Company import Company
 from app.models.JobApplication import JobApplication
 from app.models.Person import Person
+
+from seeds.factories import factory
+
+import pytest
 
 
 class TestCompany():
@@ -9,25 +14,43 @@ class TestCompany():
     # Constants
 
     # Fixtures
+    @pytest.fixture(scope="function", autouse=True)
+    def setup_teardown(self):
+        # Setup
+        company = factory(Company).create()
+
+        yield company
+
+        # Teardown
 
     # Helpers
 
     # Test Cases
-    # def test_company_has_many_job_applications(self, get_company):
-    #     company = get_company('job_application')
-    #     job_applications = company.job_applications
+    def test_company_has_many_job_applications(self, setup_teardown):
+        company = setup_teardown
 
-    #     assert job_applications.count() > 0
-    #     assert isinstance(job_applications.get(0), JobApplication)
+        company.job_applications().save_many([
+            factory(JobApplication).make(),
+            factory(JobApplication).make()
+        ])
 
-    # def test_company_has_an_address(self, get_company):
-    #     company = get_company('address')
-    #     address = company.address
+        assert company.job_applications.count() == 2
+        assert isinstance(company.job_applications.get(0), JobApplication)
 
-    #     assert isinstance(address, Address)
+    def test_company_has_an_address(self, setup_teardown):
+        company = setup_teardown
 
-    # def test_company_has_a_person(self, get_company):
-    #     company = get_company('person')
-    #     person = company.person
+        company.address().associate(
+            factory(Address).create()
+        )
 
-    #     assert isinstance(person, Person)
+        assert isinstance(company.address, Address)
+
+    def test_company_has_a_person(self, setup_teardown):
+        company = setup_teardown
+
+        company.person().associate(
+            factory(Person).create()
+        )
+
+        assert isinstance(company.person, Person)

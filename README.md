@@ -2,7 +2,7 @@
 
 ## Packages
 
-- masoniteorm https://orm.masoniteproject.com/
+- orator https://orator-orm.com/
 - colorama https://github.com/tartley/colorama
 - pytest https://docs.pytest.org/en/6.2.x/g
 - coverage https://coverage.readthedocs.io/en/6.2/
@@ -35,14 +35,7 @@ pip install pyside6
 ## Create Models
 
 ```bash
-masonite-orm model JobApplication
-masonite-orm model Job
-masonite-orm model Company
-masonite-orm model Profession
-masonite-orm model EmploymentType
-masonite-orm model Action
-masonite-orm model Address
-masonite-orm model Person
+
 ```
 
 ## Create Database
@@ -50,9 +43,7 @@ masonite-orm model Person
 - Create migrations
 
 ```bash
-masonite-orm migration create_job_applications_table --create job_applications
-...
-...
+
 ```
 
 - Migrate
@@ -106,3 +97,12 @@ https://github.com/pytest-dev/pytest-reportlog
 
         with capsys.disabled():
             print('))))))))))))))))' + address.id)
+
+print(\*a, sep = "\n")
+
+print str(a)[1:-1]
+
+print(' '.join(map(str, a)))
+
+print"in new line"
+print('\n'.join(map(str, a)))

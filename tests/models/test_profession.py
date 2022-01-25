@@ -1,18 +1,37 @@
 
 from app.models.Job import Job
+from app.models.Profession import Profession
+
+from seeds.factories import factory
+
+import pytest
 
 
 class TestProfession():
     # Constants
 
     # Fixtures
+    @pytest.fixture(scope="function", autouse=True)
+    def setup_teardown(self):
+        # Setup
+        profession = factory(Profession).create()
+
+        yield profession
+
+        # Teardown
 
     # Helpers
 
     # Test Cases
-    def test_profession_has_many_jobs(self, get_profession):
-        profession = get_profession()
-        jobs = profession.jobs
+    def test_profession_has_many_jobs(self, setup_teardown):
+        profession = setup_teardown
 
-        assert jobs.count() > 0
-        assert isinstance(jobs.get(0), Job)
+        profession.jobs().save(
+            factory(Job).make()
+        )
+        profession.jobs().save(
+            factory(Job).make()
+        )
+
+        assert profession.jobs.count() == 2
+        assert isinstance(profession.jobs.get(0), Job)

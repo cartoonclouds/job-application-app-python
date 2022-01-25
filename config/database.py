@@ -7,7 +7,7 @@ databases = {
         'database': 'jaa_database.sqlite',
         'prefix': '',
         'log_queries': True
-    }
+    },
 }
 
 db = DatabaseManager(databases)

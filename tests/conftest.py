@@ -10,6 +10,7 @@ from app.models.Person import Person
 from app.models.Company import Company
 from app.models.Profession import Profession
 from app.models.Address import Address
+from app.models.Action import Action
 
 
 def pytest_terminal_summary(terminalreporter, exitstatus, config):
@@ -41,77 +42,13 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
 
 # Global Fixtures
 
-
-@pytest.fixture(scope="module")
-def get_job_application():
-    """ Returns a function to find a JobApplication with ID. If no ID is passed a random JobApplication is returned. """
-    def _get_job_application(id=None):
-        if (id is None):
-            return JobApplication.first()
-        else:
-            return JobApplication.find(id)
-
-    return _get_job_application
-
-
-@pytest.fixture(scope="module")
-def get_job():
-    """ Returns a function to find a Job with ID. If no ID is passed a random Job is returned. """
-    def _get_job(id=None):
-        if (id is None):
-            return Job.first()
-        else:
-            return Job.find(id)
-
-    return _get_job
-
-
-@pytest.fixture(scope="module")
-def get_person():
-    """ Returns a function to find a Person with ID. If no ID is passed a random Person is returned. """
-    def _get_person(id=None):
-        if (id is None):
-            return Person.first()
-        else:
-            return Person.find(id)
-
-    return _get_person
-
-
-@pytest.fixture(scope="module")
-def get_company():
-    """ Returns a function to find a Company with ID. If no ID is passed a random Company is returned. """
-    def _get_company(withHas=None, id=None):
-        if (id is None):
-            if (withHas is not None):
-                return Company.has(withHas).first()
-            else:
-                return Company.first()
-        else:
-            return Company.find(id)
-
-    return _get_company
-
-
-@pytest.fixture(scope="module")
-def get_profession():
-    """ Returns a function to find a Profession with ID. If no ID is passed a random Profession is returned. """
-    def _get_profession(id=None):
-        if (id is None):
-            return Profession.first()
-        else:
-            return Profession.find(id)
-
-    return _get_profession
-
-
 # @pytest.fixture(scope="module")
 # def get_address():
 #     """ Returns a function to find a Address with ID. If no ID is passed a random Address is returned. """
 #     def _get_address(withHas=None, id=None):
 #         if (id is None):
 #             if (withHas is not None):
-#                 return Address.has(withHas).first()
+#                 return Address.has(withHas).with_(withHas).first()
 #             else:
 #                 return Address.first()
 #         else:

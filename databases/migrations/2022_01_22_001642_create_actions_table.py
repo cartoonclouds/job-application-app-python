@@ -16,7 +16,9 @@ class CreateActionsTable(Migration):
             table.boolean('pinned').default(False)
             table.text('contact_method').nullable()
 
-            table.morphs('actionable')
+            # morphs
+            table.integer('actionable_id').unsigned().nullable()
+            table.text('actionable_type').nullable()
 
             # Relations
             table.integer('person_id').unsigned().nullable()

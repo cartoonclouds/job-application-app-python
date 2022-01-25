@@ -1,32 +1,47 @@
 
-from app.models import Address
+from app.models.Address import Address
 from app.models.Job import Job
 from app.models.Company import Company
 
+from seeds.factories import factory
+
+import pytest
+
 
 class TestAddress():
-    pass
     # Constants
 
     # Fixtures
+    @pytest.fixture(scope="function", autouse=True)
+    def setup_teardown(self):
+        # Setup
+        address = factory(Address).create()
+
+        yield address
+
+        # Teardown
 
     # Helpers
 
     # Test Cases
-    # def test_address_has_many_companies(self, get_address, capsys):
-    #     address = get_address('company')
-    #     companies = address.companies
+    def test_address_has_many_companies(self, setup_teardown):
+        address = setup_teardown
 
-    #     if (companies.count() <= 0):
-    #         with capsys.disabled():
-    #             print('Address ID without companies: ' + str(address.id))
+        address.companies().save_many([
+            factory(Company).make(),
+            factory(Company).make()
+        ])
 
-    #     assert companies.count() > 0
-    #     assert isinstance(companies.get(0), Company)
+        assert address.companies.count() == 2
+        assert isinstance(address.companies.get(0), Company)
 
-    # def test_address_has_many_jobs(self, get_address, capsys):
-    #     address = get_address('job')
-    #     jobs = address.jobs
+    def test_address_has_many_jobs(self, setup_teardown):
+        address = setup_teardown
 
-    #     assert jobs.count() > 0
-    #     assert isinstance(jobs.get(0), Job)
+        address.jobs().save_many([
+            factory(Job).make(),
+            factory(Job).make()
+        ])
+
+        assert address.jobs.count() == 2
+        assert isinstance(address.jobs.get(0), Job)

@@ -1,5 +1,5 @@
 from orator import SoftDeletes
-from orator.orm import has_one, has_many, scope
+from orator.orm import belongs_to, has_many, scope
 
 from app.models.Model import Model
 
@@ -14,16 +14,12 @@ class Company(SoftDeletes, Model):
         from app.models.JobApplication import JobApplication
         return JobApplication
 
-    @has_one
+    @belongs_to
     def address(self):
         from app.models.Address import Address
         return Address
 
-    @has_one
+    @belongs_to
     def person(self):
         from app.models.Person import Person
         return Person
-
-    # @scope
-    # def has(self, query, relationship):
-    #     return super().has(query, relationship)

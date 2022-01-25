@@ -15,7 +15,3 @@ class Address(Model):
     def jobs(self):
         from app.models.Job import Job
         return Job
-
-    # @scope
-    # def has(self, query, relationship):
-    #     return super().has(query, relationship)

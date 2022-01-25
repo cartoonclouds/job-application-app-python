@@ -1,6 +1,6 @@
 """Actions model"""
 
-from orator.orm import morph_to, morph_one, morph_many
+from orator.orm import morph_to, morph_one, morph_many, has_one
 
 from app.models.Model import Model
 
@@ -18,5 +18,9 @@ class Action(Model):
         return
 
     @morph_many('actionable')
-    def following_actions(self):
+    def child_actions(self):
+        return Action
+
+    @has_one('id', 'actionable_id')
+    def parent_action(self):
         return Action
