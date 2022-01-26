@@ -19,29 +19,17 @@ class MainWindow(QMainWindow):
 
         # Setup window
         self.setWindowTitle('Main Window App GUI')
-        self.resize(800, 600)
+        self.resize(1500, 800)
         # self.setWindowIcon(QIcon(os.path.join('images', 'ma-icon-64.png')))
 
         # Setup menubar
-        self.setupMenuBar()
+        self.setup_menubar()
 
         # Setup statusbar
-        self.setupStatusBar()
+        self.set_statusbar()
 
         # Setup initial tabs
-        self.tabs = self.setupTabs()
-        self.setCentralWidget(self.tabs)
-
-        self.tab1 = SummaryTab(
-            tabs=self.tabs,
-            label="&Summary",
-            tooltip="Summary tab with stats"
-        )
-        self.tab2 = JobApplicationTab(self.tabs, "Tab 2")
-        self.tab3 = JobApplicationTab(self.tabs, "Tab 3")
-
-        # self.tab1.setTabText("123456")
-        # self.tabs.setTabText(0, "Contact Details")
+        self.setup_tabs()
 
         # Instance variables
         # self.hello = ["Hallo Welt", "Hei maailma", "Hola Mundo", "Привет мир"]
@@ -57,7 +45,39 @@ class MainWindow(QMainWindow):
         # self.button.clicked.connect(self.magic)
         self.show()
 
-    def setupMenuBar(self):
+    def resizeEvent(self, event):
+        # self.tab1.table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        # self.tab1.table.horizontalHeader().setSectionResizeMode(QHeaderView.Interactive)
+
+        return super(MainWindow, self).resizeEvent(event)
+
+    def setup_tabs(self):
+        self.tabs = self.setup_tabs_layout()
+        self.setCentralWidget(self.tabs)
+
+        self.tab1 = SummaryTab(
+            label="&Summary",
+            tabs=self.tabs,
+            tooltip="Summary tab with stats"
+        )
+        self.tab2 = JobApplicationTab("Tab 2", self.tabs)
+        self.tab3 = JobApplicationTab("Tab 3", self.tabs)
+
+        # self.tab1.setTabText("123456")
+        # self.tabs.setTabText(0, "Contact Details")
+
+    def setup_tabs_layout(self):
+        tabs = QTabWidget()
+        tabs.setTabsClosable(True)
+        tabs.setDocumentMode(True)
+        tabs.tabCloseRequested.connect(self.close_current_tab)
+        tabs.setMovable(True)
+
+        tabs.tabBarDoubleClicked.connect(self.tab_open_doubleclick)
+
+        return tabs
+
+    def setup_menubar(self):
         self.menubar = self.menuBar()
         # Uncomment to disable native menubar on Mac
         # self.menubar().setNativeMenuBar(False)
@@ -76,7 +96,7 @@ class MainWindow(QMainWindow):
         # new_tab_action.triggered.connect(lambda _: self.add_new_tab())
         # file_menu.addAction(new_tab_action)
 
-    def setupStatusBar(self):
+    def set_statusbar(self):
         self.statusbar = self.statusBar()
 
         # Adding a temporary message
@@ -86,17 +106,6 @@ class MainWindow(QMainWindow):
         self.wcLabel = QLabel(f"100 Words")
         self.statusbar.addPermanentWidget(self.wcLabel)
 
-    def setupTabs(self):
-        tabs = QTabWidget()
-        tabs.setTabsClosable(True)
-        tabs.setDocumentMode(True)
-        tabs.tabCloseRequested.connect(self.closeCurrentTab)
-        tabs.setMovable(True)
-
-        tabs.tabBarDoubleClicked.connect(self.tab_open_doubleclick)
-
-        return tabs
-
     def tab_open_doubleclick(self, i):
         if i == -1:  # No tab under the click
             self.add_new_tab()
@@ -104,7 +113,7 @@ class MainWindow(QMainWindow):
     def add_new_tab(self):
         pass
 
-    def closeCurrentTab(self, tabIndex):
+    def close_current_tab(self, tabIndex):
         if isinstance(self.tabs.widget(tabIndex), SummaryTab):
             return
 

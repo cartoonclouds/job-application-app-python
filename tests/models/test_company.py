@@ -17,11 +17,13 @@ class TestCompany():
     @pytest.fixture(scope="function", autouse=True)
     def setup_teardown(self):
         # Setup
+        Company.truncate()
         company = factory(Company).create()
 
         yield company
 
         # Teardown
+        Company.truncate()
 
     # Helpers
 

@@ -15,11 +15,13 @@ class TestAddress():
     @pytest.fixture(scope="function", autouse=True)
     def setup_teardown(self):
         # Setup
+        Address.truncate()
         address = factory(Address).create()
 
         yield address
 
         # Teardown
+        Address.truncate()
 
     # Helpers
 

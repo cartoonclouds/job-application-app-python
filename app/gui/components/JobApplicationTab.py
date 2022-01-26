@@ -8,7 +8,15 @@ from PySide6.QtWidgets import *
 
 
 class JobApplicationTab(QWidget):
-    def __init__(self, tabs: QTabWidget, label: str, autoAddToTabs: bool = True, tooltip: str = None, whatsThis: str = None, icon: QIcon = None):
+    def __init__(self,
+                 label: str,
+                 tabs: QTabWidget,
+                 autoAddToTabs: bool = True,
+                 tooltip: str = None,
+                 whatsThis: str = None,
+                 icon: QIcon = None
+                 ):
+        
         super().__init__()
 
         self.tabs = tabs
@@ -26,47 +34,47 @@ class JobApplicationTab(QWidget):
         self.setLayout(layout)
 
         if (autoAddToTabs):
-            self.addToTabs()
+            self.add_to_tabs()
 
-    def setTabIcon(self, icon: QIcon):
+    def set_tab_icon(self, icon: QIcon):
         self.icon = icon
         self.tabs.setTabIcon(self.index, icon)
 
-    def setTabText(self, label: str):
+    def set_tab_text(self, label: str):
         self.label = label
         self.tabs.setTabText(self.index, label)
 
-    def setTabToolTip(self, tooltip: str):
+    def set_tab_tooltip(self, tooltip: str):
         self.tooltip = tooltip
         self.tabs.setTabToolTip(self.index, tooltip)
 
-    def setTabWhatsThis(self, tabWhatsThis: str):
+    def set_tab_whatsthis(self, tabWhatsThis: str):
         self.tabWhatsThis = tabWhatsThis
         self.tabs.setTabWhatsThis(self.index, tabWhatsThis)
 
-    def setActive(self):
-        self.errorIfNotInserted(
+    def set_active(self):
+        self.error_if_not_inserted(
             "Tab must be inserted before setting as active")
 
         self.tabs.setCurrentWidget(self)
 
-    def addToTabs(self):
-        self.errorIfInserted("A tab cannot be inserted more than once")
+    def add_to_tabs(self):
+        self.error_if_inserted("A tab cannot be inserted more than once")
 
         self.index = self.tabs.addTab(self, self.label)
-        self.setTabText(self.label)
-        self.setTabToolTip(self.tooltip)
-        self.setTabWhatsThis(self.tabWhatsThis)
+        self.set_tab_text(self.label)
+        self.set_tab_tooltip(self.tooltip)
+        self.set_tab_whatsthis(self.tabWhatsThis)
 
         if (isinstance(self.icon, QIcon)):
-            self.setTabIcon(self.icon)
+            self.set_tab_icon(self.icon)
 
-    def errorIfInserted(self, error):
+    def error_if_inserted(self, error):
         if self.index >= 0:
             raise Exception(error)
             # throw exception already added
 
-    def errorIfNotInserted(self, error):
+    def error_if_not_inserted(self, error):
         if self.index == -1:
             raise Exception(error)
             # throw exception already added

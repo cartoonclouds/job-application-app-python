@@ -14,11 +14,13 @@ class TestProfession():
     @pytest.fixture(scope="function", autouse=True)
     def setup_teardown(self):
         # Setup
+        Profession.truncate()
         profession = factory(Profession).create()
 
         yield profession
 
         # Teardown
+        Profession.truncate()
 
     # Helpers
 

@@ -14,11 +14,13 @@ class TestPerson():
     @pytest.fixture(scope="function", autouse=True)
     def setup_teardown(self):
         # Setup
+        Person.truncate()
         person = factory(Person).create()
 
         yield person
 
         # Teardown
+        Person.truncate()
 
     # Helpers
 

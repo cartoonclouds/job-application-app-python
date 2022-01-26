@@ -23,3 +23,6 @@ class Company(SoftDeletes, Model):
     def person(self):
         from app.models.Person import Person
         return Person
+
+    def display_label(self):
+        return f"#{self.id} {self.name}"

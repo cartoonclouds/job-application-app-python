@@ -17,11 +17,13 @@ class TestJob():
     @pytest.fixture(scope="function", autouse=True)
     def setup_teardown(self):
         # Setup
+        Job.truncate()
         job = factory(Job).create()
 
         yield job
 
         # Teardown
+        Job.truncate()
 
     # Helpers
 

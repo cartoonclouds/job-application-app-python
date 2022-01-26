@@ -30,3 +30,6 @@ class Job(SoftDeletes, Model):
     @morph_many('actionable')
     def actions(self):
         return Action
+
+    def display_label(self):
+        return f"#{self.id} {self.title}"

@@ -10,11 +10,13 @@ class TestAction():
     @pytest.fixture(scope="function", autouse=True)
     def setup_teardown(self):
         # Setup
+        Action.truncate()
         action = factory(Action).create()
 
         yield action
 
         # Teardown
+        Action.truncate()
 
     # Helpers
 

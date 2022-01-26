@@ -15,11 +15,13 @@ class TestJobApplication():
     @pytest.fixture(scope="function", autouse=True)
     def setup_teardown(self):
         # Setup
+        JobApplication.truncate()
         jobApplication = factory(JobApplication).create()
 
         yield jobApplication
 
         # Teardown
+        JobApplication.truncate()
 
     # Helpers
 
