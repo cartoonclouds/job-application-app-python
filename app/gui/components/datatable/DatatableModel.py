@@ -209,8 +209,8 @@ class DatatableModel(QAbstractTableModel):
         else:
             self._resize_data = dict()
 
-    def autoResizeAt(self, index: int):
-        """Sets the column to fill the remaining space
+    def autoResizeAt(self, index: Union[int, list(int)]):
+        """Sets the column to fill the remaining space.
 
         Args:
             index (int): Index of column to resize

@@ -2,12 +2,14 @@
 from PySide6.QtCore import *
 from PySide6.QtGui import *
 from PySide6.QtWidgets import *
-from app.gui.components.datatable.JobApplicationDatatableModel import JobApplicationDataTableModel
-from app.gui.components.datatable.DataTable import DataTable
 
 from app.storage import Storage
-from app.gui.components.tabs.Tab import Tab
 from app.utilities.IconUtility import IconUtility
+
+from app.gui.components.tabs.Tab import Tab
+from app.gui.components.datatable.DatatableSortModel import CustomSortModel
+from app.gui.components.datatable.JobApplicationDatatableModel import JobApplicationDataTableModel
+from app.gui.components.datatable.DataTable import DataTable
 
 
 class SummaryTab(Tab):
@@ -33,11 +35,18 @@ class SummaryTab(Tab):
         # Table setup
         tableModel = JobApplicationDataTableModel(Storage.jobAppRepository)
         self.table = DataTable(tableModel)
+
+        # proxyModel = CustomSortModel()
+        # proxyModel.setSourceModel(tableModel)
+        # self.table = DataTable(tableModel)
+
         tableModel.updateSizeAt(0)
         tableModel.updateSizeAt(1)
         tableModel.updateSizeAt(2)
         tableModel.updateSizeAt(3)
 
+        # tableModel.autoResizeAt([4, 5])
+        
         self.layout.addWidget(self.table)
 
         label = QLabel()

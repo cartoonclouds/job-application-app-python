@@ -1,4 +1,8 @@
-class CustomSortModel(QtGui.QSortFilterProxyModel):
+
+from PySide6.QtCore import QSortFilterProxyModel
+
+
+class CustomSortModel(QSortFilterProxyModel):
     def __init__(self, parent=None):
         """
         Custom QSortFilterProxyModel to allow sorting and filtering of our custom data model.
