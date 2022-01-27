@@ -9,6 +9,7 @@ from PySide6.QtGui import *
 from PySide6.QtWidgets import *
 from app.models.Model import Model
 from app.repositories.Repository import Repository
+from app.utilities.IconUtility import IconUtility
 
 
 @dataclass
@@ -69,14 +70,18 @@ class JobApplicationDataTableModel(QAbstractTableModel):
             return self._handle_text_alignment_role(details)
         elif role == Qt.DecorationRole:
             return self._handle_decoration_role(details)
-        elif role == Qt.SizeHintRole:
-            return self._handle_size_hint_role(details)
+        # elif role == Qt.SizeHintRole:
+        #     return self._handle_size_hint_role(details)
 
-    def _handle_size_hint_role(self, details: DataTableData):
-        pass
+    # def _handle_size_hint_role(self, details: DataTableData):
+    #     pass
 
     def _handle_decoration_role(self, details: DataTableData):
-        return QIcon('tick.png')
+        if type(details.value) == bool:
+            if details.value:
+                return IconUtility.get_icon("tick-32")
+            else:
+                return IconUtility.get_icon("tick-32")
 
     def _handle_display_role(self, details: DataTableData):
         # Perform per-type checks and render accordingly.
@@ -88,6 +93,12 @@ class JobApplicationDataTableModel(QAbstractTableModel):
             # Render float to 2 dp
             # return "%.2f" % value
             return details.value
+
+        if type(details.value) == bool:
+            if details.value:
+                return IconUtility.get_icon("tick-32")
+            else:
+                return IconUtility.get_icon("tick-32")
 
         if details.columnName == "job_id":
             return details.model.job.display_label()
@@ -101,7 +112,10 @@ class JobApplicationDataTableModel(QAbstractTableModel):
         if details.column == 0:
             return Qt.AlignCenter
 
-        if isinstance(details.value, datetime) or isinstance(details.value, int) or isinstance(details.value, float):
+        if type(details.value) == bool:
+            return Qt.AlignCenter
+
+        if isinstance(details.value, datetime):
             return Qt.AlignVCenter + Qt.AlignRight
 
     def set_column_widths(self, dataTable: QTableView):

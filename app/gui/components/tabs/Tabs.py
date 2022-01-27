@@ -35,7 +35,7 @@ class Tabs(QTabWidget):
 
         # Remove the close button
         if not tab.closable:
-          self.tabBar().setTabButton(tab.index, QTabBar.RightSide, None)
+            self.tabBar().setTabButton(tab.index, QTabBar.RightSide, None)
 
         return tab
 

@@ -21,6 +21,16 @@ class DataTable(QTableView):
 
         self.verticalHeader().setMinimumSectionSize(50)
 
+        self.setAlternatingRowColors(True)
+        
+        # Use to customise setItemDelegate cell display
+        #  
+
+        # Remove vertical gridlines
+        self.setShowGrid(False)
+        self.setStyleSheet(
+            'QTableView::item {border-bottom: 1px solid #d6d9dc;}')
+
         # for loop over columnCount
         dataTableModel.set_column_widths(self)
 

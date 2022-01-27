@@ -30,5 +30,6 @@ class SummaryTab(Tab):
         self.setLayout(self.layout)
 
         # Table setup
-        self.table = DataTable(JobApplicationDataTableModel(Storage.jobAppRepository))
+        self.table = DataTable(
+            JobApplicationDataTableModel(Storage.jobAppRepository))
         self.layout.addWidget(self.table)
