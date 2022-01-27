@@ -21,6 +21,15 @@ class DataTableData:
 
 
 class DatatableModel(QAbstractTableModel):
+    """A Datatable model baseclass.
+
+    URL: https://doc.qt.io/qtforpython/PySide6/QtCore/QAbstractTableModel.html
+
+    Raises:
+        ValueError: [description]
+        TypeError: [description]
+        AttributeError: [description]
+    """
     _headers = defaultdict(list[str])
     _data: Repository
     _avg_font_w: int = 5
@@ -59,9 +68,9 @@ class DatatableModel(QAbstractTableModel):
         Returns:
             int: [description]
         """
-        model: Model = self._data.get_at_index(0)
+        model: Model = self._data.getAtIndex(0)
 
-        return model.get_table_column_count()
+        return model.getTableColumnCount()
 
     # def setHeaders(self, items):
     #     """
@@ -199,16 +208,14 @@ class DatatableModel(QAbstractTableModel):
             self._doColumnResize()
         else:
             self._resize_data = dict()
-            
-            
-    def autoResizeAt(self, index: int):
-      """Sets the column to fill the remaining space
 
-      Args:
-          index (int): Index of column to resize
-      """
-      pass
-            
+    def autoResizeAt(self, index: int):
+        """Sets the column to fill the remaining space
+
+        Args:
+            index (int): Index of column to resize
+        """
+        pass
 
     def updateSize(self):
         """
@@ -239,7 +246,7 @@ class DatatableModel(QAbstractTableModel):
         if self._headers:
             return self._headers
         elif self._data:
-            return self._data.get_columns()
+            return self._data.getColumns()
 
     def _getTableFontWidth(self):
         self._avg_font_w = self._parent_table.fontMetrics().averageCharWidth()

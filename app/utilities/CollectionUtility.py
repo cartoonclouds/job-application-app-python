@@ -9,7 +9,7 @@ T = TypeVar("T")
 class CollectionUtility:
 
     @staticmethod
-    def key_by(key: str, collection: Iterable[T]) -> list[tuple[str, T]]:
+    def keyBy(key: str, collection: Iterable[T]) -> list[tuple[str, T]]:
         """Keys a collection by a string value.
 
             Args:

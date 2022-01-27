@@ -22,27 +22,27 @@ class IconUtility:
     _FILE_ICON_PATH = "app/assets/icons/"
 
     @staticmethod
-    def set_icon_type(type: ICON_TYPE):
+    def setIconType(type: ICON_TYPE):
         IconUtility._icon_type = type
 
     @staticmethod
-    def get_icon(name: str) -> QIcon:
+    def getIcon(name: str) -> QIcon:
         # https://github.com/gvanrossum/patma/blob/master/README.md#tutorial
         match IconUtility._icon_type:
             case ICON_TYPE.PIXMAP:
-                return IconUtility.get_sp_icon(name)
+                return IconUtility.getSPIcon(name)
 
             case ICON_TYPE.FILE:
-                return IconUtility.get_file_icon(name)
+                return IconUtility.getFileIcon(name)
 
             case ICON_TYPE.DESKTOP:
-                return IconUtility.get_desktop_icon(name)
+                return IconUtility.getDesktopIcon(name)
 
             case _:
                 raise Exception('Unknown icon type ' + IconUtility._icon_type)
 
     @staticmethod
-    def get_file_icon(name: str, filetype: str = 'png') -> QIcon:
+    def getFileIcon(name: str, filetype: str = 'png') -> QIcon:
         # Check if file exists -> exception
         iconPath = f'{IconUtility._FILE_ICON_PATH}{name}.{filetype}'
 
@@ -55,14 +55,15 @@ class IconUtility:
         if not icon.load(iconPath) or icon.isNull():
             raise Exception(f'Icon cannot be loaded from path {iconPath}')
 
+        return icon
         return QIcon(icon)
 
     @staticmethod
-    def get_desktop_icon(name: str) -> QIcon:
+    def getDesktopIcon(name: str) -> QIcon:
         return QIcon.fromTheme(name)
 
     @staticmethod
-    def get_sp_icon(name: str) -> QIcon:
+    def getSPIcon(name: str) -> QIcon:
         pixmap = getattr(QStyle.StandardPixmap, "SP_" + name)
 
         return QApplication.style().standardIcon(pixmap)

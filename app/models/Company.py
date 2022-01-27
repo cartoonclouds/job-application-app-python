@@ -10,7 +10,7 @@ class Company(SoftDeletes, Model):
     __dates__ = ['deleted_at']
 
     @has_many
-    def job_applications(self):
+    def jobApplications(self):
         from app.models.JobApplication import JobApplication
         return JobApplication
 
@@ -24,5 +24,5 @@ class Company(SoftDeletes, Model):
         from app.models.Person import Person
         return Person
 
-    def display_label(self):
+    def displayLabel(self):
         return f"#{self.id} {self.name}"

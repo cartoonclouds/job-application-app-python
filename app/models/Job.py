@@ -13,7 +13,7 @@ class Job(SoftDeletes, Model):
     __dates__ = ['deleted_at']
 
     @belongs_to
-    def job_application(self):
+    def jobApplication(self):
         from app.models.JobApplication import JobApplication
         return JobApplication
 
@@ -31,5 +31,5 @@ class Job(SoftDeletes, Model):
     def actions(self):
         return Action
 
-    def display_label(self):
+    def displayLabel(self):
         return f"#{self.id} {self.title}"

@@ -10,7 +10,10 @@ from app.gui.components.datatable.DatatableModel import DataTableData, Datatable
 class DataTable(QTableView):
     """A datatable view model.
 
-    URL: https://doc.qt.io/qtforpython/PySide6/QtWidgets/QTableView.html
+    URL: 
+        https://doc.qt.io/qtforpython/PySide6/QtWidgets/QTableView.html
+        https://doc.qt.io/qtforpython/tutorials/datavisualize/add_tableview.html
+        https://www.pythonguis.com/tutorials/qtableview-modelviews-numpy-pandas/
     """
 
     def __init__(self, dataTableModel: DatatableModel = None):
@@ -24,7 +27,8 @@ class DataTable(QTableView):
         # self.horizontalHeader().setDefaultSectionSize(
         #     int(1500 / self.model().columnCount(self)))
         # self.horizontalHeader().setStretchLastSection(True)
-        self.horizontalHeader().sectionPressed.connect(self.header_pressed)
+        self.horizontalHeader().sectionPressed.connect(self.headerPressed)
+        self.setSelectionBehavior(QAbstractItemView.SelectRows)
 
         self.verticalHeader().setMinimumSectionSize(50)
 
@@ -41,5 +45,5 @@ class DataTable(QTableView):
         # for loop over columnCount
         # dataTableModel.set_column_widths(self)
 
-    def header_pressed(self, logicalIndex: int):
+    def headerPressed(self, logicalIndex: int):
         print('presseed')

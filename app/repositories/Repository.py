@@ -5,7 +5,7 @@ from app.models.Model import Model
 
 
 class Repository:
-    def load_all(self) -> bool:
+    def loadAll(self) -> bool:
         """Loads all models from the database.
 
         NOTE: This will clear any models already present!
@@ -23,7 +23,7 @@ class Repository:
         """
         return len(self)
 
-    def get_at_index(self, index: int) -> Union[Model, bool]:
+    def getAtIndex(self, index: int) -> Union[Model, bool]:
         """Gets the Job Application at index. If there's nothing at index, False is returned.
 
         Returns:
@@ -38,7 +38,13 @@ class Repository:
 
         return model
 
-    def get_columns(self) -> list[str]:
-        model: Model = self.get_at_index(0)
+    def getColumns(self) -> list[str]:
+        model: Model = self.getAtIndex(0)
 
-        return model.get_table_columns()
+        return model.getTableColumns()
+
+    def saveChanges(self):
+        """
+        Saves all changes made to the database 
+        """
+        pass

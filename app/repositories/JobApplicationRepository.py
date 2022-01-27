@@ -29,25 +29,19 @@ class JobApplicationRepository(collections.UserDict, Repository):
             d (Union[MutableMapping[Union[str, int], JobApplication], Iterable[JobApplication]], optional): [description]. Defaults to None.
         """
         if not isinstance(d, dict) and d is not None:
-            d = CollectionUtility.key_by('id', d)
+            d = CollectionUtility.keyBy('id', d)
 
         super().__init__(d)
 
-    def load_all(self) -> bool:
+    def loadAll(self) -> bool:
         try:
             jobApplications = JobApplication.get()
         except:
             return False
 
-        keyedJobApplications = CollectionUtility.key_by(
+        keyedJobApplications = CollectionUtility.keyBy(
             'id', jobApplications)
 
         self.data = dict(keyedJobApplications)
 
         return True
-
-    def save_changes(self):
-        """
-        Saves all changes made to the database 
-        """
-        pass

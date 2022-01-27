@@ -8,7 +8,7 @@ from config.database import db
 class Model(oratorModel):
 
     @classmethod
-    def table_name(self) -> str:
+    def getTableName(self) -> str:
         """Returns the table name for this model.
 
         Returns:
@@ -17,21 +17,24 @@ class Model(oratorModel):
         return inflection.tableize(self.__name__)
 
     @classmethod
-    def get_table_columns(self) -> list[str]:
+    def getTableColumns(self) -> list[str]:
         """Returns a list of column names.
 
         Returns:
             (list)
         """
-        return db.table(db.raw('PRAGMA_TABLE_INFO("' + self.table_name() + '")')
+        return db.table(db.raw('PRAGMA_TABLE_INFO("' + self.getTableName() + '")')
                         ).select('name').get().pluck('name').all()
 
     @classmethod
-    def get_table_column_count(self) -> int:
+    def getTableColumnCount(self) -> int:
         """Returns a count of columns for this table.
 
         Returns:
             (int)
         """
-        return db.table(db.raw('PRAGMA_TABLE_INFO("' + self.table_name() + '")')
+        return db.table(db.raw('PRAGMA_TABLE_INFO("' + self.getTableName() + '")')
                         ).select('name').get().pluck('name').count()
+
+    def displayLabel(self):
+        return f"{__name__}#{self.id}"

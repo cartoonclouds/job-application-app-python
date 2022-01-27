@@ -7,6 +7,7 @@ from app.gui.components.datatable.DataTable import DataTable
 
 from app.storage import Storage
 from app.gui.components.tabs.Tab import Tab
+from app.utilities.IconUtility import IconUtility
 
 
 class SummaryTab(Tab):
@@ -38,3 +39,9 @@ class SummaryTab(Tab):
         tableModel.updateSizeAt(3)
 
         self.layout.addWidget(self.table)
+
+        label = QLabel()
+        label.setMaximumSize(32, 32)
+        label.setScaledContents(True)
+        label.setPixmap(IconUtility.getIcon("tick-32"))
+        self.table.setCornerWidget(label)

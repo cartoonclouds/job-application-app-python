@@ -18,9 +18,9 @@ class Action(Model):
         return
 
     @morph_many('actionable')
-    def child_actions(self):
+    def childActions(self):
         return Action
 
     @has_one('id', 'actionable_id')
-    def parent_action(self):
+    def parentAction(self):
         return Action

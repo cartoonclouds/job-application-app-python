@@ -38,7 +38,7 @@ class TestJobApplicationRepository():
 
         jobApplicationRepository.clear()
 
-        ret = jobApplicationRepository.load_all()
+        ret = jobApplicationRepository.loadAll()
 
         assert ret == True
         assert jobApplicationRepository.count(

@@ -24,13 +24,13 @@ class MainWindow(QMainWindow):
         # self.setWindowIcon(QIcon(os.path.join('images', 'ma-icon-64.png')))
 
         # Setup menubar
-        self.menubar = self.setup_menubar()
+        self.menubar = self.setupMenubar()
 
         # Setup statusbar
-        self.statusbar = self.set_statusbar()
+        self.statusbar = self.setupStatusbar()
 
         # Setup initial tabs
-        self.tabs = self.setup_tabs()
+        self.tabs = self.setupTabs()
         self.setCentralWidget(self.tabs)
 
         # Instance variables
@@ -53,21 +53,21 @@ class MainWindow(QMainWindow):
 
         return super(MainWindow, self).resizeEvent(event)
 
-    def setup_tabs(self):
+    def setupTabs(self):
         tabs = Tabs()
 
-        tabs.add_tab(SummaryTab(
+        tabs.addNewTab(SummaryTab(
             label="&Summary",
             tooltip="Summary tab with stats"
         ))
-        tabs.add_tab(JobApplicationTab("Tab 2"))
-        tabs.add_tab(JobApplicationTab("Tab 3"))
+        tabs.addNewTab(JobApplicationTab("Tab 2"))
+        tabs.addNewTab(JobApplicationTab("Tab 3"))
 
         # self.tab1.setTabText("123456")
         # self.tabs.setTabText(0, "Contact Details")
         return tabs
 
-    def setup_menubar(self):
+    def setupMenubar(self):
         menubar = self.menuBar()
         # Uncomment to disable native menubar on Mac
         # menubar().setNativeMenuBar(False)
@@ -88,7 +88,7 @@ class MainWindow(QMainWindow):
         # file_menu.addAction(new_tab_action)
         return menubar
 
-    def set_statusbar(self):
+    def setupStatusbar(self):
         statusbar = self.statusBar()
 
         # Adding a temporary message

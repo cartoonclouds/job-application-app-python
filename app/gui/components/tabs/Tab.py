@@ -10,20 +10,20 @@ class Tab(QWidget):
 
         self.parent: QTabWidget = None
 
-    def set_parent(self, parent: QTabWidget):
+    def setParent(self, parent: QTabWidget):
         self.parent = parent
 
-    def set_tab_icon(self, icon: QIcon):
+    def setTabIcon(self, icon: QIcon):
         self.parent.setTabIcon(self.index, icon)
 
-    def set_text(self, label: str):
+    def setText(self, label: str):
         self.parent.setTabText(self.index, label)
 
-    def set_tooltip(self, tooltip: str):
+    def setTooltip(self, tooltip: str):
         self.parent.setTabToolTip(self.index, tooltip)
 
-    def set_whats_this(self, tabWhatsThis: str):
+    def setWhatsThis(self, tabWhatsThis: str):
         self.parent.setTabWhatsThis(self.index, tabWhatsThis)
 
-    def set_active(self):
+    def setActive(self):
         self.parent.setCurrentWidget(self)

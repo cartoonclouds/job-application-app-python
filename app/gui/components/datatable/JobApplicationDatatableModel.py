@@ -15,8 +15,6 @@ from app.utilities.StringUtility import StringUtility
 class JobApplicationDataTableModel(DatatableModel):
     """A datatable model representing Job Applications.
 
-    URL: https://doc.qt.io/qtforpython/PySide6/QtCore/QAbstractTableModel.html
-
     Attributes:
         data (Repository): A diciontary holding the Job Application data
     """
@@ -28,13 +26,13 @@ class JobApplicationDataTableModel(DatatableModel):
 
         # Generate headers
         self.setHeaders(
-            list(map(lambda c: inflection.titleize(c), self._data.get_columns())))
+            list(map(lambda c: inflection.titleize(c), self._data.getColumns())))
 
     def data(self, index: Union[QModelIndex, QPersistentModelIndex], role: int) -> Any:
         column = index.column()
         row = index.row()
-        model: Model = self._data.get_at_index(row)
-        columnName = model.get_table_columns()[column]
+        model: Model = self._data.getAtIndex(row)
+        columnName = model.getTableColumns()[column]
         value = getattr(model, columnName)
 
         details = DataTableData(
@@ -47,25 +45,26 @@ class JobApplicationDataTableModel(DatatableModel):
         )
 
         if role == Qt.DisplayRole:
-            return self._handle_display_role(details)
+            return self._handleDisplayRole(details)
         elif role == Qt.TextAlignmentRole:
-            return self._handle_text_alignment_role(details)
+            return self._handleTextAlignmentRole(details)
         elif role == Qt.DecorationRole:
-            return self._handle_decoration_role(details)
+            return self._handleDecorationRole(details)
         # elif role == Qt.SizeHintRole:
         #     return self._handle_size_hint_role(details)
 
     # def _handle_size_hint_role(self, details: DataTableData):
     #     pass
 
-    def _handle_decoration_role(self, details: DataTableData):
-        if type(details.value) == bool:
-            if details.value:
-                return IconUtility.get_icon("tick-32")
-            else:
-                return IconUtility.get_icon("tick-32")
+    def _handleDecorationRole(self, details: DataTableData):
+        pass
+        # if type(details.value) == bool:
+        #     if details.value:
+        #         return IconUtility.getIcon("tick-32")
+        #     else:
+        #         return IconUtility.getIcon("tick-32")
 
-    def _handle_display_role(self, details: DataTableData):
+    def _handleDisplayRole(self, details: DataTableData):
         # Perform per-type checks and render accordingly.
         if isinstance(details.value, datetime):
             # Render time to YYY-MM-DD.
@@ -78,19 +77,19 @@ class JobApplicationDataTableModel(DatatableModel):
 
         if type(details.value) == bool:
             if details.value:
-                return IconUtility.get_icon("tick-32")
+                return IconUtility.getIcon("tick-32")
             else:
-                return IconUtility.get_icon("tick-32")
+                return IconUtility.getIcon("tick-32")
 
         if details.columnName == "job_id":
-            return details.model.job.display_label()
+            return details.model.job.displayLabel()
 
         if details.columnName == "company_id":
-            return details.model.company.display_label()
+            return details.model.company.displayLabel()
 
         return details.value
 
-    def _handle_text_alignment_role(self, details: DataTableData):
+    def _handleTextAlignmentRole(self, details: DataTableData):
         if details.column == 0:
             return Qt.AlignCenter
 
