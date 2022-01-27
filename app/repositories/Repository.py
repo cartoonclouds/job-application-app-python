@@ -8,18 +8,18 @@ class Repository:
     def load_all(self) -> bool:
         """Loads all models from the database.
 
-            NOTE: This will clear any models already present!
+        NOTE: This will clear any models already present!
 
-            Returns:
-                (bool) The success of loading from the database
+        Returns:
+            (bool) The success of loading from the database
         """
         pass
 
     def count(self) -> int:
         """Returns the number of loaded Job Applications
 
-            Returns:
-                count (int)
+        Returns:
+            count (int)
         """
         return len(self)
 

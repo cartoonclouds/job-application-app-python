@@ -45,3 +45,9 @@ class JobApplicationRepository(collections.UserDict, Repository):
         self.data = dict(keyedJobApplications)
 
         return True
+
+    def save_changes(self):
+        """
+        Saves all changes made to the database 
+        """
+        pass

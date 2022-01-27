@@ -1,52 +1,34 @@
 
-
-from dataclasses import dataclass
 from datetime import datetime
 import inflection
 from typing import Any, Union
 from PySide6.QtCore import *
 from PySide6.QtGui import *
 from PySide6.QtWidgets import *
+from app.gui.components.datatable.DatatableModel import DataTableData, DatatableModel
 from app.models.Model import Model
 from app.repositories.Repository import Repository
 from app.utilities.IconUtility import IconUtility
+from app.utilities.StringUtility import StringUtility
 
 
-@dataclass
-class DataTableData:
-    column: int
-    row: int
-    index: int
-    model: Model
-    columnName: str
-    value: str
+class JobApplicationDataTableModel(DatatableModel):
+    """A datatable model representing Job Applications.
 
+    URL: https://doc.qt.io/qtforpython/PySide6/QtCore/QAbstractTableModel.html
 
-class JobApplicationDataTableModel(QAbstractTableModel):
+    Attributes:
+        data (Repository): A diciontary holding the Job Application data
+    """
 
     def __init__(self, data: Repository):
         super(JobApplicationDataTableModel, self).__init__()
 
         self._data = data
-        self.horizontalHeaders = self._generate_headers(Qt.Horizontal)
 
-    def _generate_headers(self, orientation):
-        if orientation == Qt.Horizontal:
-            return list(map(lambda c: inflection.humanize(c), self._data.get_columns()))
-
-    def headerData(self, section, orientation, role):
-        # section is the index of the column/row.
-        if orientation == Qt.Horizontal:
-            if role == Qt.DisplayRole:
-                return self.horizontalHeaders[section]
-
-    def rowCount(self, parent: Union[QModelIndex, QPersistentModelIndex]) -> int:
-        return self._data.count()
-
-    def columnCount(self, parent: Union[QModelIndex, QPersistentModelIndex]) -> int:
-        model: Model = self._data.get_at_index(0)
-
-        return model.get_table_column_count()
+        # Generate headers
+        self.setHeaders(
+            list(map(lambda c: inflection.titleize(c), self._data.get_columns())))
 
     def data(self, index: Union[QModelIndex, QPersistentModelIndex], role: int) -> Any:
         column = index.column()
@@ -117,7 +99,3 @@ class JobApplicationDataTableModel(QAbstractTableModel):
 
         if isinstance(details.value, datetime):
             return Qt.AlignVCenter + Qt.AlignRight
-
-    def set_column_widths(self, dataTable: QTableView):
-        # for loop over self.columnCount()
-        dataTable.setColumnWidth(0, 50)
