@@ -11,6 +11,12 @@ from app.models.Action import Action
 
 factory = Factory()
 
+EMPLOYMENT_TYPES = elements = ("Full-time", "Part-time", "Casual", "Fixed Term",
+                               "Shiftworker", "Daily/Weekly Hire", "Probation", "Apprentice/Trainee", "Outworker")
+CONTACT_METHODS = elements = ("Phone call", "Received phone call", "E-mail", "Recruiter",
+                              "In-person", "Company website", "Employment website", "Letter", "Online forum")
+RATE_UNITS = elements = ('minute', 'hour', 'day')
+
 
 @factory.define(Profession)
 def profession_factory(faker):
@@ -29,22 +35,6 @@ def address_factory(faker):
         'state': faker.city(),
         'postcode': faker.postcode(),
         'country': faker.country(),
-    }
-
-
-@factory.define(Job)
-def job_factory(faker):
-    return {
-        'website': faker.url(),
-        'comments': faker.paragraph(),
-        'title': faker.job(),
-        'closing_date': faker.future_datetime().isoformat(),
-        'salary': faker.random_int(),
-        'rate': faker.random_int(),
-        'rate_unit': faker.random_element(elements=('minute', 'hour', 'day')),
-        'employment_type': faker.random_element(elements=("Full-time", "Part-time", "Casual", "Fixed Term", "Shiftworker", "Daily/Weekly Hire", "Probation", "Apprentice/Trainee", "Outworker")),
-        'profession_id': factory(Profession).create().id,
-        'address_id': factory(Address).create().id,
     }
 
 
@@ -76,8 +66,24 @@ def job_application_factory(faker):
         'title': faker.sentence(),
         'requires_followup': faker.boolean(),
         'pinned': faker.boolean(),
-        'job_id': factory(Job).create().id,
         'company_id': factory(Company).create().id,
+    }
+
+
+@factory.define(Job)
+def job_factory(faker):
+    return {
+        'website': faker.url(),
+        'comments': faker.paragraph(),
+        'title': faker.job(),
+        'closing_date': faker.future_datetime().isoformat(),
+        'salary': faker.random_int(),
+        'rate': faker.random_int(),
+        'rate_unit': faker.random_element(RATE_UNITS),
+        'employment_type': faker.random_element(EMPLOYMENT_TYPES),
+        'profession_id': factory(Profession).create().id,
+        'address_id': factory(Address).create().id,
+        'job_application_id': factory(JobApplication).create().id,
     }
 
 
@@ -90,7 +96,7 @@ def actions_factory(faker):
         'title': faker.sentence(),
         'requires_followup': faker.boolean(),
         'pinned': faker.boolean(),
-        'contact_method': faker.random_element(elements=("Phone call", "Received phone call", "E-mail", "Recruiter", "In-person", "Company website", "Employment website", "Letter", "Online forum")),
+        'contact_method': faker.random_element(CONTACT_METHODS),
         'person_id': factory(Person).create().id,
         # Can be either Action or Job
         # 'actionable_id': actionable.get_key(),

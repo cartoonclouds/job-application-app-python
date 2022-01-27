@@ -21,8 +21,9 @@ class CreateJobsTable(Migration):
             table.long_text('comments').nullable()
 
             # Relations
-            table.integer('profession_id').unsigned().nullable()  # one-to-one
-            table.integer('address_id').unsigned().nullable()  # one-to-one
+            table.integer('job_application_id').unsigned()
+            table.integer('profession_id').unsigned().nullable()
+            table.integer('address_id').unsigned().nullable()
 
             table.timestamps()
             table.soft_deletes()

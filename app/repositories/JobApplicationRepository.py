@@ -2,7 +2,7 @@
 import collections
 from typing import Collection, Dict, Iterable, MutableMapping, NewType, Union
 from app.models.JobApplication import JobApplication
-from app.repositories.IRepository import Repository
+from app.repositories.Repository import Repository
 from app.utilities.CollectionUtility import CollectionUtility
 
 # https://docs.python.org/3/library/collections.html#collections.UserDict
@@ -34,13 +34,6 @@ class JobApplicationRepository(collections.UserDict, Repository):
         super().__init__(d)
 
     def load_all(self) -> bool:
-        """Loads all Job Applications from the database.
-
-            NOTE: This will clear any Job Applications already present!
-
-            Returns:
-                (bool) The success of loading from the database
-        """
         try:
             jobApplications = JobApplication.get()
         except:
@@ -52,31 +45,3 @@ class JobApplicationRepository(collections.UserDict, Repository):
         self.data = dict(keyedJobApplications)
 
         return True
-
-    def count(self) -> int:
-        """Returns the number of loaded Job Applications
-
-            Returns:
-                count (int)
-        """
-        return len(self)
-
-    def getAtIndex(self, index: int) -> Union[JobApplication, bool]:
-        """Gets the Job Application at index. If there's nothing at index, False is returned.
-
-        Returns:
-            (Union[JobApplication, bool]): A Job Application
-        """
-        jobAppList = list(self.items())
-
-        try:
-            model: JobApplication = jobAppList[index][1]
-        except:
-            return False
-
-        return model
-
-    def get_columns(self):
-        model: JobApplication = self.getAtIndex(0)
-
-        return model.get_table_columns()

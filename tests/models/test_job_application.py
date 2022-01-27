@@ -28,10 +28,10 @@ class TestJobApplication():
     # Test Cases
 
     # https://stackoverflow.com/questions/14549405/python-check-instances-of-classes
-    def test_job_application_belongs_to_job(self, setup_teardown):
+    def test_job_application_has_a_job(self, setup_teardown):
         jobApplication = setup_teardown
 
-        jobApplication.job().associate(
+        jobApplication.job().save(
             factory(Job).create()
         )
 

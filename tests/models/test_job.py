@@ -29,10 +29,10 @@ class TestJob():
 
     # Test Cases
 
-    def test_job_has_a_job_application(self, setup_teardown):
+    def test_job_belongs_to_job_application(self, setup_teardown):
         job = setup_teardown
 
-        job.job_application().save(
+        job.job_application().associate(
             factory(JobApplication).make()
         )
 

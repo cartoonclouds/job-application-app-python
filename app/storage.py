@@ -3,5 +3,6 @@
 from app.repositories.JobApplicationRepository import JobApplicationRepository
 
 
-jobAppRepository = JobApplicationRepository()
-jobAppRepository.load_all()
+class Storage:
+    jobAppRepository = JobApplicationRepository()
+    jobAppRepository.load_all()

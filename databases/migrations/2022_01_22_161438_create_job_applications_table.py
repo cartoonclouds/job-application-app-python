@@ -17,10 +17,7 @@ class CreateJobApplicationsTable(Migration):
             table.boolean('pinned').default(False)
 
             # Relations
-            table.integer('job_id').unsigned()  # one-to-one
-            # table.foreign('job_id').references('id').on('jobs')
-
-            table.integer('company_id').unsigned()  # belongs-to-one
+            table.integer('company_id').unsigned()
 
             table.timestamps()
             table.soft_deletes()

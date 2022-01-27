@@ -12,7 +12,7 @@ class Job(SoftDeletes, Model):
     # __dates__ = ['closing_date', 'deleted_at']
     __dates__ = ['deleted_at']
 
-    @has_one
+    @belongs_to
     def job_application(self):
         from app.models.JobApplication import JobApplication
         return JobApplication

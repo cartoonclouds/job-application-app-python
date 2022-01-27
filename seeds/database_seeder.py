@@ -18,7 +18,7 @@ class DatabaseSeeder(Seeder):
         Run the database seeds.
         """
         # Create 5 job applications with associated relations
-        jobApplications = factory(JobApplication, 20).create()
+        jobApplications = factory(JobApplication, 2).create()
         jobApplications.each(
             lambda ja: ja.job().save(factory(Action).make())
         )

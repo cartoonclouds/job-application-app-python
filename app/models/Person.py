@@ -14,8 +14,3 @@ class Person(SoftDeletes, Model):
     def companies(self):
         from app.models.Company import Company
         return Company
-
-    # @has_many
-    # def actions(self):
-    #     from app.models.Action import ComActionpany
-    #     return Action
