@@ -1,13 +1,14 @@
 
 
+import typing
 from PySide6.QtCore import *
 from PySide6.QtGui import *
 from PySide6.QtWidgets import *
 
-from app.gui.components.datatable.DatatableModel import DataTableData, DatatableModel
+# from app.gui.components.datatable.DatatableModel import DatatableModel
 
 
-class DataTable(QTableView):
+class Datatable(QTableView):
     """A datatable view model.
 
     URL: 
@@ -16,10 +17,10 @@ class DataTable(QTableView):
         https://www.pythonguis.com/tutorials/qtableview-modelviews-numpy-pandas/
     """
 
-    def __init__(self, dataTableModel: DatatableModel = None):
-        super(DataTable, self).__init__()
+    def __init__(self, dataTableModel = None):
+        super(Datatable, self).__init__()
 
-        if isinstance(dataTableModel, DatatableModel):
+        if dataTableModel:
             self.setModel(dataTableModel)
             dataTableModel.setParentTable(self)
 
@@ -28,10 +29,9 @@ class DataTable(QTableView):
         #     int(1500 / self.model().columnCount(self)))
         # self.horizontalHeader().setStretchLastSection(True)
         self.horizontalHeader().sectionPressed.connect(self.headerPressed)
+
         self.setSelectionBehavior(QAbstractItemView.SelectRows)
-
         self.verticalHeader().setMinimumSectionSize(50)
-
         self.setAlternatingRowColors(True)
 
         # Use to customise setItemDelegate cell display

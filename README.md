@@ -98,7 +98,7 @@ https://github.com/pytest-dev/pytest-reportlog
         with capsys.disabled():
             print('))))))))))))))))' + address.id)
 
-print(\*a, sep = "\n")
+print(*a, sep = "\n")
 
 print str(a)[1:-1]
 

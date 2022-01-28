@@ -29,7 +29,7 @@ class JobApplicationRepository(collections.UserDict, Repository):
             d (Union[MutableMapping[Union[str, int], JobApplication], Iterable[JobApplication]], optional): [description]. Defaults to None.
         """
         if not isinstance(d, dict) and d is not None:
-            d = CollectionUtility.keyBy('id', d)
+            d = CollectionUtility.key_by('id', d)
 
         super().__init__(d)
 
@@ -39,7 +39,7 @@ class JobApplicationRepository(collections.UserDict, Repository):
         except:
             return False
 
-        keyedJobApplications = CollectionUtility.keyBy(
+        keyedJobApplications = CollectionUtility.key_by(
             'id', jobApplications)
 
         self.data = dict(keyedJobApplications)
