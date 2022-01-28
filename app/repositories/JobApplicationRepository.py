@@ -1,6 +1,7 @@
 
 import collections
 from typing import Iterable, MutableMapping
+import typing
 from app.models.JobApplication import JobApplication
 from app.repositories.Repository import Repository
 from app.utilities.CollectionUtility import CollectionUtility
@@ -29,19 +30,22 @@ class JobApplicationRepository(collections.UserDict, Repository):
             d (MutableMapping[str | int, JobApplication] | Iterable[JobApplication], optional): [description]. Defaults to None.
         """
         if not isinstance(d, dict) and d is not None:
-            d = CollectionUtility.key_by('id', d)
+            d = CollectionUtility.keyBy('id', d)
 
         super().__init__(d)
 
     def loadAll(self) -> bool:
         try:
-            jobApplications = JobApplication.get()
+            jobApplications: JobApplication = JobApplication.get()
         except:
             return False
 
-        keyedJobApplications = CollectionUtility.key_by(
+        keyedJobApplications = CollectionUtility.keyBy(
             'id', jobApplications)
 
         self.data = dict(keyedJobApplications)
 
         return True
+
+    def values(self) -> typing.ValuesView[JobApplication]:
+        return super().values()

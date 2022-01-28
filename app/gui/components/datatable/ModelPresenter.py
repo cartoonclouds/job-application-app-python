@@ -25,5 +25,5 @@ class ModelPresenter(ABC):
         return self._model.getTableColumns()
 
     @abstractmethod
-    def getFormattedAt(self, column: str, role):
+    def getFormattedAt(self, column: str, role) -> typing.Any:
         pass

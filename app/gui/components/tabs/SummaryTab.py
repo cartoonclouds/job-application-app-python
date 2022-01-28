@@ -1,38 +1,22 @@
 
 import inflection
-from PySide6.QtCore import *
-from PySide6.QtGui import *
-from PySide6.QtWidgets import *
+from PySide6.QtWidgets import QHBoxLayout
 
 from app.storage import Storage
-from app.utilities.IconUtility import IconUtility
+from app.types import TabDetails
 
 from app.gui.components.tabs.Tab import Tab
-from app.gui.components.datatable.DatatableSortModel import CustomSortModel
 from app.gui.components.datatable.ModelPresenters.JobApplication import JobApplicationModelPresenter
 from app.gui.components.datatable.Datatable import Datatable
 from app.gui.components.datatable.DatatableModel import DatatableModel
 
 
 class SummaryTab(Tab):
-    def __init__(self,
-                 label: str,
-                 tooltip: str = None,
-                 whatsThis: str = None,
-                 icon: QIcon = None,
-                 closable: bool = True
-                 ) -> None:
+    def __init__(self, label: str, **kwargs: TabDetails) -> None:
+        super().__init__(label=label, **kwargs)
 
-        super(SummaryTab, self).__init__()
-
-        self.label = label
-        self.tooltip = tooltip
-        self.tab_whatsThis = whatsThis
-        self.icon = icon
-        self.closable = False
-
-        self.layout = QHBoxLayout()
-        self.setLayout(self.layout)
+        self.mainLayout = QHBoxLayout()
+        self.setLayout(self.mainLayout)
 
         # Table setup
         dataModels = [
@@ -44,7 +28,7 @@ class SummaryTab(Tab):
             c: inflection.titleize(c)
             for c in dataModels[0].columns
         }
-        
+
         # columHeaders = dict(zip(
         #     ["id", "title", "pinned", "job_id", "updated_at"],
         #     ["ID", "Title", "Pinned", "Job", "Updated At"]
@@ -64,10 +48,10 @@ class SummaryTab(Tab):
 
         # dataTableModel.autoResizeAt([4, 5])
 
-        self.layout.addWidget(self.table)
+        self.mainLayout.addWidget(self.table)
 
-        label = QLabel()
-        label.setMaximumSize(32, 32)
-        label.setScaledContents(True)
-        label.setPixmap(IconUtility.getIcon("tick-32"))
-        self.table.setCornerWidget(label)
+        # qlabel = QLabel()
+        # qlabel.setMaximumSize(32, 32)
+        # qlabel.setScaledContents(True)
+        # qlabel.setPixmap(IconUtility.getIcon("tick-32"))
+        # self.table.setCornerWidget(qlabel)

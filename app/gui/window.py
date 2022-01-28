@@ -1,10 +1,7 @@
-import sys
-import os
-import sys
-import random
-from PySide6.QtCore import *
-from PySide6.QtGui import *
-from PySide6.QtWidgets import *
+
+# from PySide6.QtCore import *
+from PySide6.QtGui import QResizeEvent, QAction, QKeySequence
+from PySide6.QtWidgets import QMainWindow, QLabel
 
 from app.gui.components.tabs.JobApplicationTab import JobApplicationTab
 from app.gui.components.tabs.SummaryTab import SummaryTab
@@ -17,7 +14,7 @@ from app.storage import Storage
 
 class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs):
-        super(MainWindow, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # Setup window
         self.setWindowTitle('Main Window App GUI')
@@ -48,7 +45,8 @@ class MainWindow(QMainWindow):
         # self.button.clicked.connect(self.magic)
         self.show()
 
-    def resizeEvent(self, event):
+    def resizeEvent(self, event: QResizeEvent) -> None:
+
         # self.tab1.table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         # self.tab1.table.horizontalHeader().setSectionResizeMode(QHeaderView.Interactive)
 
@@ -57,10 +55,9 @@ class MainWindow(QMainWindow):
     def setupTabs(self):
         tabs = Tabs()
 
-        tabs.addNewTab(SummaryTab(
-            label="&Summary",
-            tooltip="Summary tab with stats"
-        ))
+        tabs.addNewTab(
+            SummaryTab("&Summary", tooltip="Summary tab with stats")
+        )
         tabs.addNewTab(JobApplicationTab("Tab 2"))
         tabs.addNewTab(JobApplicationTab("Tab 3"))
 
@@ -100,7 +97,3 @@ class MainWindow(QMainWindow):
         statusbar.addPermanentWidget(self.wcLabel)
 
         return statusbar
-
-    @Slot()
-    def magic(self):
-        self.text.setText(random.choice(self.hello))

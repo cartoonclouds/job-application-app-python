@@ -1,45 +1,45 @@
 
+from enum import Enum, unique, auto
 from PySide6 import os
 from PySide6.QtGui import QIcon, QPixmap
 from PySide6.QtWidgets import QApplication, QStyle
-from dataclasses import dataclass
-from pathlib import Path
 
 # StandardPixmap icons http://srinikom.github.io/pyside-docs/PySide/QtGui/QStyle.html#PySide.QtGui.PySide.QtGui.QStyle.StandardPixmap
 # Desktop icons https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html
 # https://www.pythonguis.com/faq/built-in-qicons-pyqt/
 
 
-@dataclass
-class ICON_TYPE:
-    FILE = 0
-    DESKTOP = 1
-    PIXMAP = 2
+# https://github.com/gvanrossum/patma/blob/master/README.md#tutorial
+
+@unique
+class IconType(Enum):
+    FILE = auto()
+    DESKTOP = auto()
+    PIXMAP = auto()
 
 
 class IconUtility:
-    _icon_type = ICON_TYPE.FILE
+    _icon_type = IconType.FILE
     _FILE_ICON_PATH = "app/assets/icons/"
 
     @staticmethod
-    def setIconType(type: ICON_TYPE):
+    def setIconType(type: IconType):
         IconUtility._icon_type = type
 
     @staticmethod
     def getIcon(name: str) -> QIcon:
-        # https://github.com/gvanrossum/patma/blob/master/README.md#tutorial
         match IconUtility._icon_type:
-            case ICON_TYPE.PIXMAP:
+            case IconType.PIXMAP:
                 return IconUtility.getSPIcon(name)
 
-            case ICON_TYPE.FILE:
+            case IconType.FILE:
                 return IconUtility.getFileIcon(name)
 
-            case ICON_TYPE.DESKTOP:
+            case IconType.DESKTOP:
                 return IconUtility.getDesktopIcon(name)
 
             case _:
-                raise Exception('Unknown icon type ' + IconUtility._icon_type)
+                raise Exception(f'Unknown icon type {IconUtility._icon_type}')
 
     @staticmethod
     def getFileIcon(name: str, filetype: str = 'png') -> QIcon:

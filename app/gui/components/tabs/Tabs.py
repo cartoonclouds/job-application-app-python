@@ -15,7 +15,7 @@ class Tabs(QTabWidget):
     """
 
     def __init__(self) -> None:
-        super(Tabs, self).__init__()
+        super().__init__()
 
         self.setTabsClosable(True)
         self.setDocumentMode(True)

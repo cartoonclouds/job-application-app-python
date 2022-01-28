@@ -1,15 +1,20 @@
 
 
-from typing import Iterable, TypeVar
+from typing import TypeVar
+import typing
 
 
-T = TypeVar("T")
+T = TypeVar('T')  # Any type.
+KT = TypeVar('KT')  # Key type.
+VT = TypeVar('VT')  # Value type.
+Collection = typing.Sequence[typing.Mapping[str, T]]
 
 
 class CollectionUtility:
 
     @staticmethod
-    def key_by(key: str, collection: Iterable[T]) -> list[tuple[str, T]]:
+    # -> typing.Mapping[str, Collection[T]]:
+    def keyBy(key: str, collection: Collection[T]):
         """Keys a collection by a string value.
 
             Args:
@@ -20,5 +25,11 @@ class CollectionUtility:
                 (list[tuple[str, T]]): A list of tuples with entries key, elemment
         """
         keys = collection.pluck(key)
+        # keys = CollectionUtility.pluck(key, collection)
 
         return zip(keys, collection)
+
+    @staticmethod
+    def pluck(key: str, collection: Collection[T]):
+        r = [x[key] for x in collection]
+        return r

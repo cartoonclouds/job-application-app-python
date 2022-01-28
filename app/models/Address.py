@@ -1,6 +1,6 @@
 
 from app.models.Model import Model
-from orator.orm import has_many, scope
+from orator.orm import has_many
 
 
 class Address(Model):

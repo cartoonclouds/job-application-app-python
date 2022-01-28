@@ -1,14 +1,14 @@
 
-from PySide6.QtCore import QSortFilterProxyModel
+from PySide6.QtCore import QObject, QSortFilterProxyModel
 
 
 class CustomSortModel(QSortFilterProxyModel):
-    def __init__(self, parent=None) -> None:
+    def __init__(self, parent: QObject | None = None) -> None:
         """
         Custom QSortFilterProxyModel to allow sorting and filtering of our custom data model.
         :param parent: parent so that this model is deleted properly upon close.
         """
-        super(CustomSortModel, self).__init__(parent)
+        super().__init__(parent)
 
         self.countAllColumns = False
         self._sortingColumn = 0

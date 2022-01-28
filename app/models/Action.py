@@ -1,6 +1,6 @@
 """Actions model"""
 
-from orator.orm import morph_to, morph_one, morph_many, has_one
+from orator.orm import morph_to, morph_many, has_one
 
 from app.models.Model import Model
 

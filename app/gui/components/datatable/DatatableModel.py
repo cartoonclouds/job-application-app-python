@@ -1,11 +1,13 @@
 import typing
 
-from PySide6.QtCore import *
-from PySide6.QtGui import *
-from PySide6.QtWidgets import *
+from PySide6.QtCore import QAbstractTableModel, Qt, QModelIndex, QPersistentModelIndex
+from PySide6.QtWidgets import QTableView
+from app import types
 
 from app.gui.components.datatable.Datatable import Datatable
 from app.gui.components.datatable.ModelPresenter import ModelPresenter
+from app.types import ColumnHeaders
+
 
 class DatatableModel(QAbstractTableModel):
     """A Datatable model baseclass.
@@ -23,26 +25,26 @@ class DatatableModel(QAbstractTableModel):
 
     # auto_resize: bool = False
 
-    def __init__(self, data: typing.Sequence[ModelPresenter], columnHeaders: typing.Mapping[str, str] | None = None) -> None:
-        super(DatatableModel, self).__init__()
+    def __init__(self, data: typing.Sequence[ModelPresenter], columnHeaders: ColumnHeaders | None = None) -> None:
+        super().__init__()
 
         # Set instance variables
         self._data = data
-        self._headers: typing.Sequence[str] = []
-        self._columns: typing.Sequence[str] = []
-        self._parent_table: QTableView = None
+        self._headers: types.TableHeaders = []
+        self._columns: types.ColumnNames = []
+        self._parent_table: QTableView | None = None
 
         if columnHeaders:
             self.setHeaders(list(columnHeaders.values()))
             self.setColumns(list(columnHeaders.keys()))
 
-    def setHeaders(self, data: typing.Sequence[str]):
-        self._headers = data
+    def setHeaders(self, headers: types.TableHeaders):
+        self._headers = headers
 
-    def setColumns(self, data: typing.Sequence[str]):
-        self._columns = data
+    def setColumns(self, columns: types.ColumnNames):
+        self._columns = columns
 
-    def headerData(self, section, orientation, role):
+    def headerData(self, section: int, orientation: Qt.Orientation, role: int = ...) -> typing.Any:
         """
         Sets the header data based on our header key list.
         """
@@ -187,9 +189,6 @@ class DatatableModel(QAbstractTableModel):
         Raises:
             TypeError
         """
-        if not isinstance(datatable, Datatable):
-            raise TypeError('Must be a TableView item')
-
         self._parent_table = datatable
         # self._getTableFontWidth()
         # self._autoAllResizeData()

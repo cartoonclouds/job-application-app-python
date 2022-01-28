@@ -1,5 +1,5 @@
 from orator import SoftDeletes
-from orator.orm import belongs_to, has_many, scope
+from orator.orm import belongs_to, has_many
 
 from app.models.Model import Model
 

@@ -13,7 +13,7 @@ class JobApplicationModelPresenter(ModelPresenter):
     """
 
     def __init__(self, model: Model) -> None:
-        self._model = model
+        super().__init__(model)
 
     def getFormattedAt(self, column: str, role):
         details = ModelData(

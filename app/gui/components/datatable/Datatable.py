@@ -1,11 +1,5 @@
 
-
-import typing
-from PySide6.QtCore import *
-from PySide6.QtGui import *
-from PySide6.QtWidgets import *
-
-from app.gui.components.datatable.DatatableModel import DatatableModel
+from PySide6.QtWidgets import QTableView, QAbstractItemView
 
 # from app.gui.components.datatable.DatatableModel import DatatableModel
 
@@ -19,8 +13,8 @@ class Datatable(QTableView):
         https://www.pythonguis.com/tutorials/qtableview-modelviews-numpy-pandas/
     """
 
-    def __init__(self, dataTableModel: DatatableModel | None = None) -> None:
-        super(Datatable, self).__init__()
+    def __init__(self, dataTableModel: None = None) -> None:
+        super().__init__()
 
         if dataTableModel:
             self.setModel(dataTableModel)

@@ -1,30 +1,16 @@
 
-from PySide6.QtCore import *
-from PySide6.QtGui import *
-from PySide6.QtWidgets import *
+from PySide6.QtWidgets import QFormLayout, QLineEdit
 
 from app.gui.components.tabs.Tab import Tab
+from app.types import TabDetails
 
 # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QTabWidget.html
 # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QTabBar.html
 
 
 class JobApplicationTab(Tab):
-    def __init__(self,
-                 label: str,
-                 tooltip: str = None,
-                 whatsThis: str = None,
-                 icon: QIcon = None, 
-                 closable: bool = True
-                 ) -> None:
-
-        super(JobApplicationTab, self).__init__()
-
-        self.label = label
-        self.tooltip = tooltip
-        self.tab_whatsThis = whatsThis
-        self.icon = icon
-        self.closable = closable
+    def __init__(self, label: str, **kwargs: TabDetails) -> None:
+        super().__init__(label=label, **kwargs)
 
         layout = QFormLayout()
         layout.addRow("Name", QLineEdit())
