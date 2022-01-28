@@ -5,7 +5,7 @@ from PySide6.QtGui import QIcon
 
 
 class Tab(QWidget):
-    def __init__(self):
+    def __init__(self) -> None:
         super(Tab, self).__init__()
 
         self.parent: QTabWidget = None

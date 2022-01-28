@@ -14,6 +14,12 @@ class Model(oratorModel):
         Returns:
             (str)
         """
+        # print()
+        # __class__
+        # __table__
+        # print(self.get_table())
+        # print(self.__class__)
+        # print(*dir(self), sep="\n")
         return inflection.tableize(self.__name__)
 
     @classmethod
@@ -26,7 +32,7 @@ class Model(oratorModel):
         return db.table(db.raw('PRAGMA_TABLE_INFO("' + self.getTableName() + '")')
                         ).select('name').get().pluck('name').all()
 
-    @classmethod
+    @ classmethod
     def getTableColumnCount(self) -> int:
         """Returns a count of columns for this table.
 

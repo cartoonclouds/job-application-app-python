@@ -14,7 +14,7 @@ class Tabs(QTabWidget):
         https://doc.qt.io/qtforpython/PySide6/QtWidgets/QTabBar.html
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super(Tabs, self).__init__()
 
         self.setTabsClosable(True)

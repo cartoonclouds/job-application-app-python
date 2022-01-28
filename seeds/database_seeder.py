@@ -18,10 +18,10 @@ class DatabaseSeeder(Seeder):
         Run the database seeds.
         """
         # Create 5 job applications with associated relations
-        jobApplications = factory(JobApplication, 2).create()
-        jobApplications.each(
-            lambda ja: ja.job().save(factory(Action).make())
-        )
+        # jobApplications = factory(JobApplication, 2).create()
+        # jobApplications.each(
+        #     lambda ja: ja.job().save(factory(Action).make())
+        # )
 
         # Get jobs and add 3 actions to each
         # jobs = Job.get()
@@ -50,7 +50,9 @@ class DatabaseSeeder(Seeder):
         # )
 
         # ja = factory(JobApplication).create()
-        # ja = JobApplication.first()
+        ja = JobApplication.first()
+
+        print(ja.getTableName())
 
         # print(JobApplication.first().get_table_column_count())
 

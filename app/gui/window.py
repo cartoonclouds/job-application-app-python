@@ -9,6 +9,7 @@ from PySide6.QtWidgets import *
 from app.gui.components.tabs.JobApplicationTab import JobApplicationTab
 from app.gui.components.tabs.SummaryTab import SummaryTab
 from app.gui.components.tabs.Tabs import Tabs
+from app.storage import Storage
 
 # https://realpython.com/python-menus-toolbars/
 # https://github.com/pythonguis/15-minute-apps/blob/aaf6038ab4b687cf1370ae3c7ca71f46140c5cdb/browser_tabbed/browser_tabbed.py
@@ -20,7 +21,7 @@ class MainWindow(QMainWindow):
 
         # Setup window
         self.setWindowTitle('Main Window App GUI')
-        self.resize(1500, 800)
+        self.resize(Storage.WINDOW_WIDTH, Storage.WINDOW_HEIGHT)
         # self.setWindowIcon(QIcon(os.path.join('images', 'ma-icon-64.png')))
 
         # Setup menubar

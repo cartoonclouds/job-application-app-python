@@ -7,6 +7,7 @@
 - pytest https://docs.pytest.org/en/6.2.x/g
 - coverage https://coverage.readthedocs.io/en/6.2/
 - pytest-xdist https://github.com/pytest-dev/pytest-xdist
+- mypy http://mypy-lang.org/
 
 Fore: BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, RESET.
 Back: BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, RESET.
@@ -98,7 +99,7 @@ https://github.com/pytest-dev/pytest-reportlog
         with capsys.disabled():
             print('))))))))))))))))' + address.id)
 
-print(*a, sep = "\n")
+print(\*a, sep = "\n")
 
 print str(a)[1:-1]
 

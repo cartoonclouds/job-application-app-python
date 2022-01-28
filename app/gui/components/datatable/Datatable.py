@@ -5,6 +5,8 @@ from PySide6.QtCore import *
 from PySide6.QtGui import *
 from PySide6.QtWidgets import *
 
+from app.gui.components.datatable.DatatableModel import DatatableModel
+
 # from app.gui.components.datatable.DatatableModel import DatatableModel
 
 
@@ -17,7 +19,7 @@ class Datatable(QTableView):
         https://www.pythonguis.com/tutorials/qtableview-modelviews-numpy-pandas/
     """
 
-    def __init__(self, dataTableModel = None):
+    def __init__(self, dataTableModel: DatatableModel | None = None) -> None:
         super(Datatable, self).__init__()
 
         if dataTableModel:
@@ -26,7 +28,7 @@ class Datatable(QTableView):
 
         # TODO Statically set window width. Need to get initially get window width
         # self.horizontalHeader().setDefaultSectionSize(
-        #     int(1500 / self.model().columnCount(self)))
+        #     int(Storage.WINDOW_WIDTH / self.model().columnCount(self)))
         # self.horizontalHeader().setStretchLastSection(True)
         self.horizontalHeader().sectionPressed.connect(self.headerPressed)
 

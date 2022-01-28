@@ -1,13 +1,11 @@
 import typing
 
-from typing import Union
 from PySide6.QtCore import *
 from PySide6.QtGui import *
 from PySide6.QtWidgets import *
 
 from app.gui.components.datatable.Datatable import Datatable
 from app.gui.components.datatable.ModelPresenter import ModelPresenter
-
 
 class DatatableModel(QAbstractTableModel):
     """A Datatable model baseclass.
@@ -25,23 +23,23 @@ class DatatableModel(QAbstractTableModel):
 
     # auto_resize: bool = False
 
-    def __init__(self, data: typing.List[ModelPresenter], columnHeaders: typing.Optional[typing.Mapping[str, str]]):
+    def __init__(self, data: typing.Sequence[ModelPresenter], columnHeaders: typing.Mapping[str, str] | None = None) -> None:
         super(DatatableModel, self).__init__()
 
         # Set instance variables
         self._data = data
-        self._headers: typing.List[str] = []
-        self._columns: typing.List[str] = []
+        self._headers: typing.Sequence[str] = []
+        self._columns: typing.Sequence[str] = []
         self._parent_table: QTableView = None
 
         if columnHeaders:
             self.setHeaders(list(columnHeaders.values()))
             self.setColumns(list(columnHeaders.keys()))
 
-    def setHeaders(self, data: typing.List[str]):
+    def setHeaders(self, data: typing.Sequence[str]):
         self._headers = data
 
-    def setColumns(self, data: typing.List[str]):
+    def setColumns(self, data: typing.Sequence[str]):
         self._columns = data
 
     def headerData(self, section, orientation, role):
@@ -52,34 +50,35 @@ class DatatableModel(QAbstractTableModel):
             if role == Qt.DisplayRole:
                 return self._headers[section]
 
-    def rowCount(self, parent: Union[QModelIndex, QPersistentModelIndex] = None) -> int:
+    def rowCount(self, parent: QModelIndex | QPersistentModelIndex | None = None) -> int:
         """Return the row count.
 
         Args:
-            parent (Union[QModelIndex, QPersistentModelIndex], optional): The parent table
+            parent (QModelIndex | QPersistentModelIndex, optional): The parent table
 
         Returns:
             int
         """
         return len(self._data)
 
-    def columnCount(self, parent: Union[QModelIndex, QPersistentModelIndex] = None) -> int:
+    def columnCount(self, parent: QModelIndex | QPersistentModelIndex | None = None) -> int:
         """ Return the column count.
 
         Args:
-            parent (Union[QModelIndex, QPersistentModelIndex]): The parent table
+            parent (QModelIndex | QPersistentModelIndex, optional): The parent table
 
         Returns:
             int: [description]
         """
         return len(self._columns)
 
-    def data(self, index: Union[QModelIndex, QPersistentModelIndex], role: int) -> typing.Any:
+    def data(self, index: QModelIndex | QPersistentModelIndex, role: int) -> typing.Any:
         colIdx = index.column()
         rowIdx = index.row()
         rowModel: ModelPresenter = self._data[rowIdx]
+        colName = self._columns[colIdx]
 
-        return rowModel.getFormattedAt(colIdx, role)
+        return rowModel.getFormattedAt(colName, role)
 
     # def setHeaders(self, items):
     #     """
@@ -115,12 +114,12 @@ class DatatableModel(QAbstractTableModel):
     #         self._autoSingleResizeData(data)
     #         self._doColumnResize()
 
-    # def addRows(self, data: MutableMapping[str, Model]):
+    # def addRows(self, data: Mapping[str | Model]):
     #     """
     #     Accepts a list of dicts to add them all to the table.
 
     #     Args:
-    #         data (MutableMapping[str, Model]): list of dicts
+    #         data (Mapping[str, Model]): list of dicts
 
     #     Raises:
     #         ValueError
@@ -218,7 +217,7 @@ class DatatableModel(QAbstractTableModel):
     #     else:
     #         self._resize_data = dict()
 
-    # def autoResizeAt(self, index: Union[int, list(int)]):
+    # def autoResizeAt(self, index: int | Sequence[int]):
     #     """Sets the column to fill the remaining space.
 
     #     Args:

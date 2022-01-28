@@ -3,7 +3,7 @@ from PySide6.QtCore import QSortFilterProxyModel
 
 
 class CustomSortModel(QSortFilterProxyModel):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None) -> None:
         """
         Custom QSortFilterProxyModel to allow sorting and filtering of our custom data model.
         :param parent: parent so that this model is deleted properly upon close.

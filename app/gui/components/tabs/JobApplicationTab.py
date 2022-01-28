@@ -16,7 +16,7 @@ class JobApplicationTab(Tab):
                  whatsThis: str = None,
                  icon: QIcon = None, 
                  closable: bool = True
-                 ):
+                 ) -> None:
 
         super(JobApplicationTab, self).__init__()
 

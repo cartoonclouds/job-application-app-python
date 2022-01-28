@@ -1,6 +1,4 @@
 
-from typing import Union
-
 from app.models.Model import Model
 
 
@@ -23,11 +21,11 @@ class Repository:
         """
         return len(self)
 
-    def getAtIndex(self, index: int) -> Union[Model, bool]:
+    def getAtIndex(self, index: int) -> Model | bool:
         """Gets the Job Application at index. If there's nothing at index, False is returned.
 
         Returns:
-            (Union[JobApplication, bool]): A Job Application
+            (JobApplication | bool): A Job Application
         """
         modelList = list(self.items())
 

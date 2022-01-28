@@ -6,7 +6,7 @@ from app.gui.window import MainWindow
 
 
 class App():
-    def __init__(self):
+    def __init__(self) -> None:
         app = QApplication(sys.argv)
 
         window = MainWindow()

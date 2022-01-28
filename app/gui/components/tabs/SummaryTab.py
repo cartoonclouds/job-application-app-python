@@ -1,18 +1,17 @@
 
+import inflection
 from PySide6.QtCore import *
 from PySide6.QtGui import *
 from PySide6.QtWidgets import *
-from app.gui.components.datatable.DatatableModel import DatatableModel
-from app.models.JobApplication import JobApplication
-from app.repositories.JobApplicationRepository import JobApplicationRepository
-import inflection
+
 from app.storage import Storage
 from app.utilities.IconUtility import IconUtility
 
 from app.gui.components.tabs.Tab import Tab
 from app.gui.components.datatable.DatatableSortModel import CustomSortModel
-from app.gui.components.datatable.ModelPresenter import ModelPresenter
+from app.gui.components.datatable.ModelPresenters.JobApplication import JobApplicationModelPresenter
 from app.gui.components.datatable.Datatable import Datatable
+from app.gui.components.datatable.DatatableModel import DatatableModel
 
 
 class SummaryTab(Tab):
@@ -22,7 +21,7 @@ class SummaryTab(Tab):
                  whatsThis: str = None,
                  icon: QIcon = None,
                  closable: bool = True
-                 ):
+                 ) -> None:
 
         super(SummaryTab, self).__init__()
 
@@ -37,7 +36,7 @@ class SummaryTab(Tab):
 
         # Table setup
         dataModels = [
-            ModelPresenter(jobApp)
+            JobApplicationModelPresenter(jobApp)
             for jobApp in Storage.jobApplications.values()
         ]
 
@@ -45,10 +44,11 @@ class SummaryTab(Tab):
             c: inflection.titleize(c)
             for c in dataModels[0].columns
         }
-
-        # print(*columHeaders.values(), sep="\n")
-        # print(type(columHeaders.values()))
-        # exit()
+        
+        # columHeaders = dict(zip(
+        #     ["id", "title", "pinned", "job_id", "updated_at"],
+        #     ["ID", "Title", "Pinned", "Job", "Updated At"]
+        # ))
 
         dataTableModel = DatatableModel(dataModels, columHeaders)
         self.table = Datatable(dataTableModel)
