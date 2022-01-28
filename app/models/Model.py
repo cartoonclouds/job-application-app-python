@@ -1,5 +1,7 @@
+from orator.orm.model import Model as oratorModel
+from orator.query.builder import QueryBuilder  # or maybe QueryBuilder
+from orator.orm.utils import scope
 
-from orator import Model as oratorModel
 import inflection
 
 from config.database import db
@@ -44,5 +46,22 @@ class Model(oratorModel):
             db.raw('PRAGMA_TABLE_INFO("' + cls.getTableName() + '")')
         ).select('name').get().pluck('name').count()
 
-    def displayLabel(self):
-        return f"{__name__}#{self.id}"
+    # Scopes
+
+    # @scope
+    # def starts_with(self, query, column, search) -> QueryBuilder:
+    #     return query.where(column, 'LIKE', '{}%'.format(search))
+
+    # @scope
+    # def like(self, query, column, search) -> QueryBuilder:
+    #     return query.where(column, 'LIKE', '%{}%'.format(search))
+
+    # @scope
+    # def ends_with(self, query, column, search) -> QueryBuilder:
+    #     return query.where(column, 'LIKE', '%{}'.format(search))
+
+    # Model methods
+
+    # @scope
+    # def displayLabel(self):
+    #     return f"{__name__}#{self.id}"

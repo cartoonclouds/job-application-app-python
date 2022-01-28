@@ -51,6 +51,8 @@ class DatabaseSeeder(Seeder):
 
         # ja = factory(JobApplication).create()
         ja = JobApplication.first()
+        
+        ja.is_valid()
 
         print(ja.getTableName())
 

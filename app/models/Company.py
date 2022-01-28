@@ -1,10 +1,10 @@
-from orator import SoftDeletes
-from orator.orm import belongs_to, has_many
+from orator.orm.scopes.soft_deleting import SoftDeletingScope
+from orator.orm.utils import belongs_to, has_many
 
 from app.models.Model import Model
 
 
-class Company(SoftDeletes, Model):
+class Company(SoftDeletingScope, Model):
     __fillable__ = ["*"]
 
     __dates__ = ['deleted_at']

@@ -1,11 +1,10 @@
-
-from orator import SoftDeletes
-from orator.orm import belongs_to, has_one
+from orator.orm.scopes.soft_deleting import SoftDeletingScope
+from orator.orm.utils import belongs_to, has_one
 
 from app.models.Model import Model
 
 
-class JobApplication(SoftDeletes, Model):
+class JobApplication(SoftDeletingScope, Model):
     __fillable__ = ["*"]
 
     __with__ = ['job', 'company']

@@ -16,3 +16,10 @@ if __name__ == "__main__":
     #         self
     #     """
     #     pass
+
+    # Initalize db + migrations
+    # https://github.com/sdispater/orator/pull/200
+
+    # Validate model on save
+    # https://github.com/sdispater/orator/pull/371
+    # https://orator-orm.com/docs/0.9/orm.html#model-events

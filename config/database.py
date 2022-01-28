@@ -1,4 +1,6 @@
-from orator import DatabaseManager, Model, Schema
+from orator.orm.model import Model
+from orator.schema import Schema
+from orator.database_manager import DatabaseManager
 
 
 databases = {
