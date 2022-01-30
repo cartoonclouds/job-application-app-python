@@ -7,8 +7,7 @@ from app import types
 from app.config.App import Sizing
 
 from app.gui.components.datatable.Datatable import Datatable
-from app.gui.components.datatable.ModelPresenter import ModelPresenter
-from app.storage import Storage
+from app.models.Model import Model
 from app.types import ColumnHeaders
 from app.utilities.IconUtility import IconUtility
 
@@ -24,20 +23,16 @@ class DatatableModel(QAbstractTableModel):
         AttributeError: [description]
     """
 
-    def __init__(self, data: typing.Sequence[ModelPresenter], columnHeaders: ColumnHeaders | None = None) -> None:
+    def __init__(self, data: typing.Sequence[Model], columnHeaders: ColumnHeaders) -> None:
         super().__init__()
 
         # Set instance variables
         self._data = data
-        self._headers: types.TableHeaders = []
-        self._columns: types.ColumnNames = []
-        self._parent_table: QTableView | None = None
+        self._headers: types.TableHeaders = list(columnHeaders.values())
+        self._columns: types.ColumnNames = list(columnHeaders.keys())
+        # self._parent_table: QTableView | None = None
 
-        self.resizeColumns()
-
-        if columnHeaders:
-            self.setHeaders(list(columnHeaders.values()))
-            self.setColumns(list(columnHeaders.keys()))
+        # self.resizeColumns()
 
     def setHeaders(self, headers: types.TableHeaders):
         self._headers = headers
@@ -75,19 +70,19 @@ class DatatableModel(QAbstractTableModel):
         Returns:
             int: [description]
         """
-        if self._columns:
-            return len(self._columns)
-        else:
-            return self._data[0].columnCount
-
-    def data(self, index: QModelIndex | QPersistentModelIndex, role: int) -> typing.Any:
-        colIdx = index.column()
-        rowIdx = index.row()
-        rowModel: ModelPresenter = self._data[rowIdx]
-        colName = self._columns[colIdx]
-
-        return rowModel.getFormattedAt(colName, role)
-
+        return len(self._columns)
+    
+    # def data(self, index: QModelIndex | QPersistentModelIndex, role: int) -> typing.Any:
+    #     match role:
+    #         case Qt.DisplayRole:
+    #         case Qt.DecorationRole:
+    #         case Qt.EditRole:
+    #         case Qt.ToolTipRole:
+    #         case Qt.StatusTipRole:
+    #         case Qt.WhatsThisRole:
+    #         case Qt.TextAlignmentRole:
+    #         case Qt.SizeHintRole:
+                
     def setParentTable(self, datatable: Datatable):
         """
         Sets the parent table widget so that we can get its font metrics for setting our column width with autoResize.
@@ -98,7 +93,7 @@ class DatatableModel(QAbstractTableModel):
         Raises:
             TypeError
         """
-        self._parent_table = datatable
+        self._parentTable = datatable
         self.resizeColumns()
         self.decorateCells()
 
@@ -108,6 +103,7 @@ class DatatableModel(QAbstractTableModel):
             for c in range(self.columnCount()):
                 column = self._columns[c]
                 value = getattr(row, column)
+                index = self.index(r, c)
                 if column in ["requires_followup"]:
                     if value:
                         self.addIconAtIndex(
@@ -124,7 +120,7 @@ class DatatableModel(QAbstractTableModel):
         la.setPixmap(icon)
         w.setLayout(l)
         l.addWidget(la)
-        self._parent_table.setIndexWidget(index, w)
+        self._parentTable.setIndexWidget(index, w)
 
     # Width int | "fill" (fill the remaining space) | "stretch"
 
@@ -134,27 +130,30 @@ class DatatableModel(QAbstractTableModel):
         2. Column to contents - the width will be that of the column with the largest content
         3. Fill remaining - sets the width to fill the remaining space available (after the first two options are set)
         """
-        if self._parent_table is None:
+        if self._parentTable is None:
             return
 
-        tableWidth = Storage.WINDOW_WIDTH
+        tableWidth = self._parentTable.width()
         colWidths = 0
 
         for colIdx in range(self.columnCount()):
             if self._columns[colIdx] in ["id", "requires_followup", "pinned", "created_at", "updated_at", "deleted_at"]:
-                self._parent_table.resizeColumnToContents(colIdx)
-                colWidth = self._parent_table.columnWidth(colIdx)
-                
-                # 4 pixels for padding
-                colWidths += self._parent_table.columnWidth(
-                    colIdx)
+                self._parentTable.resizeColumnToContents(colIdx)
+                colWidth = self._parentTable.columnWidth(colIdx)
+                self._parentTable.setColumnWidth(
+                    colIdx, colWidth + Sizing.TABLE_X_PADDING)
+
+                colWidths += colWidth + Sizing.TABLE_X_PADDING
 
         for colIdx in range(self.columnCount()):
             if self._columns[colIdx] in ["title", "job_id", "company_id"]:
 
-                colWidth = int((tableWidth - colWidths) / 3)
+                # colWidth = int((tableWidth - colWidths) / 3)
+                colWidth = int((tableWidth - colWidths -
+                               (6 * Sizing.TABLE_X_PADDING)) / 3)
 
-                self._parent_table.setColumnWidth(colIdx, colWidth)
+                self._parentTable.setColumnWidth(
+                    colIdx, colWidth + Sizing.TABLE_X_PADDING)
 
     # def setHeaders(self, items):
     #     """

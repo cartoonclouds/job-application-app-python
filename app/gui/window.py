@@ -33,18 +33,6 @@ class MainWindow(QMainWindow):
 
         # https://www.pythonguis.com/tutorials/pyside6-widgets/
 
-        # Instance variables
-        # self.hello = ["Hallo Welt", "Hei maailma", "Hola Mundo", "Привет мир"]
-
-        # self.button = QPushButton("Click me!")
-        # self.text = QLabel(
-        #     "Hello World", alignment=Qt.AlignCenter)
-
-        # # self.layout = QVBoxLayout(self)
-        # self.addWidget(self.text)
-        # self.addWidget(self.button)
-
-        # self.button.clicked.connect(self.magic)
         self.show()
 
     def resizeEvent(self, event: QResizeEvent) -> None:

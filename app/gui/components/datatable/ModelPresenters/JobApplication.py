@@ -1,28 +1,39 @@
 
+from dataclasses import dataclass
 import datetime
-from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QTableWidgetItem, QWidget, QHBoxLayout, QLabel
+import typing
+from PySide6.QtCore import *
+from PySide6.QtWidgets import *
+from PySide6.QtGui import *
+from app.gui.components.datatable.DatatableModel import DatatableModel
 # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QTableWidgetItem.html
 
-from app.gui.components.datatable.ModelPresenter import ModelData, ModelPresenter
 from app.models.JobApplication import JobApplication
-from app.models.Model import Model
-from app.utilities.IconUtility import IconUtility
+from app.types import ColumnHeaders
 
 
-class JobApplicationModelPresenter(ModelPresenter):
+@dataclass
+class ModelData:
+    column: str
+    model: JobApplication
+    value: typing.Any
+
+
+class JobApplicationDatatableModel(DatatableModel):
     """
-    A datatable model presenter for Job Applications.
+    A datatable model for Job Applications.
     """
 
-    def __init__(self, model: JobApplication) -> None:
-        super().__init__(model)
+    def __init__(self, data: typing.Sequence[JobApplication], columnHeaders: ColumnHeaders) -> None:
+        super().__init__(data, columnHeaders)
 
-    def getFormattedAt(self, column: str, role: Qt.ItemDataRole):
-        details = ModelData(
-            column,
-            getattr(self._model, column)
-        )
+    def data(self, index: QModelIndex | QPersistentModelIndex, role: int) -> typing.Any:
+        colIdx = index.column()
+        rowIdx = index.row()
+        jobApp: JobApplication = self._data[rowIdx]
+        colName = self._columns[colIdx]
+
+        details = ModelData(colName, jobApp, getattr(jobApp, colName))
 
         match role:
             case Qt.DisplayRole:
@@ -57,10 +68,10 @@ class JobApplicationModelPresenter(ModelPresenter):
             return
 
         if details.column == "job_id":
-            return self._model.job.displayLabel()
+            return details.model.job.displayLabel()
 
         if details.column == "company_id":
-            return self._model.company.displayLabel()
+            return details.model.company.displayLabel()
 
         return details.value
 

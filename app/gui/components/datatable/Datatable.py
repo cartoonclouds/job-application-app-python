@@ -1,8 +1,7 @@
 
 from PySide6.QtWidgets import QTableView, QAbstractItemView, QPushButton
 from PySide6.QtCore import QAbstractTableModel, Slot, QSortFilterProxyModel
-
-
+from PySide6.QtGui import QResizeEvent
 # from app.gui.components.datatable.DatatableModel import DatatableModel
 
 
@@ -39,6 +38,10 @@ class Datatable(QTableView):
 
     # https://wiki.qt.io/Qt_for_Python_Signals_and_Slots
     # @Slot()
+
+    def resizeEvent(self, event: QResizeEvent) -> None:
+        self.model().resizeColumns()
+        return super().resizeEvent(event)
 
     def headerPressed(self, logicalIndex: int):
         print('presseed')
