@@ -25,15 +25,10 @@ class SummaryTab(Tab):
             for jobApp in Storage.jobApplications.values()
         ]
 
-        columHeaders = {
-            c: inflection.titleize(c)
-            for c in dataModels[0].columns
-        }
-
-        # columHeaders = dict(zip(
-        #     ["id", "title", "pinned", "job_id", "updated_at"],
-        #     ["ID", "Title", "Pinned", "Job", "Updated At"]
-        # ))
+        columHeaders = dict(zip(
+            ["id", "title", "requires_followup", "company_id", "job_id", "created_at", "updated_at"],
+            ["ID", "Title", "Requires Followup", "Company", "Job", "Created At", "Updated At"]
+        ))
 
         dataTableModel = DatatableModel(dataModels, columHeaders)
         self.table = Datatable(dataTableModel)
@@ -42,17 +37,4 @@ class SummaryTab(Tab):
         # proxyModel.setSourceModel(dataTableModel)
         # self.table = DataTable(dataTableModel)
 
-        # dataTableModel.updateSizeAt(0)
-        # dataTableModel.updateSizeAt(1)
-        # dataTableModel.updateSizeAt(2)
-        # dataTableModel.updateSizeAt(3)
-
-        # dataTableModel.autoResizeAt([4, 5])
-
         self.mainLayout.addWidget(self.table)
-
-        # qlabel = QLabel()
-        # qlabel.setMaximumSize(32, 32)
-        # qlabel.setScaledContents(True)
-        # qlabel.setPixmap(IconUtility.getIcon("tick-32"))
-        # self.table.setCornerWidget(qlabel)

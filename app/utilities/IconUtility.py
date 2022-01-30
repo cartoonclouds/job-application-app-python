@@ -15,36 +15,23 @@ from PySide6.QtWidgets import QApplication, QStyle
 class IconType(Enum):
     FILE = auto()
     DESKTOP = auto()
-    PIXMAP = auto()
+    STANDARD = auto()
+
+
+@unique
+class IconFormat(Enum):
+    QIcon = auto()
+    QPixmap = auto()
 
 
 class IconUtility:
-    _icon_type = IconType.FILE
     _FILE_ICON_PATH = "app/assets/icons/"
 
     @staticmethod
-    def setIconType(type: IconType):
-        IconUtility._icon_type = type
-
-    @staticmethod
-    def getIcon(name: str) -> QIcon:
-        match IconUtility._icon_type:
-            case IconType.PIXMAP:
-                return IconUtility.getSPIcon(name)
-
-            case IconType.FILE:
-                return IconUtility.getFileIcon(name)
-
-            case IconType.DESKTOP:
-                return IconUtility.getDesktopIcon(name)
-
-            case _:
-                raise Exception(f'Unknown icon type {IconUtility._icon_type}')
-
-    @staticmethod
-    def getFileIcon(name: str, filetype: str = 'png') -> QIcon:
+    def getFileIcon(name: str, format: IconFormat = IconFormat.QPixmap) -> QIcon | QPixmap:
         # Check if file exists -> exception
-        iconPath = f'{IconUtility._FILE_ICON_PATH}{name}.{filetype}'
+        filetype = 'png'
+        iconPath = f'{IconUtility._FILE_ICON_PATH}{name.strip()}.{filetype}'
 
         # os.path.exists
         if not os.path.exists(iconPath):
@@ -55,15 +42,28 @@ class IconUtility:
         if not icon.load(iconPath) or icon.isNull():
             raise Exception(f'Icon cannot be loaded from path {iconPath}')
 
-        return icon
-        return QIcon(icon)
+        qicon = QIcon(icon)
+
+        if format is IconFormat.QIcon:
+            return qicon
+        elif format is IconFormat.QPixmap:
+            return icon
 
     @staticmethod
-    def getDesktopIcon(name: str) -> QIcon:
-        return QIcon.fromTheme(name)
+    # | QPixmap:
+    def getDesktopIcon(name: str, format: IconFormat = IconFormat.QIcon) -> QIcon:
+        qicon = QIcon.fromTheme(name.strip())
 
-    @staticmethod
-    def getSPIcon(name: str) -> QIcon:
-        pixmap = getattr(QStyle.StandardPixmap, "SP_" + name)
+        # if format is IconFormat.QIcon:
+        return qicon
+        # elif format is IconFormat.QPixmap:
+        #     return qicon.pixmap(qicon.width(), qicon.height())
 
-        return QApplication.style().standardIcon(pixmap)
+    @ staticmethod
+    def getStandardIcon(name: str, format: IconFormat = IconFormat.QPixmap) -> QIcon | QPixmap:
+        iconName = getattr(QStyle.StandardPixmap, "SP_" + name.strip())
+
+        if format is IconFormat.QIcon:
+            return QApplication.style().standardIcon(iconName)
+        elif format is IconFormat.QPixmap:
+            return QApplication.style().standardPixmap(iconName)

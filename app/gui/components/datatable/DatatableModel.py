@@ -4,6 +4,7 @@ from PySide6.QtCore import *
 from PySide6.QtWidgets import *
 from PySide6.QtGui import *
 from app import types
+from app.config.App import Sizing
 
 from app.gui.components.datatable.Datatable import Datatable
 from app.gui.components.datatable.ModelPresenter import ModelPresenter
@@ -23,11 +24,6 @@ class DatatableModel(QAbstractTableModel):
         AttributeError: [description]
     """
 
-    # _avg_font_w: int = 5
-    # _resize_data = dict(int)
-
-    # auto_resize: bool = False
-
     def __init__(self, data: typing.Sequence[ModelPresenter], columnHeaders: ColumnHeaders | None = None) -> None:
         super().__init__()
 
@@ -38,9 +34,6 @@ class DatatableModel(QAbstractTableModel):
         self._parent_table: QTableView | None = None
 
         self.resizeColumns()
-
-        self.btn_sell = QPushButton('Edit')
-        # self.btn_sell.clicked.connect(self.headerPressed)
 
         if columnHeaders:
             self.setHeaders(list(columnHeaders.values()))
@@ -54,7 +47,7 @@ class DatatableModel(QAbstractTableModel):
         self._columns = columns
         self.resizeColumns()
 
-    def headerData(self, section: int, orientation: Qt.Orientation, role: int = ...) -> typing.Any:
+    def headerData(self, section: int, orientation: Qt.Orientation, role: int) -> typing.Any:
         """
         Sets the header data based on our header key list.
         """
@@ -93,17 +86,6 @@ class DatatableModel(QAbstractTableModel):
         rowModel: ModelPresenter = self._data[rowIdx]
         colName = self._columns[colIdx]
 
-        # Adds widget to cell
-        if colIdx == 0 and rowIdx == 0:
-            w = QWidget()
-            l = QHBoxLayout()
-            la = QLabel()
-            la.setPixmap(IconUtility.getIcon("tick-32"))
-            w.setLayout(l)
-            l.addWidget(la)
-            self._parent_table.setIndexWidget(index, w)
-            
-            
         return rowModel.getFormattedAt(colName, role)
 
     def setParentTable(self, datatable: Datatable):
@@ -118,8 +100,34 @@ class DatatableModel(QAbstractTableModel):
         """
         self._parent_table = datatable
         self.resizeColumns()
+        self.decorateCells()
 
-    # Width int | "fill" (fill the remaining space) | ""
+    def decorateCells(self):
+        for r in range(self.rowCount()):
+            row = self._data[r]
+            for c in range(self.columnCount()):
+                column = self._columns[c]
+                value = getattr(row, column)
+                if column in ["requires_followup"]:
+                    if value:
+                        self.addIconAtIndex(
+                            index, IconUtility.getFileIcon("light-bulb-24"))
+                    else:
+                        self.addIconAtIndex(
+                            index, IconUtility.getFileIcon("light-bulb-off-24"))
+
+    def addIconAtIndex(self, index: QModelIndex | QPersistentModelIndex, icon: QPixmap):
+        w = QWidget()
+        l = QHBoxLayout()
+        la = QLabel()
+        la.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        la.setPixmap(icon)
+        w.setLayout(l)
+        l.addWidget(la)
+        self._parent_table.setIndexWidget(index, w)
+
+    # Width int | "fill" (fill the remaining space) | "stretch"
+
     def resizeColumns(self):
         """Resizes columns one of three ways:
         1. Width - sets the width to be a specific number
@@ -131,16 +139,20 @@ class DatatableModel(QAbstractTableModel):
 
         tableWidth = Storage.WINDOW_WIDTH
         colWidths = 0
+
         for colIdx in range(self.columnCount()):
             if self._columns[colIdx] in ["id", "requires_followup", "pinned", "created_at", "updated_at", "deleted_at"]:
                 self._parent_table.resizeColumnToContents(colIdx)
+                colWidth = self._parent_table.columnWidth(colIdx)
+                
                 # 4 pixels for padding
-                colWidths += self._parent_table.columnWidth(colIdx) + 4
+                colWidths += self._parent_table.columnWidth(
+                    colIdx)
 
         for colIdx in range(self.columnCount()):
             if self._columns[colIdx] in ["title", "job_id", "company_id"]:
 
-                colWidth = int((tableWidth - colWidths) / 3) - 4
+                colWidth = int((tableWidth - colWidths) / 3)
 
                 self._parent_table.setColumnWidth(colIdx, colWidth)
 
@@ -174,24 +186,8 @@ class DatatableModel(QAbstractTableModel):
     #     self._data.update({data.id, data})
     #     self.endInsertRows()
 
-    # def setData(self, index, cell_data, role=QtCore.Qt.EditRole):
-    #     """
-    #     When table cell is edited
-    #     """
-
-    #     row = index.row()
-    #     column = index.column()
-
-    #     if role == QtCore.Qt.EditRole:
-
-    #         if column == 1:
-    #             self._data[row].name = cell_data
-
     # emit(dataChanged(index, index));
-
-    #     if self.auto_resize:
-    #         self._autoSingleResizeData(data)
-    #         self._doColumnResize()
+    # layoutChanged.emit()
 
     # def addRows(self, data: Mapping[str | Model]):
     #     """
@@ -255,93 +251,3 @@ class DatatableModel(QAbstractTableModel):
     #         return None
     #     except:
     #         return None
-
-    # def setAutoResize(self, b):
-    #     """
-    #     Turns on or off auto resize for the table. This gathers the font metrics of the parent table, and then loops
-    #     over any current data, or newly added data (including table headers) to get the widest item, and sets the
-    #     column width to fit this.
-
-    #     Args:
-    #         b (bool)
-
-    #     Raise:
-    #         AttributeError
-    #     """
-    #     if not self._parent_table:
-    #         raise AttributeError(
-    #             'You must call set parent table first to set the parent TableView item')
-
-    #     self.auto_resize = b
-    #     if b:
-    #         self._autoAllResizeData()
-    #         self._doColumnResize()
-    #     else:
-    #         self._resize_data = dict()
-
-    # def autoResizeAt(self, index: int | Sequence[int]):
-    #     """Sets the column to fill the remaining space.
-
-    #     Args:
-    #         index (int): Index of column to resize
-    #     """
-    #     pass
-
-    # def updateSize(self):
-    #     """
-    #     Force the table size to update to the current size data.
-    #     """
-    #     self._doColumnResize()
-
-    # def updateSizeAt(self, index: int):
-    #     """
-    #     Force a column to update to the current size data.
-    #     """
-    #     txt = self._headers[index]
-    #     self._parent_table.setColumnWidth(index, self._resize_data.get(txt))
-
-    # def updateSizeData(self):
-    #     """
-    #     Force an update/regathering of all the size data for each row and column.
-    #     """
-    #     self._autoAllResizeData(True)
-    #     self._doColumnResize()
-
-    # def _doColumnResize(self):
-    #     for i in range(len(self._headers)):
-    #         txt = self._headers[i]
-    #         self._parent_table.setColumnWidth(i, self._resize_data.get(txt))
-
-    # def _getKeyList(self):
-    #     if self._headers:
-    #         return self._headers
-    #     elif self._data:
-    #         return self._data.getColumns()
-
-    # def _getTableFontWidth(self):
-    #     self._avg_font_w = self._parent_table.fontMetrics().averageCharWidth()
-
-    # def _autoAllResizeData(self, reset=False):
-    #     if not self._resize_data or reset is True:
-    #         self._resize_data = dict(int)
-
-    #         key_list = self._getKeyList()
-    #         for header in key_list:
-    #             header_width = len(header) * self._avg_font_w
-    #             if header_width > self._resize_data[header]:
-    #                 self._resize_data[header] = header_width
-
-    #             for item in self._data.values():
-    #                 value = getattr(item, StringUtility.columnerize(header))
-    #                 width = len(str(value)) * self._avg_font_w
-    #                 if width > self._resize_data[header]:
-    #                     self._resize_data[header] = width
-
-    # def _autoSingleResizeData(self, data):
-    #     key_list = self._getKeyList()
-    #     for header in key_list:
-    #         value = getattr(data, StringUtility.columnerize(header))
-    #         if value:
-    #             width = len(str(value)) * self._avg_font_w
-    #             if width > self._resize_data[header]:
-    #                 self._resize_data[header] = width

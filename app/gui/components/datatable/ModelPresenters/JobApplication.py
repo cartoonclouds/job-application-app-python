@@ -5,6 +5,7 @@ from PySide6.QtWidgets import QTableWidgetItem, QWidget, QHBoxLayout, QLabel
 # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QTableWidgetItem.html
 
 from app.gui.components.datatable.ModelPresenter import ModelData, ModelPresenter
+from app.models.JobApplication import JobApplication
 from app.models.Model import Model
 from app.utilities.IconUtility import IconUtility
 
@@ -14,7 +15,7 @@ class JobApplicationModelPresenter(ModelPresenter):
     A datatable model presenter for Job Applications.
     """
 
-    def __init__(self, model: Model) -> None:
+    def __init__(self, model: JobApplication) -> None:
         super().__init__(model)
 
     def getFormattedAt(self, column: str, role: Qt.ItemDataRole):
@@ -27,11 +28,16 @@ class JobApplicationModelPresenter(ModelPresenter):
             case Qt.DisplayRole:
                 return self._handleDisplayRole(details)
 
-            case Qt.TextAlignmentRole:
-                return self._handleTextAlignmentRole(details)
-
             case Qt.DecorationRole:
                 return self._handleDecorationRole(details)
+
+            # case Qt.EditRole:
+            # case Qt.ToolTipRole:
+            # case Qt.StatusTipRole:
+            # case Qt.WhatsThisRole:
+
+            case Qt.TextAlignmentRole:
+                return self._handleTextAlignmentRole(details)
 
             case Qt.SizeHintRole:
                 return self._handleSizeHintRole(details)
@@ -48,10 +54,7 @@ class JobApplicationModelPresenter(ModelPresenter):
             return details.value
 
         if type(details.value) == bool:
-            if details.value:
-                return IconUtility.getIcon("tick-32")
-            else:
-                return IconUtility.getIcon("tick-32")
+            return
 
         if details.column == "job_id":
             return self._model.job.displayLabel()
@@ -76,8 +79,3 @@ class JobApplicationModelPresenter(ModelPresenter):
 
     def _handleDecorationRole(self, details: ModelData):
         pass
-        # if type(details.value) == bool:
-        #     if details.value:
-        #         return IconUtility.getIcon("tick-32")
-        #     else:
-        #         return IconUtility.getIcon("tick-32")

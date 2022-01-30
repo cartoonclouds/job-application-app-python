@@ -32,3 +32,6 @@ class ModelPresenter(ABC):
     @abstractmethod
     def getFormattedAt(self, column: str, role: Qt.ItemDataRole) -> typing.Any:
         pass
+
+    def __getattr__(self, name):
+        return self._model.__getattr__(name)
