@@ -1,5 +1,6 @@
 
 import typing
+from PySide6.QtCore import Qt
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
@@ -24,6 +25,10 @@ class ModelPresenter(ABC):
     def columns(self):
         return self._model.getTableColumns()
 
+    @property
+    def columnCount(self):
+        return self._model.getTableColumnCount()
+
     @abstractmethod
-    def getFormattedAt(self, column: str, role) -> typing.Any:
+    def getFormattedAt(self, column: str, role: Qt.ItemDataRole) -> typing.Any:
         pass

@@ -1,6 +1,9 @@
+
+import typing
 from orator.orm.model import Model as oratorModel
 from orator.query.builder import QueryBuilder  # or maybe QueryBuilder
 from orator.orm.utils import scope
+from PySide6.QtCore import Signal
 
 import inflection
 
@@ -65,3 +68,17 @@ class Model(oratorModel):
     # @scope
     # def displayLabel(self):
     #     return f"{__name__}#{self.id}"
+
+    # https://wiki.qt.io/Qt_for_Python_Signals_and_Slots#New_syntax:_Signal.28.29_and_Slot.28.29
+    # https://www.pythonguis.com/tutorials/pyside6-signals-slots-events/
+    created = Signal(str)
+
+    def __call__(self, *args: typing.Any, **kwds: typing.Any) -> typing.Any:
+        # User.creating(lambda user: user.is_valid())
+        # creating, created, updating, updated, saving, saved, deleting, deleted, restoring, restored.
+        Model.created(lambda m: m.created.emit('hello'))
+
+        return super().__call__(*args, **kwds)
+    # void itemsRemoved(int start, int count);
+    # void itemsAdded(int count);
+    # void itemChanged(int index);

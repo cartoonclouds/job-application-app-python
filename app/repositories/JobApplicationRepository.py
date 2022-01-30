@@ -1,6 +1,5 @@
 
 import collections
-from typing import Iterable, MutableMapping
 import typing
 from app.models.JobApplication import JobApplication
 from app.repositories.Repository import Repository
@@ -23,11 +22,11 @@ class JobApplicationRepository(collections.UserDict, Repository):
             loadAll(): Loads all Job Applications from the database.
     """
 
-    def __init__(self, d: MutableMapping[str | int, JobApplication] | Iterable[JobApplication] | None = None) -> None:
+    def __init__(self, d: typing.MutableMapping[str | int, JobApplication] | typing.Iterable[JobApplication] | None = None) -> None:
         """Constructs the job application repository.
 
         Args:
-            d (MutableMapping[str | int, JobApplication] | Iterable[JobApplication], optional): [description]. Defaults to None.
+            d (typing.MutableMapping[str | int, JobApplication] | typing.Iterable[JobApplication], optional): [description]. Defaults to None.
         """
         if not isinstance(d, dict) and d is not None:
             d = CollectionUtility.keyBy('id', d)

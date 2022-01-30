@@ -1,6 +1,7 @@
 
 import inflection
 from PySide6.QtWidgets import QHBoxLayout
+from PySide6.QtCore import QSortFilterProxyModel
 
 from app.storage import Storage
 from app.types import TabDetails

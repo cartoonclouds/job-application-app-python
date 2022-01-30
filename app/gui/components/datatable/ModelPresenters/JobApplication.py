@@ -1,6 +1,8 @@
 
 import datetime
 from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QTableWidgetItem, QWidget, QHBoxLayout, QLabel
+# https://doc.qt.io/qtforpython/PySide6/QtWidgets/QTableWidgetItem.html
 
 from app.gui.components.datatable.ModelPresenter import ModelData, ModelPresenter
 from app.models.Model import Model
@@ -15,20 +17,24 @@ class JobApplicationModelPresenter(ModelPresenter):
     def __init__(self, model: Model) -> None:
         super().__init__(model)
 
-    def getFormattedAt(self, column: str, role):
+    def getFormattedAt(self, column: str, role: Qt.ItemDataRole):
         details = ModelData(
             column,
             getattr(self._model, column)
         )
 
-        if role == Qt.DisplayRole:
-            return self._handleDisplayRole(details)
-        elif role == Qt.TextAlignmentRole:
-            return self._handleTextAlignmentRole(details)
-        elif role == Qt.DecorationRole:
-            return self._handleDecorationRole(details)
-        elif role == Qt.SizeHintRole:
-            return self._handleSizeHintRole(details)
+        match role:
+            case Qt.DisplayRole:
+                return self._handleDisplayRole(details)
+
+            case Qt.TextAlignmentRole:
+                return self._handleTextAlignmentRole(details)
+
+            case Qt.DecorationRole:
+                return self._handleDecorationRole(details)
+
+            case Qt.SizeHintRole:
+                return self._handleSizeHintRole(details)
 
     def _handleDisplayRole(self, details: ModelData):
         # Perform per-type checks and render accordingly.
@@ -42,7 +48,10 @@ class JobApplicationModelPresenter(ModelPresenter):
             return details.value
 
         if type(details.value) == bool:
-            return
+            if details.value:
+                return IconUtility.getIcon("tick-32")
+            else:
+                return IconUtility.getIcon("tick-32")
 
         if details.column == "job_id":
             return self._model.job.displayLabel()
@@ -66,8 +75,9 @@ class JobApplicationModelPresenter(ModelPresenter):
         pass
 
     def _handleDecorationRole(self, details: ModelData):
-        if type(details.value) == bool:
-            if details.value:
-                return IconUtility.getIcon("tick-32")
-            else:
-                return IconUtility.getIcon("tick-32")
+        pass
+        # if type(details.value) == bool:
+        #     if details.value:
+        #         return IconUtility.getIcon("tick-32")
+        #     else:
+        #         return IconUtility.getIcon("tick-32")

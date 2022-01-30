@@ -31,6 +31,8 @@ class MainWindow(QMainWindow):
         self.tabs = self.setupTabs()
         self.setCentralWidget(self.tabs)
 
+        # https://www.pythonguis.com/tutorials/pyside6-widgets/
+
         # Instance variables
         # self.hello = ["Hallo Welt", "Hei maailma", "Hola Mundo", "Привет мир"]
 

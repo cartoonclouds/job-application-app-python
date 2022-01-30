@@ -1,5 +1,7 @@
 
-from PySide6.QtWidgets import QTableView, QAbstractItemView
+from PySide6.QtWidgets import QTableView, QAbstractItemView, QPushButton
+from PySide6.QtCore import QAbstractTableModel, Slot, QSortFilterProxyModel
+
 
 # from app.gui.components.datatable.DatatableModel import DatatableModel
 
@@ -13,7 +15,7 @@ class Datatable(QTableView):
         https://www.pythonguis.com/tutorials/qtableview-modelviews-numpy-pandas/
     """
 
-    def __init__(self, dataTableModel: None = None) -> None:
+    def __init__(self, dataTableModel: QAbstractTableModel | QSortFilterProxyModel | None = None) -> None:
         super().__init__()
 
         if dataTableModel:
@@ -29,9 +31,18 @@ class Datatable(QTableView):
         self.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.verticalHeader().setMinimumSectionSize(50)
         self.setAlternatingRowColors(True)
+        self.setWordWrap(False)
 
         # Use to customise setItemDelegate cell display
         #
+
+        # w = QWidget()
+        # l = QHBoxLayout()
+        # la = QLabel()
+        # la.setPixmap(IconUtility.getIcon("tick-32"))
+        # w.setLayout(l)
+        # l.addWidget(la)
+        # self.setIndexWidget(index, display)
 
         # Remove vertical gridlines
         self.setShowGrid(False)
@@ -41,5 +52,7 @@ class Datatable(QTableView):
         # for loop over columnCount
         # dataTableModel.set_column_widths(self)
 
+    # https://wiki.qt.io/Qt_for_Python_Signals_and_Slots
+    # @Slot()
     def headerPressed(self, logicalIndex: int):
         print('presseed')

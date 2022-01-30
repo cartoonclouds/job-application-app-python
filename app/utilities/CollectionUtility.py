@@ -14,7 +14,7 @@ class CollectionUtility:
 
     @staticmethod
     # -> typing.Mapping[str, Collection[T]]:
-    def keyBy(key: str, collection: Collection[T]):
+    def keyBy(key: str, collection: Collection[T]): # -> typing.Mapping[str, Collection[T]]:
         """Keys a collection by a string value.
 
             Args:
@@ -24,7 +24,7 @@ class CollectionUtility:
             Returns:
                 (list[tuple[str, T]]): A list of tuples with entries key, elemment
         """
-        keys = collection.pluck(key)
+        keys: typing.Sequence[str] = collection.pluck(key)
         # keys = CollectionUtility.pluck(key, collection)
 
         return zip(keys, collection)

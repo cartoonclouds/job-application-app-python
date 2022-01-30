@@ -1,12 +1,15 @@
 import typing
 
-from PySide6.QtCore import QAbstractTableModel, Qt, QModelIndex, QPersistentModelIndex
-from PySide6.QtWidgets import QTableView
+from PySide6.QtCore import *
+from PySide6.QtWidgets import *
+from PySide6.QtGui import *
 from app import types
 
 from app.gui.components.datatable.Datatable import Datatable
 from app.gui.components.datatable.ModelPresenter import ModelPresenter
+from app.storage import Storage
 from app.types import ColumnHeaders
+from app.utilities.IconUtility import IconUtility
 
 
 class DatatableModel(QAbstractTableModel):
@@ -34,15 +37,22 @@ class DatatableModel(QAbstractTableModel):
         self._columns: types.ColumnNames = []
         self._parent_table: QTableView | None = None
 
+        self.resizeColumns()
+
+        self.btn_sell = QPushButton('Edit')
+        # self.btn_sell.clicked.connect(self.headerPressed)
+
         if columnHeaders:
             self.setHeaders(list(columnHeaders.values()))
             self.setColumns(list(columnHeaders.keys()))
 
     def setHeaders(self, headers: types.TableHeaders):
         self._headers = headers
+        self.resizeColumns()
 
     def setColumns(self, columns: types.ColumnNames):
         self._columns = columns
+        self.resizeColumns()
 
     def headerData(self, section: int, orientation: Qt.Orientation, role: int = ...) -> typing.Any:
         """
@@ -72,7 +82,10 @@ class DatatableModel(QAbstractTableModel):
         Returns:
             int: [description]
         """
-        return len(self._columns)
+        if self._columns:
+            return len(self._columns)
+        else:
+            return self._data[0].columnCount
 
     def data(self, index: QModelIndex | QPersistentModelIndex, role: int) -> typing.Any:
         colIdx = index.column()
@@ -80,7 +93,56 @@ class DatatableModel(QAbstractTableModel):
         rowModel: ModelPresenter = self._data[rowIdx]
         colName = self._columns[colIdx]
 
+        # Adds widget to cell
+        if colIdx == 0 and rowIdx == 0:
+            w = QWidget()
+            l = QHBoxLayout()
+            la = QLabel()
+            la.setPixmap(IconUtility.getIcon("tick-32"))
+            w.setLayout(l)
+            l.addWidget(la)
+            self._parent_table.setIndexWidget(index, w)
+            
+            
         return rowModel.getFormattedAt(colName, role)
+
+    def setParentTable(self, datatable: Datatable):
+        """
+        Sets the parent table widget so that we can get its font metrics for setting our column width with autoResize.
+
+        Args:
+            datatable (Datatable)
+
+        Raises:
+            TypeError
+        """
+        self._parent_table = datatable
+        self.resizeColumns()
+
+    # Width int | "fill" (fill the remaining space) | ""
+    def resizeColumns(self):
+        """Resizes columns one of three ways:
+        1. Width - sets the width to be a specific number
+        2. Column to contents - the width will be that of the column with the largest content
+        3. Fill remaining - sets the width to fill the remaining space available (after the first two options are set)
+        """
+        if self._parent_table is None:
+            return
+
+        tableWidth = Storage.WINDOW_WIDTH
+        colWidths = 0
+        for colIdx in range(self.columnCount()):
+            if self._columns[colIdx] in ["id", "requires_followup", "pinned", "created_at", "updated_at", "deleted_at"]:
+                self._parent_table.resizeColumnToContents(colIdx)
+                # 4 pixels for padding
+                colWidths += self._parent_table.columnWidth(colIdx) + 4
+
+        for colIdx in range(self.columnCount()):
+            if self._columns[colIdx] in ["title", "job_id", "company_id"]:
+
+                colWidth = int((tableWidth - colWidths) / 3) - 4
+
+                self._parent_table.setColumnWidth(colIdx, colWidth)
 
     # def setHeaders(self, items):
     #     """
@@ -111,6 +173,21 @@ class DatatableModel(QAbstractTableModel):
     #     self.beginInsertRows(QModelIndex(), row, row)
     #     self._data.update({data.id, data})
     #     self.endInsertRows()
+
+    # def setData(self, index, cell_data, role=QtCore.Qt.EditRole):
+    #     """
+    #     When table cell is edited
+    #     """
+
+    #     row = index.row()
+    #     column = index.column()
+
+    #     if role == QtCore.Qt.EditRole:
+
+    #         if column == 1:
+    #             self._data[row].name = cell_data
+
+    # emit(dataChanged(index, index));
 
     #     if self.auto_resize:
     #         self._autoSingleResizeData(data)
@@ -178,20 +255,6 @@ class DatatableModel(QAbstractTableModel):
     #         return None
     #     except:
     #         return None
-
-    def setParentTable(self, datatable: Datatable):
-        """
-        Sets the parent table widget so that we can get its font metrics for setting our column width with autoResize.
-
-        Args:
-            datatable (Datatable)
-
-        Raises:
-            TypeError
-        """
-        self._parent_table = datatable
-        # self._getTableFontWidth()
-        # self._autoAllResizeData()
 
     # def setAutoResize(self, b):
     #     """

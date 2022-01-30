@@ -16,7 +16,7 @@ if __name__ == "__main__":
     #         self
     #     """
     #     pass
-
+    
     # Initalize db + migrations
     # https://github.com/sdispater/orator/pull/200
 
