@@ -14,16 +14,26 @@ class Tab(QWidget):
                  ) -> None:
         super().__init__()
 
+        self._tooltip = tooltip
+        self._whatsThis = whatsThis
+
         self.label = label
-        self.tooltip = tooltip
-        self.tab_whatsThis = whatsThis
+        self.index = 0
         self.icon = icon
         self.closable = closable
 
     def setParent(self, parent: QTabWidget):
         self.parent = parent
 
+        self.setTooltip(self._tooltip)
+        self.setWhatsThis(self._whatsThis)
+        self.setText(self.label)
+
+        self.setTabIcon(self.icon)
+
     def setTabIcon(self, icon: QIcon):
+        if not icon:
+            return
         self.parent.setTabIcon(self.index, icon)
 
     def setText(self, label: str):

@@ -8,6 +8,12 @@
 - coverage https://coverage.readthedocs.io/en/6.2/
 - pytest-xdist https://github.com/pytest-dev/pytest-xdist
 - mypy http://mypy-lang.org/
+- QtAwesome https://github.com/spyder-ide/qtawesome
+  https://fontawesome.com/v5.15/icons?d=gallery&m=free
+  https://phosphoricons.com/
+  https://remixicon.com/
+  https://microsoft.github.io/vscode-codicons/dist/codicon.html
+  https://pictogrammers.github.io/@mdi/font/6.5.95/
 
 Fore: BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, RESET.
 Back: BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, RESET.

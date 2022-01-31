@@ -2,11 +2,13 @@
 # from PySide6.QtCore import *
 from PySide6.QtGui import QResizeEvent, QAction, QKeySequence
 from PySide6.QtWidgets import QMainWindow, QLabel
+import qtawesome as qta
 
 from app.gui.components.tabs.JobApplicationTab import JobApplicationTab
 from app.gui.components.tabs.SummaryTab import SummaryTab
 from app.gui.components.tabs.Tabs import Tabs
 from app.storage import Storage
+from app.utilities.IconUtility import IconUtility
 
 # https://realpython.com/python-menus-toolbars/
 # https://github.com/pythonguis/15-minute-apps/blob/aaf6038ab4b687cf1370ae3c7ca71f46140c5cdb/browser_tabbed/browser_tabbed.py
@@ -19,6 +21,9 @@ class MainWindow(QMainWindow):
         # Setup window
         self.setWindowTitle('Main Window App GUI')
         self.resize(Storage.WINDOW_WIDTH, Storage.WINDOW_HEIGHT)
+
+        fa5_icon = qta.icon('fa5.flag')
+        self.setWindowIcon(fa5_icon)
         # self.setWindowIcon(QIcon(os.path.join('images', 'ma-icon-64.png')))
 
         # Setup menubar
@@ -46,10 +51,13 @@ class MainWindow(QMainWindow):
         tabs = Tabs()
 
         tabs.addNewTab(
-            SummaryTab("&Summary", tooltip="Summary tab with stats")
+            SummaryTab(
+                "&Summary", tooltip="Summary tab with stats", closable=False, icon=IconUtility.getFileIcon("gear"))
         )
-        tabs.addNewTab(JobApplicationTab("Tab 2"))
-        tabs.addNewTab(JobApplicationTab("Tab 3"))
+        tabs.addNewTab(JobApplicationTab(
+            "Tab 2", icon=IconUtility.getFileIcon("blue-folder-32")))
+        tabs.addNewTab(JobApplicationTab(
+            "Tab 3", icon=IconUtility.getFileIcon("blue-folder-32")))
 
         # self.tab1.setTabText("123456")
         # self.tabs.setTabText(0, "Contact Details")

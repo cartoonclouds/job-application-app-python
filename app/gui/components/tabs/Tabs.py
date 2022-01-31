@@ -25,21 +25,17 @@ class Tabs(QTabWidget):
         self.tabBarDoubleClicked.connect(self.tabOpenDoubleClick)
 
     def addNewTab(self, tab: Tab) -> Tab:
-        tab.setParent(self)
-
         # Add tab
         if isinstance(tab.icon, QIcon):
             tab.index = self.addTab(tab, tab.icon, tab.label)
         else:
             tab.index = self.addTab(tab, tab.label)
 
-        tab.setText(tab.label)
-        tab.setTooltip(tab.tooltip)
-        tab.setWhatsThis(tab.tab_whatsThis)
-
         # Remove the close button
         if not tab.closable:
             self.tabBar().setTabButton(tab.index, QTabBar.RightSide, None)
+
+        tab.setParent(self)
 
         return tab
 

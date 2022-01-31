@@ -5,6 +5,7 @@ from PySide6.QtWidgets import *
 from PySide6.QtGui import *
 from app import types
 from app.config.App import Sizing
+import qtawesome as qta
 
 from app.gui.components.datatable.Datatable import Datatable
 from app.models.Model import Model
@@ -71,7 +72,7 @@ class DatatableModel(QAbstractTableModel):
             int: [description]
         """
         return len(self._columns)
-    
+
     # def data(self, index: QModelIndex | QPersistentModelIndex, role: int) -> typing.Any:
     #     match role:
     #         case Qt.DisplayRole:
@@ -82,7 +83,7 @@ class DatatableModel(QAbstractTableModel):
     #         case Qt.WhatsThisRole:
     #         case Qt.TextAlignmentRole:
     #         case Qt.SizeHintRole:
-                
+
     def setParentTable(self, datatable: Datatable):
         """
         Sets the parent table widget so that we can get its font metrics for setting our column width with autoResize.
@@ -104,6 +105,10 @@ class DatatableModel(QAbstractTableModel):
                 column = self._columns[c]
                 value = getattr(row, column)
                 index = self.index(r, c)
+
+                # w = qta.IconWidget('mdi.web', color='blue')
+                # self._parentTable.setIndexWidget(index, w)
+
                 if column in ["requires_followup"]:
                     if value:
                         self.addIconAtIndex(

@@ -41,6 +41,7 @@ class Datatable(QTableView):
 
     def resizeEvent(self, event: QResizeEvent) -> None:
         self.model().resizeColumns()
+
         return super().resizeEvent(event)
 
     def headerPressed(self, logicalIndex: int):
