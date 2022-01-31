@@ -22,8 +22,8 @@ class _ModelCommunicator(QObject):
     saved = Signal(oratorModel)
     deleting = Signal(oratorModel)
     deleted = Signal(oratorModel)
-    restoring = Signal(oratorModel)
-    restored = Signal(oratorModel)
+    # restoring = Signal(oratorModel)
+    # restored = Signal(oratorModel)
 
 
 _modelCommunicator = _ModelCommunicator()
@@ -39,8 +39,8 @@ class Model(oratorModel):
     savedEvent = _modelCommunicator.saved
     deletingEvent = _modelCommunicator.deleting
     deletedEvent = _modelCommunicator.deleted
-    restoringEvent = _modelCommunicator.restoring
-    restoredEvent = _modelCommunicator.restored
+    # restoringEvent = _modelCommunicator.restoring
+    # restoredEvent = _modelCommunicator.restored
 
     @classmethod
     def _boot(cls):
@@ -52,8 +52,8 @@ class Model(oratorModel):
         cls.saved(lambda m: cls.savedEvent.emit(m))         # type: ignore
         cls.deleting(lambda m: cls.deletingEvent.emit(m))   # type: ignore
         cls.deleted(lambda m: cls.deletedEvent.emit(m))     # type: ignore
-        cls.restoring(lambda m: cls.restoringEvent.emit(m))  # type: ignore
-        cls.restored(lambda m: cls.restoredEvent.emit(m))   # type: ignore
+        # cls.restoring(lambda m: cls.restoringEvent.emit(m))  # type: ignore
+        # cls.restored(lambda m: cls.restoredEvent.emit(m))   # type: ignore
 
         super()._boot()
 
