@@ -25,6 +25,8 @@ class SummaryTab(Tab):
         self.mainLayout.addWidget(self.table)
 
     def _setupTable(self):
+
+        # QTableWidgetItem
         columHeaders = dict(zip(
             ["id", "title", "requires_followup", "company_id",
                 "job_id", "created_at", "updated_at"],

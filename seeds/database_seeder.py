@@ -45,30 +45,30 @@ class DatabaseSeeder(Seeder):
         # job.job_application().save(
         #     factory(JobApplication).make()
         # )
-        newAttrs = {
-            'title': 'abc123',
-            'requires_followup': False,
-            'pinned': False,
-            'company_id': 0,
-            'job_id': 0,
-        }
-        ja = JobApplication()
-        ja.title = "abc123"
-        ja.company_id = 1
-        ja.job_id = 1
-        # ja = JobApplication.first()
+        # newAttrs = {
+        #     'title': 'abc123',
+        #     'requires_followup': False,
+        #     'pinned': False,
+        #     'company_id': 0,
+        #     'job_id': 0,
+        # }
+        # ja = JobApplication()
+        # ja.title = "abc123"
+        # ja.company_id = 1
+        # ja.job_id = 1
+        # # ja = JobApplication.first()
 
-        ja.createdEvent.connect(self.eventHappened)
+        # ja.createdEvent.connect(self.eventHappened)
 
-        ja.save()
+        # ja.save()
 
         # ja.is_valid()
 
         # print(ja.getTableName())
 
-    @Slot(Model)
-    def eventHappened(self, m: Model):
-        debug(m)
+    # @Slot(Model)
+    # def eventHappened(self, m: Model):
+    #     debug(m)
 
         # print(JobApplication.first().get_table_column_count())
 

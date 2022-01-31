@@ -14,7 +14,16 @@ from config.database import db
 
 
 class _ModelCommunicator(QObject):
+    creating = Signal(oratorModel)
     created = Signal(oratorModel)
+    updating = Signal(oratorModel)
+    updated = Signal(oratorModel)
+    saving = Signal(oratorModel)
+    saved = Signal(oratorModel)
+    deleting = Signal(oratorModel)
+    deleted = Signal(oratorModel)
+    restoring = Signal(oratorModel)
+    restored = Signal(oratorModel)
 
 
 _modelCommunicator = _ModelCommunicator()
@@ -22,11 +31,29 @@ _modelCommunicator = _ModelCommunicator()
 
 class Model(oratorModel):
 
+    creatingEvent = _modelCommunicator.creating
     createdEvent = _modelCommunicator.created
+    updatingEvent = _modelCommunicator.updating
+    updatedEvent = _modelCommunicator.updated
+    savingEvent = _modelCommunicator.saving
+    savedEvent = _modelCommunicator.saved
+    deletingEvent = _modelCommunicator.deleting
+    deletedEvent = _modelCommunicator.deleted
+    restoringEvent = _modelCommunicator.restoring
+    restoredEvent = _modelCommunicator.restored
 
     @classmethod
     def _boot(cls):
-        cls.created(lambda m: cls.createdEvent.emit(m))
+        cls.creating(lambda m: cls.creatingEvent.emit(m))   # type: ignore
+        cls.created(lambda m: cls.createdEvent.emit(m))     # type: ignore
+        cls.updating(lambda m: cls.updatingEvent.emit(m))   # type: ignore
+        cls.updated(lambda m: cls.updatedEvent.emit(m))     # type: ignore
+        cls.saving(lambda m: cls.savingEvent.emit(m))       # type: ignore
+        cls.saved(lambda m: cls.savedEvent.emit(m))         # type: ignore
+        cls.deleting(lambda m: cls.deletingEvent.emit(m))   # type: ignore
+        cls.deleted(lambda m: cls.deletedEvent.emit(m))     # type: ignore
+        cls.restoring(lambda m: cls.restoringEvent.emit(m))  # type: ignore
+        cls.restored(lambda m: cls.restoredEvent.emit(m))   # type: ignore
 
         super()._boot()
 
@@ -89,12 +116,3 @@ class Model(oratorModel):
 
     # https://wiki.qt.io/Qt_for_Python_Signals_and_Slots#New_syntax:_Signal.28.29_and_Slot.28.29
     # https://www.pythonguis.com/tutorials/pyside6-signals-slots-events/
-
-    def __call__(self, *args: typing.Any, **kwds: typing.Any) -> typing.Any:
-        # User.creating(lambda user: user.is_valid())
-        # creating, created, updating, updated, saving, saved, deleting, deleted, restoring, restored.
-
-        return super().__call__(*args, **kwds)
-    # void itemsRemoved(int start, int count);
-    # void itemsAdded(int count);
-    # void itemChanged(int index);
