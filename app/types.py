@@ -1,9 +1,11 @@
 
-from re import S
-from typing import Type, TypeVar
+from typing import Type, TypeAlias, TypeVar
 import typing
 
 from PySide6 import QtGui
+
+from app.gui.components.tabs import Tab as TabComponent
+
 
 # Mypy is a static type checker for Python 3
 # https://mypy.readthedocs.io/en/stable/introduction.html
@@ -15,19 +17,23 @@ from PySide6 import QtGui
 # https://python.github.io/peps/pep-0484/#generics
 # https://mypy.readthedocs.io/en/stable/generics.html
 
+
+# Tabs: TypeAlias = TabsComponent.Tabs
+Tab: TypeAlias = TabComponent.Tab
+
 Id = str
 
 T = TypeVar('T')  # Declare type variable. Use for generics
 
-ColumnName = str
-TableHeader = str
+ColumnName: TypeAlias = str
+TableHeader: TypeAlias = str
 
-TableHeaders = typing.Sequence[TableHeader]
-ColumnNames = typing.Sequence[ColumnName]
+TableHeaders: TypeAlias = typing.Sequence[TableHeader]
+ColumnNames: TypeAlias = typing.Sequence[ColumnName]
 
-ColumnHeaders = typing.Mapping[ColumnName, TableHeader]
+ColumnHeaders: TypeAlias = typing.Mapping[ColumnName, TableHeader]
 
-TabDetails = typing.Dict[str, str | bool | QtGui.QIcon]
+TabDetails: TypeAlias = str | bool | QtGui.QIcon | QtGui.QPixmap | None
 
 
 # You can use a ClassVar[t] annotation to explicitly declare that a particular attribute should not be set on instances:
@@ -35,13 +41,3 @@ TabDetails = typing.Dict[str, str | bool | QtGui.QIcon]
 
 
 # https://mypy.readthedocs.io/en/stable/literal_types.html#parameterizing-literals
-
-#
-
-# Pydantic - validation / Using Types at Runtime
-# https://pypi.org/project/pydantic/
-# https://medium.com/swlh/cool-things-you-can-do-with-pydantic-fc1c948fbde0
-# https://pydantic-docs.helpmanual.io/
-
-
-# https://pypi.org/project/parse/

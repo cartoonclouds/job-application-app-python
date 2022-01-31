@@ -1,4 +1,6 @@
 
+
+# pyright: reportMissingModuleSource=false
 import typing
 from orator.orm.model import Model as oratorModel
 from orator.query.builder import QueryBuilder  # or maybe QueryBuilder

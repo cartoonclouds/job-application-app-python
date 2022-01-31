@@ -15,6 +15,10 @@
   https://microsoft.github.io/vscode-codicons/dist/codicon.html
   https://pictogrammers.github.io/@mdi/font/6.5.95/
 
+# Dev
+
+- python devtools https://github.com/samuelcolvin/python-devtools
+
 Fore: BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, RESET.
 Back: BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, RESET.
 Style: DIM, NORMAL, BRIGHT, RESET_ALL

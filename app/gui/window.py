@@ -1,6 +1,7 @@
 
 # from PySide6.QtCore import *
-from PySide6.QtGui import QResizeEvent, QAction, QKeySequence
+
+from PySide6.QtGui import QResizeEvent, QAction, QKeySequence, QIcon
 from PySide6.QtWidgets import QMainWindow, QLabel
 import qtawesome as qta
 
@@ -22,7 +23,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle('Main Window App GUI')
         self.resize(Storage.WINDOW_WIDTH, Storage.WINDOW_HEIGHT)
 
-        fa5_icon = qta.icon('fa5.flag')
+        fa5_icon: QIcon = qta.icon('fa5.flag')
         self.setWindowIcon(fa5_icon)
         # self.setWindowIcon(QIcon(os.path.join('images', 'ma-icon-64.png')))
 

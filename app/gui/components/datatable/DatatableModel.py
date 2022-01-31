@@ -9,7 +9,6 @@ import qtawesome as qta
 
 from app.gui.components.datatable.Datatable import Datatable
 from app.models.Model import Model
-from app.types import ColumnHeaders
 from app.utilities.IconUtility import IconUtility
 
 
@@ -24,7 +23,7 @@ class DatatableModel(QAbstractTableModel):
         AttributeError: [description]
     """
 
-    def __init__(self, data: typing.Sequence[Model], columnHeaders: ColumnHeaders) -> None:
+    def __init__(self, data: typing.Sequence[Model], columnHeaders: types.ColumnHeaders) -> None:
         super().__init__()
 
         # Set instance variables

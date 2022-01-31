@@ -1,7 +1,8 @@
 
 
-from PySide6.QtWidgets import QWidget, QTabWidget
+from PySide6.QtWidgets import QWidget
 from PySide6.QtGui import QIcon
+# from app import types
 
 
 class Tab(QWidget):
@@ -22,18 +23,22 @@ class Tab(QWidget):
         self.icon = icon
         self.closable = closable
 
-    def setParent(self, parent: QTabWidget):
-        self.parent = parent
+    def setParent(self, parent):  # type: ignore
+        self.parent = parent  # type: ignore
 
-        self.setTooltip(self._tooltip)
-        self.setWhatsThis(self._whatsThis)
-        self.setText(self.label)
+        if isinstance(self._tooltip, str):
+            self.setTooltip(self._tooltip)
 
-        self.setTabIcon(self.icon)
+        if isinstance(self._whatsThis, str):
+            self.setWhatsThis(self._whatsThis)
+
+        if isinstance(self._tooltip, str):
+            self.setText(self._tooltip)
+
+        if isinstance(self.icon, QIcon):
+            self.setTabIcon(self.icon)
 
     def setTabIcon(self, icon: QIcon):
-        if not icon:
-            return
         self.parent.setTabIcon(self.index, icon)
 
     def setText(self, label: str):
@@ -42,7 +47,7 @@ class Tab(QWidget):
     def setTooltip(self, tooltip: str):
         self.parent.setTabToolTip(self.index, tooltip)
 
-    def setWhatsThis(self, tabWhatsThis: str):
+    def setWhatsThis(self, tabWhatsThis: str):  # type: ignore
         self.parent.setTabWhatsThis(self.index, tabWhatsThis)
 
     def setActive(self):

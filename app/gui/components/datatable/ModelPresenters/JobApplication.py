@@ -9,7 +9,7 @@ from app.gui.components.datatable.DatatableModel import DatatableModel
 # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QTableWidgetItem.html
 
 from app.models.JobApplication import JobApplication
-from app.types import ColumnHeaders
+from app import types
 
 
 @dataclass
@@ -24,7 +24,7 @@ class JobApplicationDatatableModel(DatatableModel):
     A datatable model for Job Applications.
     """
 
-    def __init__(self, data: typing.Sequence[JobApplication], columnHeaders: ColumnHeaders) -> None:
+    def __init__(self, data: typing.Sequence[JobApplication], columnHeaders: types.ColumnHeaders) -> None:
         super().__init__(data, columnHeaders)
 
     def data(self, index: QModelIndex | QPersistentModelIndex, role: int) -> typing.Any:

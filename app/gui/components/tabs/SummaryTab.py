@@ -3,7 +3,7 @@ from PySide6.QtWidgets import QHBoxLayout
 from PySide6.QtCore import QSortFilterProxyModel
 
 from app.storage import Storage
-from app.types import TabDetails
+from app import types
 
 from app.gui.components.tabs.Tab import Tab
 from app.gui.components.datatable.ModelPresenters.JobApplication import JobApplicationDatatableModel
@@ -11,7 +11,7 @@ from app.gui.components.datatable.Datatable import Datatable
 
 
 class SummaryTab(Tab):
-    def __init__(self, label: str, **kwargs: TabDetails) -> None:
+    def __init__(self, label: str, **kwargs: types.TabDetails) -> None:
         super().__init__(label=label, **kwargs)
 
         self.mainLayout = QHBoxLayout()
@@ -36,6 +36,8 @@ class SummaryTab(Tab):
             list(Storage.jobApplications.values()),
             columHeaders
         )
+
+        debug(Storage.jobApplications)
 
         # proxyModel = CustomSortModel()
         # proxyModel.setSourceModel(dataTableModel)
