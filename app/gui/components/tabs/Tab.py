@@ -2,7 +2,10 @@
 
 from PySide6.QtWidgets import QWidget
 from PySide6.QtGui import QIcon
-# from app import types
+
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from app.gui.components.tabs.Tabs import Tabs
 
 
 class Tab(QWidget):
@@ -23,8 +26,8 @@ class Tab(QWidget):
         self.icon = icon
         self.closable = closable
 
-    def setParent(self, parent):  # type: ignore
-        self.parent = parent  # type: ignore
+    def setParent(self, parent: 'Tabs'):  # type: ignore
+        self.parent: 'Tabs' = parent
 
         if isinstance(self._tooltip, str):
             self.setTooltip(self._tooltip)

@@ -8,6 +8,7 @@
 - coverage https://coverage.readthedocs.io/en/6.2/
 - pytest-xdist https://github.com/pytest-dev/pytest-xdist
 - mypy http://mypy-lang.org/
+- backpack (Collections) https://github.com/sdispater/backpack
 - QtAwesome https://github.com/spyder-ide/qtawesome
   https://fontawesome.com/v5.15/icons?d=gallery&m=free
   https://phosphoricons.com/

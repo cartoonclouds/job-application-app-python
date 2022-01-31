@@ -3,16 +3,32 @@
 # pyright: reportMissingModuleSource=false
 import typing
 from orator.orm.model import Model as oratorModel
+from orator.orm.scopes.scope import Scope
 from orator.query.builder import QueryBuilder  # or maybe QueryBuilder
 from orator.orm.utils import scope
-from PySide6.QtCore import Signal
-
+from PySide6.QtCore import Signal, QObject
 import inflection
+
 
 from config.database import db
 
 
+class _ModelCommunicator(QObject):
+    created = Signal(oratorModel)
+
+
+_modelCommunicator = _ModelCommunicator()
+
+
 class Model(oratorModel):
+
+    createdEvent = _modelCommunicator.created
+
+    @classmethod
+    def _boot(cls):
+        cls.created(lambda m: cls.createdEvent.emit(m))
+
+        super()._boot()
 
     @classmethod
     def getTableName(cls) -> str:
@@ -73,12 +89,10 @@ class Model(oratorModel):
 
     # https://wiki.qt.io/Qt_for_Python_Signals_and_Slots#New_syntax:_Signal.28.29_and_Slot.28.29
     # https://www.pythonguis.com/tutorials/pyside6-signals-slots-events/
-    created = Signal(str)
 
     def __call__(self, *args: typing.Any, **kwds: typing.Any) -> typing.Any:
         # User.creating(lambda user: user.is_valid())
         # creating, created, updating, updated, saving, saved, deleting, deleted, restoring, restored.
-        Model.created(lambda m: m.created.emit('hello'))
 
         return super().__call__(*args, **kwds)
     # void itemsRemoved(int start, int count);

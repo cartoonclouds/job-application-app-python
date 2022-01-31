@@ -1,10 +1,7 @@
 from orator.seeds import Seeder
-from app.models.Company import Company
-from app.models.Job import Job
-
 from app.models.JobApplication import JobApplication
-from app.models.Action import Action
-from app.repositories.JobApplicationRepository import JobApplicationRepository
+from PySide2.QtCore import QObject, Signal, Slot
+from app.models.Model import Model
 
 # from seeds.job_application_table_seeder import JobApplicationTableSeeder
 from seeds.factories import factory
@@ -48,13 +45,30 @@ class DatabaseSeeder(Seeder):
         # job.job_application().save(
         #     factory(JobApplication).make()
         # )
+        newAttrs = {
+            'title': 'abc123',
+            'requires_followup': False,
+            'pinned': False,
+            'company_id': 0,
+            'job_id': 0,
+        }
+        ja = JobApplication()
+        ja.title = "abc123"
+        ja.company_id = 1
+        ja.job_id = 1
+        # ja = JobApplication.first()
 
-        # ja = factory(JobApplication).create()
-        ja = JobApplication.first()
-        
-        ja.is_valid()
+        ja.createdEvent.connect(self.eventHappened)
 
-        print(ja.getTableName())
+        ja.save()
+
+        # ja.is_valid()
+
+        # print(ja.getTableName())
+
+    @Slot(Model)
+    def eventHappened(self, m: Model):
+        debug(m)
 
         # print(JobApplication.first().get_table_column_count())
 

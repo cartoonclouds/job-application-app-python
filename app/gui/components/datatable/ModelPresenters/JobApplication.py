@@ -12,7 +12,7 @@ from app.models.JobApplication import JobApplication
 from app import types
 
 
-@dataclass
+@dataclass(frozen=True)
 class ModelData:
     column: str
     model: JobApplication
@@ -20,9 +20,7 @@ class ModelData:
 
 
 class JobApplicationDatatableModel(DatatableModel):
-    """
-    A datatable model for Job Applications.
-    """
+    """A datatable model for Job Applications."""
 
     def __init__(self, data: typing.Sequence[JobApplication], columnHeaders: types.ColumnHeaders) -> None:
         super().__init__(data, columnHeaders)

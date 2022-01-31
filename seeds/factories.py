@@ -1,4 +1,5 @@
 
+import typing
 from orator.orm import Factory
 
 from app.models.Job import Job
@@ -11,22 +12,22 @@ from app.models.Action import Action
 
 factory = Factory()
 
-EMPLOYMENT_TYPES = elements = ("Full-time", "Part-time", "Casual", "Fixed Term",
-                               "Shiftworker", "Daily/Weekly Hire", "Probation", "Apprentice/Trainee", "Outworker")
-CONTACT_METHODS = elements = ("Phone call", "Received phone call", "E-mail", "Recruiter",
-                              "In-person", "Company website", "Employment website", "Letter", "Online forum")
-RATE_UNITS = elements = ('minute', 'hour', 'day')
+EMPLOYMENT_TYPES = ("Full-time", "Part-time", "Casual", "Fixed Term",
+                    "Shiftworker", "Daily/Weekly Hire", "Probation", "Apprentice/Trainee", "Outworker")
+CONTACT_METHODS = ("Phone call", "Received phone call", "E-mail", "Recruiter",
+                   "In-person", "Company website", "Employment website", "Letter", "Online forum")
+RATE_UNITS = ('minute', 'hour', 'day')
 
 
 @factory.define(Profession)
-def profession_factory(faker):
+def profession_factory(faker) -> dict[str, typing.Any]:
     return {
         'profession': faker.job()
     }
 
 
 @factory.define(Address)
-def address_factory(faker):
+def address_factory(faker) -> dict[str, typing.Any]:
     return {
         'address_line_1': faker.street_address(),
         #    'address_line_2': faker,
@@ -39,7 +40,7 @@ def address_factory(faker):
 
 
 @factory.define(Person)
-def person_factory(faker):
+def person_factory(faker) -> dict[str, typing.Any]:
     return {
         'name': faker.name(),
         'title': faker.prefix(),
@@ -48,7 +49,7 @@ def person_factory(faker):
 
 
 @factory.define(Company)
-def company_factory(faker):
+def company_factory(faker) -> dict[str, typing.Any]:
     return {
         'name': faker.company(),
         'email': faker.ascii_company_email(),
@@ -61,7 +62,7 @@ def company_factory(faker):
 
 
 @factory.define(JobApplication)
-def job_application_factory(faker):
+def job_application_factory(faker) -> dict[str, typing.Any]:
     return {
         'title': faker.sentence(),
         'requires_followup': faker.boolean(),
@@ -71,7 +72,7 @@ def job_application_factory(faker):
 
 
 @factory.define(Job)
-def job_factory(faker):
+def job_factory(faker) -> dict[str, typing.Any]:
     return {
         'website': faker.url(),
         'comments': faker.paragraph(),
@@ -79,8 +80,8 @@ def job_factory(faker):
         'closing_date': faker.future_datetime().isoformat(),
         'salary': faker.random_int(),
         'rate': faker.random_int(),
-        'rate_unit': faker.random_element(RATE_UNITS),
-        'employment_type': faker.random_element(EMPLOYMENT_TYPES),
+        'rate_unit': faker.random_element(elements=RATE_UNITS),
+        'employment_type': faker.random_element(elements=EMPLOYMENT_TYPES),
         'profession_id': factory(Profession).create().id,
         'address_id': factory(Address).create().id,
         'job_application_id': factory(JobApplication).create().id,
@@ -88,7 +89,7 @@ def job_factory(faker):
 
 
 @factory.define(Action)
-def actions_factory(faker):
+def actions_factory(faker) -> dict[str, typing.Any]:
     # actionableModel = faker.random_element(elements=(Job, Action))
     # actionable = factory(actionableModel).create()
 
@@ -96,7 +97,7 @@ def actions_factory(faker):
         'title': faker.sentence(),
         'requires_followup': faker.boolean(),
         'pinned': faker.boolean(),
-        'contact_method': faker.random_element(CONTACT_METHODS),
+        'contact_method': faker.random_element(elements=CONTACT_METHODS),
         'person_id': factory(Person).create().id,
         # Can be either Action or Job
         # 'actionable_id': actionable.get_key(),

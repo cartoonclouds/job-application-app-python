@@ -49,6 +49,9 @@ if __name__ == "__main__":
     # MyPi - static type checker
     # http://mypy-lang.org/
 
+    # Pydocstyle
+    # http://www.pydocstyle.org/en/
+
     # PyAutoGUI - allows for control of the mouse and keyboar
     # https://pyautogui.readthedocs.io/en/latest/
 
@@ -59,5 +62,14 @@ if __name__ == "__main__":
     # https://pip.pypa.io/en/stable/topics/configuration/
     # https://pip.pypa.io/en/stable/user_guide/#requirements-files
     # https://pip.pypa.io/en/stable/reference/requirements-file-format/#requirements-file-format
+    # https://realpython.com/lessons/using-requirement-files/
 
     # https://pypi.org/project/parse/
+
+
+# INTERFACE
+# import abc
+# class MixinDependencyInterface(abc.ABC):
+#     @abc.abstractmethod
+#     def foo(self):
+#         pass

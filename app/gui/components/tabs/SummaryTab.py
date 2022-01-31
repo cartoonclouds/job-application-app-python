@@ -37,8 +37,6 @@ class SummaryTab(Tab):
             columHeaders
         )
 
-        debug(Storage.jobApplications)
-
         # proxyModel = CustomSortModel()
         # proxyModel.setSourceModel(dataTableModel)
         # self.table = DataTable(dataTableModel)

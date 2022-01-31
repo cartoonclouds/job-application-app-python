@@ -41,12 +41,8 @@ class MainWindow(QMainWindow):
 
         self.show()
 
-    def resizeEvent(self, event: QResizeEvent) -> None:
-
-        # self.tab1.table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        # self.tab1.table.horizontalHeader().setSectionResizeMode(QHeaderView.Interactive)
-
-        return super(MainWindow, self).resizeEvent(event)
+    # def resizeEvent(self, event: QResizeEvent) -> None:
+        # return super(MainWindow, self).resizeEvent(event)
 
     def setupTabs(self):
         tabs = Tabs()
@@ -76,6 +72,7 @@ class MainWindow(QMainWindow):
         exitAction.setToolTip('Exit this program')
         exitAction.setStatusTip('Exit this program')
         exitAction.triggered.connect(self.close)
+        
         fileMenu.addAction(exitAction)
 
         # new_tab_action = QAction(

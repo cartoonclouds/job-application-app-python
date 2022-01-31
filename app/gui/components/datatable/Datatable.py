@@ -2,7 +2,10 @@
 from PySide6.QtWidgets import QTableView, QAbstractItemView, QPushButton
 from PySide6.QtCore import QAbstractTableModel, Slot, QSortFilterProxyModel
 from PySide6.QtGui import QResizeEvent
-# from app.gui.components.datatable.DatatableModel import DatatableModel
+
+from typing import TYPE_CHECKING, Optional
+if TYPE_CHECKING:
+    from app.gui.components.datatable.DatatableModel import DatatableModel
 
 
 class Datatable(QTableView):
@@ -14,7 +17,7 @@ class Datatable(QTableView):
         https://www.pythonguis.com/tutorials/qtableview-modelviews-numpy-pandas/
     """
 
-    def __init__(self, dataTableModel: QAbstractTableModel | QSortFilterProxyModel | None = None) -> None:
+    def __init__(self, dataTableModel: Optional['DatatableModel'] = None) -> None:
         super().__init__()
 
         if dataTableModel:
@@ -40,7 +43,8 @@ class Datatable(QTableView):
     # @Slot()
 
     def resizeEvent(self, event: QResizeEvent) -> None:
-        self.model().resizeColumns()
+        model: 'DatatableModel' = self.model()
+        model.resizeColumns()
 
         return super().resizeEvent(event)
 
