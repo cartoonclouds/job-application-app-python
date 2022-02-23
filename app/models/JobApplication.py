@@ -1,9 +1,8 @@
+from app.models.Model import Model
+from orator.orm.scopes.scope import Scope
 from orator.orm.scopes.soft_deleting import SoftDeletingScope
 from orator.orm.utils import belongs_to, has_one
-from orator.orm.scopes.scope import Scope
-from PySide6.QtCore import Signal, QObject
-
-from app.models.Model import Model
+from PySide6.QtCore import QObject, Signal
 
 
 class JobApplication(SoftDeletingScope, Model):

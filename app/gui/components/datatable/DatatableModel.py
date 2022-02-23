@@ -1,15 +1,21 @@
 import typing
+from dataclasses import dataclass
 
-from PySide6.QtCore import *
-from PySide6.QtWidgets import *
-from PySide6.QtGui import *
 from app import types
 from app.config.App import Sizing
-import qtawesome as qta
-
 from app.gui.components.datatable.Datatable import Datatable
 from app.models.Model import Model
-from app.utilities.IconUtility import IconUtility
+from PySide6.QtCore import (QAbstractTableModel, QModelIndex,
+                            QPersistentModelIndex, Qt)
+from PySide6.QtWidgets import QTableView
+from app.models.Model import Model
+
+
+@dataclass(frozen=True)
+class ModelData:
+    column: str
+    model: 'DatatableModel'
+    value: typing.Any
 
 
 class DatatableModel(QAbstractTableModel):
@@ -30,9 +36,7 @@ class DatatableModel(QAbstractTableModel):
         self._data = data
         self._headers: types.TableHeaders = list(columnHeaders.values())
         self._columns: types.ColumnNames = list(columnHeaders.keys())
-        # self._parent_table: QTableView | None = None
-
-        # self.resizeColumns()
+        self._parent_table: QTableView | None = None
 
     def setHeaders(self, headers: types.TableHeaders):
         self._headers = headers
@@ -95,36 +99,16 @@ class DatatableModel(QAbstractTableModel):
         """
         self._parentTable = datatable
         self.resizeColumns()
-        self.decorateCells()
 
-    def decorateCells(self):
-        for r in range(self.rowCount()):
-            row = self._data[r]
-            for c in range(self.columnCount()):
-                column = self._columns[c]
-                value = getattr(row, column)
-                index = self.index(r, c)
+    def modelAtIndex(self, index: QModelIndex | QPersistentModelIndex) -> Model:
+        return self._data[index.row()]
 
-                # w = qta.IconWidget('mdi.web', color='blue')
-                # self._parentTable.setIndexWidget(index, w)
+    def getModelData(self, index: QModelIndex | QPersistentModelIndex) -> ModelData:
+        colIdx = index.column()
+        jobApp = self.modelAtIndex(index)
+        colName = self._columns[colIdx]
 
-                if column in ["requires_followup"]:
-                    if value:
-                        self.addIconAtIndex(
-                            index, IconUtility.getFileIcon("light-bulb-24"))
-                    else:
-                        self.addIconAtIndex(
-                            index, IconUtility.getFileIcon("light-bulb-off-24"))
-
-    def addIconAtIndex(self, index: QModelIndex | QPersistentModelIndex, icon: QPixmap):
-        w = QWidget()
-        l = QHBoxLayout()
-        la = QLabel()
-        la.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        la.setPixmap(icon)
-        w.setLayout(l)
-        l.addWidget(la)
-        self._parentTable.setIndexWidget(index, w)
+        return ModelData(colName, jobApp, getattr(jobApp, colName))
 
     # Width int | "fill" (fill the remaining space) | "stretch"
 
@@ -158,6 +142,8 @@ class DatatableModel(QAbstractTableModel):
 
                 self._parentTable.setColumnWidth(
                     colIdx, colWidth + Sizing.TABLE_X_PADDING)
+
+        # self._parentTable.horizontalHeader().setStretchLastSection(True)
 
     # def setHeaders(self, items):
     #     """

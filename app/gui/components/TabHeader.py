@@ -7,7 +7,7 @@ from PySide6.QtCore import Qt
 from app.utilities.IconUtility import IconUtility
 
 
-class TabHeader(QWidget):
+class Header(QWidget):
     def __init__(self, text: str) -> None:
         super().__init__()
 

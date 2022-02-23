@@ -4,6 +4,7 @@ from PySide6.QtWidgets import QWidget
 from PySide6.QtGui import QIcon
 
 from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from app.gui.components.tabs.Tabs import Tabs
 
@@ -11,12 +12,15 @@ if TYPE_CHECKING:
 class Tab(QWidget):
     def __init__(self,
                  label: str,
+                 model: None = None,
                  tooltip: str | None = None,
                  whatsThis: str | None = None,
                  icon: QIcon | None = None,
                  closable: bool = True
                  ) -> None:
         super().__init__()
+
+        self.model = model
 
         self._tooltip = tooltip
         self._whatsThis = whatsThis
@@ -27,7 +31,7 @@ class Tab(QWidget):
         self.closable = closable
 
     def setParent(self, parent: 'Tabs'):  # type: ignore
-        self.parent: 'Tabs' = parent
+        self._parent: 'Tabs' = parent
 
         if isinstance(self._tooltip, str):
             self.setTooltip(self._tooltip)
@@ -42,16 +46,16 @@ class Tab(QWidget):
             self.setTabIcon(self.icon)
 
     def setTabIcon(self, icon: QIcon):
-        self.parent.setTabIcon(self.index, icon)
+        self._parent.setTabIcon(self.index, icon)
 
     def setText(self, label: str):
-        self.parent.setTabText(self.index, label)
+        self._parent.setTabText(self.index, label)
 
     def setTooltip(self, tooltip: str):
-        self.parent.setTabToolTip(self.index, tooltip)
+        self._parent.setTabToolTip(self.index, tooltip)
 
     def setWhatsThis(self, tabWhatsThis: str):  # type: ignore
-        self.parent.setTabWhatsThis(self.index, tabWhatsThis)
+        self._parent.setTabWhatsThis(self.index, tabWhatsThis)
 
     def setActive(self):
-        self.parent.setCurrentWidget(self)
+        self._parent.setCurrentWidget(self)

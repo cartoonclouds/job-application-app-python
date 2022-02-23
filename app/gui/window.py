@@ -1,15 +1,14 @@
 
 # from PySide6.QtCore import *
 
-from PySide6.QtGui import QResizeEvent, QAction, QKeySequence, QIcon
-from PySide6.QtWidgets import QMainWindow, QLabel
 import qtawesome as qta
-
+from app.gui.services.TabService import TabService
 from app.gui.components.tabs.JobApplicationTab import JobApplicationTab
 from app.gui.components.tabs.SummaryTab import SummaryTab
-from app.gui.components.tabs.Tabs import Tabs
 from app.storage import Storage
 from app.utilities.IconUtility import IconUtility
+from PySide6.QtGui import QAction, QIcon, QKeySequence
+from PySide6.QtWidgets import QLabel, QMainWindow
 
 # https://realpython.com/python-menus-toolbars/
 # https://github.com/pythonguis/15-minute-apps/blob/aaf6038ab4b687cf1370ae3c7ca71f46140c5cdb/browser_tabbed/browser_tabbed.py
@@ -34,8 +33,9 @@ class MainWindow(QMainWindow):
         self.statusbar = self.setupStatusbar()
 
         # Setup initial tabs
-        self.tabs = self.setupTabs()
-        self.setCentralWidget(self.tabs)
+        self.setupTabs()
+        self.setCentralWidget(TabService.tabs)
+        self.setContentsMargins(1, 1, 1, 1)
 
         # https://www.pythonguis.com/tutorials/pyside6-widgets/
 
@@ -45,20 +45,12 @@ class MainWindow(QMainWindow):
         # return super(MainWindow, self).resizeEvent(event)
 
     def setupTabs(self):
-        tabs = Tabs()
+        TabService.initTabs()
 
-        tabs.addNewTab(
+        TabService.openTab(
             SummaryTab(
                 "&Summary", tooltip="Summary tab with stats", closable=False, icon=IconUtility.getFileIcon("gear"))
         )
-        tabs.addNewTab(JobApplicationTab(
-            "Tab 2", icon=IconUtility.getFileIcon("blue-folder-32")))
-        tabs.addNewTab(JobApplicationTab(
-            "Tab 3", icon=IconUtility.getFileIcon("blue-folder-32")))
-
-        # self.tab1.setTabText("123456")
-        # self.tabs.setTabText(0, "Contact Details")
-        return tabs
 
     def setupMenubar(self):
         menubar = self.menuBar()
@@ -72,7 +64,7 @@ class MainWindow(QMainWindow):
         exitAction.setToolTip('Exit this program')
         exitAction.setStatusTip('Exit this program')
         exitAction.triggered.connect(self.close)
-        
+
         fileMenu.addAction(exitAction)
 
         # new_tab_action = QAction(

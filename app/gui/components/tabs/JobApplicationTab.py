@@ -13,7 +13,12 @@ class JobApplicationTab(Tab):
         super().__init__(label=label, **kwargs)
 
         layout = QFormLayout()
-        layout.addRow("Name", QLineEdit())
+        nameInput = QLineEdit()
+
+        if self.model:
+            nameInput.setText(self.model.title)
+
+        layout.addRow("Name", nameInput)
         layout.addRow("Address", QLineEdit())
 
         self.setLayout(layout)

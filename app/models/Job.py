@@ -29,5 +29,5 @@ class Job(SoftDeletingScope, Model):
     def actions(self):
         return Action
 
-    def displayLabel(self):
-        return f"#{self.id} {self.title}"
+    def displayLabel(self) -> str:
+        return f"{self.title} (ID {self.id})"

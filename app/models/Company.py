@@ -24,5 +24,5 @@ class Company(SoftDeletingScope, Model):
         from app.models.Person import Person
         return Person
 
-    def displayLabel(self):
-        return f"#{self.id} {self.name}"
+    def displayLabel(self) -> str:
+        return f"{self.name} (ID {self.id})"
