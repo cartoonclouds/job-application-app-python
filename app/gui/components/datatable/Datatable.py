@@ -39,9 +39,6 @@ class Datatable(QTableView):
         self.setStyleSheet(
             'QTableView::item {border-bottom: 1px solid #d6d9dc;}')
 
-    def hasDatatableModel(self) -> bool:
-        return isinstance(self.model(), DatatableModel)
-
     def _getModelAtSelection(self) -> Model:
         index = self.selectionModel().currentIndex()
 
@@ -92,16 +89,16 @@ class Datatable(QTableView):
 
         # return super().contextMenuEvent(arg__1)
 
+    def model(self) -> DatatableModel:
+        return super().model()  # type: ignore
+
     def resizeEvent(self, event: QResizeEvent | None = None) -> None:
         """Resizes columns one of three ways:
         1. Width - sets the width to be a specific number
         2. Column to contents - the width will be that of the column with the largest content
         3. Fill remaining - sets the width to fill the remaining space available (after the first two options are set)
         """
-        if not self.hasDatatableModel():
-            return
-
-        datatableModel: DatatableModel = self.model()
+        datatableModel = self.model()
         tableWidth = self.width()
         colWidths = 0
 

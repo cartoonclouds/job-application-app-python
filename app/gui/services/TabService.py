@@ -3,12 +3,12 @@ from app import types
 from app.gui.components.tabs.Tab import Tab
 from PySide6.QtGui import QIcon, QPixmap
 from PySide6.QtWidgets import QTabBar, QTabWidget
-from PySide6.QtCore import QModelIndex, QPersistentModelIndex
+from PySide6.QtCore import QModelIndex, QPersistentModelIndex, QPoint
 
 # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QTabWidget.html
 
 
-class TabServiceProvider:
+class _TabServiceProvider:
     tabs: QTabWidget
 
     def initTabs(self, tabBar: QTabBar):
@@ -16,6 +16,8 @@ class TabServiceProvider:
         self.tabs.setTabBar(tabBar)
 
     # def isTabOpen(self, tab: types.Tab):
+    def tabBar(self):
+        return self.tabs.tabBar()
 
     def openTab(self, tab: Tab, focus: bool = True) -> types.Tab:
         # if tab is already open, return
@@ -38,12 +40,15 @@ class TabServiceProvider:
 
         return tab
 
-    def closeTab(self, tab: Tab | int):
+    def closeTab(self, tab: Tab | int | QPoint):
         closingTab: Tab
         tabIndex: int
 
         if isinstance(tab, Tab):
             closingTab = tab
+        elif isinstance(tab, QPoint):
+            tabIndex = self.tabBar().tabAt(tab)
+            closingTab = self.tabs.widget(tabIndex)  # type: ignore
         else:
             closingTab = self.tabs.widget(tab)  # type: ignore
 
@@ -58,4 +63,4 @@ class TabServiceProvider:
         return self.tabs.count()
 
 
-TabService = TabServiceProvider()
+TabService = _TabServiceProvider()
