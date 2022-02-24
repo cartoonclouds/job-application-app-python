@@ -2,13 +2,15 @@
 # from PySide6.QtCore import *
 
 import qtawesome as qta
+from app.gui.components.tabs.TabBar import TabBar
+from app.gui.services.StatusBarService import StatusBarService
 from app.gui.services.TabService import TabService
-from app.gui.components.tabs.JobApplicationTab import JobApplicationTab
-from app.gui.components.tabs.SummaryTab import SummaryTab
+from app.gui.components.pages.JobApplicationTab import JobApplicationTab
+from app.gui.components.pages.SummaryTab import SummaryTab
 from app.storage import Storage
 from app.utilities.IconUtility import IconUtility
 from PySide6.QtGui import QAction, QIcon, QKeySequence
-from PySide6.QtWidgets import QLabel, QMainWindow
+from PySide6.QtWidgets import QLabel, QMainWindow, QTabWidget
 
 # https://realpython.com/python-menus-toolbars/
 # https://github.com/pythonguis/15-minute-apps/blob/aaf6038ab4b687cf1370ae3c7ca71f46140c5cdb/browser_tabbed/browser_tabbed.py
@@ -30,7 +32,7 @@ class MainWindow(QMainWindow):
         self.menubar = self.setupMenubar()
 
         # Setup statusbar
-        self.statusbar = self.setupStatusbar()
+        StatusBarService.init(self)
 
         # Setup initial tabs
         self.setupTabs()
@@ -45,11 +47,11 @@ class MainWindow(QMainWindow):
         # return super(MainWindow, self).resizeEvent(event)
 
     def setupTabs(self):
-        TabService.initTabs()
+        TabService.initTabs(TabBar())
 
         TabService.openTab(
             SummaryTab(
-                "&Summary", tooltip="Summary tab with stats", closable=False, icon=IconUtility.getFileIcon("gear"))
+                "&Summary", tooltip="Summary tab with stats", closable=False, movable=False, icon=IconUtility.getFileIcon("gear"))
         )
 
     def setupMenubar(self):
@@ -73,15 +75,3 @@ class MainWindow(QMainWindow):
         # new_tab_action.triggered.connect(lambda _: self.add_new_tab())
         # file_menu.addAction(new_tab_action)
         return menubar
-
-    def setupStatusbar(self):
-        statusbar = self.statusBar()
-
-        # Adding a temporary message
-        statusbar.showMessage('A status bar update', 0)
-
-        # Adding a permanent message
-        self.wcLabel = QLabel(f"100 Words")
-        statusbar.addPermanentWidget(self.wcLabel)
-
-        return statusbar

@@ -3,9 +3,8 @@ import datetime
 import typing
 
 from app import types
-from app.gui.components.datatable.Datatable import Datatable
-from app.gui.components.datatable.DatatableModel import (DatatableModel,
-                                                         ModelData)
+from app.gui.components.datatable.models.DatatableModel import (DatatableModel,
+                                                                ModelData)
 from app.models.JobApplication import JobApplication
 from PySide6.QtCore import QModelIndex, QPersistentModelIndex, Qt
 

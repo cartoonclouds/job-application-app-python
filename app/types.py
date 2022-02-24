@@ -2,10 +2,8 @@
 from typing import Type, TypeAlias, TypeVar
 import typing
 
-from PySide6 import QtGui
 
 from app.gui.components.tabs import Tab as TabComponent
-from app.models.Model import Model
 
 
 # Mypy is a static type checker for Python 3
@@ -33,8 +31,6 @@ TableHeaders: TypeAlias = typing.Sequence[TableHeader]
 ColumnNames: TypeAlias = typing.Sequence[ColumnName]
 
 ColumnHeaders: TypeAlias = typing.Mapping[ColumnName, TableHeader]
-
-TabDetails: TypeAlias = str | bool | QtGui.QIcon | QtGui.QPixmap | Model | None
 
 
 # You can use a ClassVar[t] annotation to explicitly declare that a particular attribute should not be set on instances:

@@ -1,31 +1,35 @@
 
 from app import types
 from app.gui.components.datatable.Datatable import Datatable
-from app.gui.components.datatable.DatatableItemDelegates.FollowUpItemDelegate import \
+from app.gui.components.datatable.delegates.FollowUpItemDelegate import \
     FollowUpItemDelegate
-from app.gui.components.datatable.JobApplicationDatatableModel import \
+from app.gui.components.datatable.models.DatatableModel import DatatableModel
+from app.gui.components.datatable.models.JobApplicationDatatableModel import \
     JobApplicationDatatableModel
-from app.gui.components.TabHeader import Header
-from app.gui.components.tabs.JobApplicationTab import JobApplicationTab
+from app.gui.components.pages.Header import Header
+from app.gui.components.pages.JobApplicationTab import JobApplicationTab
 from app.gui.components.tabs.Tab import Tab
 from app.gui.services.TabService import TabService
 from app.models.JobApplication import JobApplication
+from app.models.Model import Model
 from app.storage import Storage
 from PySide6.QtCore import (QModelIndex, QPersistentModelIndex,
-                            QSortFilterProxyModel)
+                            QSortFilterProxyModel, Slot)
 from PySide6.QtWidgets import QVBoxLayout
+from PySide6.QtGui import QMouseEvent
+from functools import partial
 
 from app.utilities.IconUtility import IconUtility
 
 
 class SummaryTab(Tab):
-    def __init__(self, label: str, **kwargs: types.TabDetails) -> None:
+    def __init__(self, label: str, **kwargs) -> None:
         super().__init__(label=label, **kwargs)
 
         self.mainLayout = QVBoxLayout()
         self.setLayout(self.mainLayout)
 
-        # Setup stats
+        # Setup stats11111111111111111111
 
         # Setup table
         self.datatable = self._setupTable()
@@ -62,16 +66,15 @@ class SummaryTab(Tab):
         # self.table = DataTable(dataTableModel)
         # .setSortingEnabled(True)
 
-        datatable.doubleClicked.connect(self.openTab)
+        datatable.openModel.connect(self.openTab)
 
         return datatable
 
-    def openTab(self, index: QModelIndex | QPersistentModelIndex):
-        datatableModel: JobApplicationDatatableModel = self.datatable.model()
-        jobApplication: JobApplication = datatableModel.modelAtIndex(index)
-
+    @Slot(Model)
+    @Slot(Model, QMouseEvent)
+    def openTab(self, model: Model):
         TabService.openTab(JobApplicationTab(
-            f"{jobApplication.title}, {jobApplication.company.name} (ID {jobApplication.id})", model=jobApplication, icon=IconUtility.getFileIcon("blue-folder-32")))
+            f"{model.title}, {model.company.name} (ID {model.id})", model=model, icon=IconUtility.getFileIcon("blue-folder-32")))
 
     def openEmptyTab(self):
         TabService.openTab(JobApplicationTab(

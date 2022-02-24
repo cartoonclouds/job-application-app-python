@@ -1,12 +1,7 @@
 
 
-from PySide6.QtWidgets import QWidget
-from PySide6.QtGui import QIcon
-
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from app.gui.components.tabs.Tabs import Tabs
+from PySide6.QtWidgets import QWidget, QTabWidget
+from PySide6.QtGui import QIcon, QIcon, QPixmap
 
 
 class Tab(QWidget):
@@ -16,7 +11,8 @@ class Tab(QWidget):
                  tooltip: str | None = None,
                  whatsThis: str | None = None,
                  icon: QIcon | None = None,
-                 closable: bool = True
+                 closable: bool = True,
+                 movable: bool = True
                  ) -> None:
         super().__init__()
 
@@ -26,12 +22,14 @@ class Tab(QWidget):
         self._whatsThis = whatsThis
 
         self.label = label
-        self.index = 0
         self.icon = icon
         self.closable = closable
+        self.movable = movable
 
-    def setParent(self, parent: 'Tabs'):  # type: ignore
-        self._parent: 'Tabs' = parent
+        self._parent: QTabWidget | None
+
+    def setParent(self, parent: QTabWidget):  # type: ignore
+        self._parent = parent
 
         if isinstance(self._tooltip, str):
             self.setTooltip(self._tooltip)
@@ -45,17 +43,27 @@ class Tab(QWidget):
         if isinstance(self.icon, QIcon):
             self.setTabIcon(self.icon)
 
+    def tabIndex(self) -> int:
+        if isinstance(self._parent, QTabWidget):
+            return self._parent.indexOf(self)
+        return -1
+
     def setTabIcon(self, icon: QIcon):
-        self._parent.setTabIcon(self.index, icon)
+        if isinstance(self._parent, QTabWidget) and self.tabIndex():
+            self._parent.setTabIcon(self.tabIndex(), icon)
 
     def setText(self, label: str):
-        self._parent.setTabText(self.index, label)
+        if isinstance(self._parent, QTabWidget) and self.tabIndex():
+            self._parent.setTabText(self.tabIndex(), label)
 
     def setTooltip(self, tooltip: str):
-        self._parent.setTabToolTip(self.index, tooltip)
+        if isinstance(self._parent, QTabWidget) and self.tabIndex():
+            self._parent.setTabToolTip(self.tabIndex(), tooltip)
 
     def setWhatsThis(self, tabWhatsThis: str):  # type: ignore
-        self._parent.setTabWhatsThis(self.index, tabWhatsThis)
+        if isinstance(self._parent, QTabWidget) and self.tabIndex():
+            self._parent.setTabWhatsThis(self.tabIndex(), tabWhatsThis)
 
     def setActive(self):
-        self._parent.setCurrentWidget(self)
+        if isinstance(self._parent, QTabWidget) and self.tabIndex():
+            self._parent.setCurrentWidget(self)

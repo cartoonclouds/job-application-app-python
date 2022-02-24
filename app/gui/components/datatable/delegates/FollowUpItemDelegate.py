@@ -2,7 +2,7 @@
 from PySide6.QtWidgets import QStyledItemDelegate, QStyleOptionViewItem
 from PySide6.QtGui import QPainter, QPixmap
 from PySide6.QtCore import QModelIndex, QPersistentModelIndex, QSize, QRect
-from app.gui.components.datatable.DatatableModel import DatatableModel
+from app.gui.components.datatable.models.DatatableModel import DatatableModel
 
 from app.utilities.IconUtility import IconUtility
 
