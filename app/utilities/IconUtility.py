@@ -1,5 +1,6 @@
 
 from enum import Enum, unique, auto
+from typing import Any, overload
 from PySide6 import os
 from PySide6.QtGui import QIcon, QPixmap
 from PySide6.QtWidgets import QApplication, QStyle
@@ -28,7 +29,15 @@ class IconUtility:
     _FILE_ICON_PATH = "app/assets/icons/"
 
     @staticmethod
-    def getFileIcon(name: str, format: IconFormat = IconFormat.QPixmap) -> QIcon | QPixmap:
+    def getFileIconAsIcon(name: str) -> QIcon:
+        return IconUtility.getFileIcon(name, IconFormat.QIcon)
+
+    @staticmethod
+    def getFileIconAsPixmap(name: str) -> QPixmap:
+        return IconUtility.getFileIcon(name, IconFormat.QPixmap)
+
+    @staticmethod
+    def getFileIcon(name: str, format: IconFormat) -> Any:
         # Check if file exists -> exception
         filetype = 'png'
         iconPath = f'{IconUtility._FILE_ICON_PATH}{name.strip()}.{filetype}'
@@ -50,7 +59,6 @@ class IconUtility:
             return icon
 
     @staticmethod
-    # | QPixmap:
     def getDesktopIcon(name: str, format: IconFormat = IconFormat.QIcon) -> QIcon:
         qicon = QIcon.fromTheme(name.strip())
 

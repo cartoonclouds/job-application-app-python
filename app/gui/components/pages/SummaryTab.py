@@ -34,7 +34,7 @@ class SummaryTab(Tab):
         # Setup table
         self.datatable = self._setupTable()
 
-        self.mainLayout.addWidget(Header('Job Applications Summary'))
+        self.mainLayout.addWidget(Header('Applications Summary'))
         self.mainLayout.addWidget(self.datatable)
 
     def _setupTable(self):
@@ -74,8 +74,8 @@ class SummaryTab(Tab):
     @Slot(Model, QMouseEvent)
     def openTab(self, model: Model):
         TabService.openTab(JobApplicationTab(
-            f"{model.title}, {model.company.name} (ID {model.id})", model=model, icon=IconUtility.getFileIcon("blue-folder-32")))
+            f"{model.title}, {model.company.name} (ID {model.id})", model=model, icon=IconUtility.getFileIconAsPixmap("blue-folder-32")))
 
     def openEmptyTab(self):
         TabService.openTab(JobApplicationTab(
-            f"New Application {TabService.tabCount() + 1}", icon=IconUtility.getFileIcon("blue-folder-32")))
+            f"New Application {TabService.tabCount() + 1}", icon=IconUtility.getFileIconAsPixmap("blue-folder-32")))

@@ -16,9 +16,9 @@ class FollowUpItemDelegate(QStyledItemDelegate):
 
         self._model: DatatableModel = parent
 
-        self.requiresFollowUpIconTrue = IconUtility.getFileIcon(
+        self.requiresFollowUpIconTrue = IconUtility.getFileIconAsPixmap(
             "light-bulb-24")
-        self.requiresFollowUpIconFalse = IconUtility.getFileIcon(
+        self.requiresFollowUpIconFalse = IconUtility.getFileIconAsPixmap(
             "light-bulb-off-24")
 
     def _getCenteredIconCoords(self, option: QStyleOptionViewItem, icon: QPixmap) -> QRect:

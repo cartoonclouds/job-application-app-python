@@ -12,7 +12,7 @@ class Header(QWidget):
         super().__init__()
 
         self._text = text
-        self._icon = IconUtility.getFileIcon("gear")
+        self._icon = IconUtility.getFileIconAsPixmap("gear")
 
         layout = QHBoxLayout()
         layout.setAlignment(Qt.AlignmentFlag.AlignLeft)

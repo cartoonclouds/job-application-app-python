@@ -1,5 +1,6 @@
 
 from PySide6.QtWidgets import QFormLayout, QLineEdit
+from app.gui.components.pages.Header import Header
 
 from app.gui.components.tabs.Tab import Tab
 
@@ -17,6 +18,7 @@ class JobApplicationTab(Tab):
         if self.model:
             nameInput.setText(self.model.title)
 
+        layout.addRow(Header(f'Job Application - {self.model.title}'))
         layout.addRow("Name", nameInput)
         layout.addRow("Address", QLineEdit())
 

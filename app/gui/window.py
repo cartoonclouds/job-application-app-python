@@ -51,7 +51,7 @@ class MainWindow(QMainWindow):
 
         TabService.openTab(
             SummaryTab(
-                "&Summary", tooltip="Summary tab with stats", closable=False, movable=False, icon=IconUtility.getFileIcon("gear"))
+                "&Summary", tooltip="Summary tab with stats", closable=False, movable=False, icon=IconUtility.getFileIconAsPixmap("gear"))
         )
 
     def setupMenubar(self):
