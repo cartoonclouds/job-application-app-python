@@ -1,9 +1,21 @@
 
+from typing import TYPE_CHECKING
 from app.models.Model import Model
 from orator.orm.utils import has_many
 
 
 class Address(Model):
+    if TYPE_CHECKING:
+        id: int
+        address_line_1: str
+        address_line_2: str
+        suburb: str
+        city: str
+        state: str
+        postcode: int
+        country: str
+        is_user: bool
+
     __fillable__ = ["*"]
 
     @has_many

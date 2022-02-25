@@ -1,9 +1,10 @@
 
+from typing import Optional
 from PySide6.QtCore import QObject, QSortFilterProxyModel
 
 
 class CustomSortModel(QSortFilterProxyModel):
-    def __init__(self, parent: QObject | None = None) -> None:
+    def __init__(self, parent: Optional[QObject] = None) -> None:
         """
         Custom QSortFilterProxyModel to allow sorting and filtering of our custom data model.
         :param parent: parent so that this model is deleted properly upon close.

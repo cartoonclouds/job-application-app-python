@@ -1,10 +1,24 @@
+from datetime import datetime
 from orator.orm.scopes.soft_deleting import SoftDeletingScope
 from orator.orm.utils import belongs_to, has_many
 
 from app.models.Model import Model
-
+from typing import TYPE_CHECKING
 
 class Company(SoftDeletingScope, Model):
+    if TYPE_CHECKING:
+        id: int
+        name: str
+        email: str
+        phone: int
+        website: str
+        comments: str
+        address_id: int
+        person_id: int
+        created_at: datetime
+        updated_at: datetime
+        deleted_at: datetime
+        
     __fillable__ = ["*"]
 
     __dates__ = ['deleted_at']

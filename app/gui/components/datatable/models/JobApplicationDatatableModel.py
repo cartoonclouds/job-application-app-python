@@ -1,8 +1,7 @@
 
 import datetime
-import typing
 
-from app import types
+from typing import Mapping, Any, Sequence
 from app.gui.components.datatable.models.DatatableModel import (DatatableModel,
                                                                 ModelData)
 from app.models.JobApplication import JobApplication
@@ -14,10 +13,10 @@ from PySide6.QtCore import QModelIndex, QPersistentModelIndex, Qt
 class JobApplicationDatatableModel(DatatableModel):
     """A datatable model for Job Applications."""
 
-    def __init__(self, data: typing.Sequence[JobApplication], columnHeaders: types.ColumnHeaders) -> None:
+    def __init__(self, data: Sequence[JobApplication], columnHeaders: Mapping[str, str]) -> None:
         super().__init__(data, columnHeaders)
 
-    def data(self, index: QModelIndex | QPersistentModelIndex, role: int) -> typing.Any:
+    def data(self, index: QModelIndex | QPersistentModelIndex, role: int) -> Any:
         modelData = self.getModelData(index)
 
         match role:

@@ -1,12 +1,11 @@
-import typing
+from typing import Sequence, Any, TYPE_CHECKING, Optional, Mapping
 from dataclasses import dataclass
 
-from app import types
 from app.models.Model import Model
 from PySide6.QtCore import (QAbstractTableModel, QModelIndex,
                             QPersistentModelIndex, Qt)
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     from app.gui.components.datatable.Datatable import Datatable
 
 
@@ -14,7 +13,7 @@ if typing.TYPE_CHECKING:
 class ModelData:
     column: str
     model: Model
-    value: typing.Any
+    value: Any
 
 
 class DatatableModel(QAbstractTableModel):
@@ -28,14 +27,14 @@ class DatatableModel(QAbstractTableModel):
         AttributeError
     """
 
-    def __init__(self, data: typing.Sequence[Model], columnHeaders: types.ColumnHeaders) -> None:
+    def __init__(self, data: Sequence[Model], columnHeaders: Mapping[str, str]) -> None:
         super().__init__()
 
         # Set instance variables
         self._data = data
-        self._headers: types.TableHeaders = list(columnHeaders.values())
-        self._columns: types.ColumnNames = list(columnHeaders.keys())
-        self._parentTable: 'Datatable' | None = None
+        self._headers: Sequence[str] = list(columnHeaders.values())
+        self._columns: Sequence[str] = list(columnHeaders.keys())
+        self._parentTable: Optional['Datatable'] = None
 
     def setParentTable(self, datatable: 'Datatable'):
         """
@@ -56,15 +55,15 @@ class DatatableModel(QAbstractTableModel):
     def getColumnName(self, colIdx: int) -> str:
         return self._columns[colIdx]
 
-    def setHeaders(self, headers: types.TableHeaders):
+    def setHeaders(self, headers: Sequence[str]):
         self._headers = headers
         self._triggerParentResize()
 
-    def setColumns(self, columns: types.ColumnNames):
+    def setColumns(self, columns: Sequence[str]):
         self._columns = columns
         self._triggerParentResize()
 
-    def headerData(self, section: int, orientation: Qt.Orientation, role: int) -> typing.Any:
+    def headerData(self, section: int, orientation: Qt.Orientation, role: int) -> Any:
         """
         Sets the header data based on our header key list.
         """
@@ -72,19 +71,19 @@ class DatatableModel(QAbstractTableModel):
             if role == Qt.DisplayRole:
                 return self._headers[section]
 
-    def rowCount(self, parent: QModelIndex | QPersistentModelIndex | None = None) -> int:
+    def rowCount(self, parent: Optional[QModelIndex | QPersistentModelIndex] = None) -> int:
         """
         Return the row count.
         """
         return len(self._data)
 
-    def columnCount(self, parent: QModelIndex | QPersistentModelIndex | None = None) -> int:
+    def columnCount(self, parent: Optional[QModelIndex | QPersistentModelIndex] = None) -> int:
         """ 
         Return the column count.
         """
         return len(self._columns)
 
-    # def data(self, index: QModelIndex | QPersistentModelIndex, role: int) -> typing.Any:
+    # def data(self, index: QModelIndex | QPersistentModelIndex, role: int) -> Any:
     #     match role:
     #         case Qt.DisplayRole:
     #         case Qt.DecorationRole:

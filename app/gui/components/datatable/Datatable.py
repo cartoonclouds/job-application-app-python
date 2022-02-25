@@ -1,4 +1,5 @@
 
+from typing import Optional
 from PySide6.QtGui import QResizeEvent, QMouseEvent, QContextMenuEvent, QAction, QCursor
 from PySide6.QtWidgets import QAbstractItemView, QTableView, QMenu
 from PySide6.QtCore import Signal, Qt, QModelIndex, QPersistentModelIndex
@@ -92,7 +93,7 @@ class Datatable(QTableView):
     def model(self) -> DatatableModel:
         return super().model()  # type: ignore
 
-    def resizeEvent(self, event: QResizeEvent | None = None) -> None:
+    def resizeEvent(self, event: Optional[QResizeEvent] = None) -> None:
         """Resizes columns one of three ways:
         1. Width - sets the width to be a specific number
         2. Column to contents - the width will be that of the column with the largest content

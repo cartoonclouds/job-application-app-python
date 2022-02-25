@@ -1,9 +1,5 @@
 
 from typing import Type, TypeAlias, TypeVar
-import typing
-
-
-from app.gui.components.tabs import Tab as TabComponent
 
 
 # Mypy is a static type checker for Python 3
@@ -17,20 +13,11 @@ from app.gui.components.tabs import Tab as TabComponent
 # https://mypy.readthedocs.io/en/stable/generics.html
 
 
-# Tabs: TypeAlias = TabsComponent.Tabs
-Tab: TypeAlias = TabComponent.Tab
-
-Id = str
+# # type: ignore
+# @no_type_check, a decorator to disable type checking per class or function (see below)
+# @no_type_check_decorator, a decorator to create your own decorators with the same meaning as @no_type_check (see below)
 
 T = TypeVar('T')  # Declare type variable. Use for generics
-
-ColumnName: TypeAlias = str
-TableHeader: TypeAlias = str
-
-TableHeaders: TypeAlias = typing.Sequence[TableHeader]
-ColumnNames: TypeAlias = typing.Sequence[ColumnName]
-
-ColumnHeaders: TypeAlias = typing.Mapping[ColumnName, TableHeader]
 
 
 # You can use a ClassVar[t] annotation to explicitly declare that a particular attribute should not be set on instances:

@@ -1,5 +1,4 @@
 
-from app import types
 from app.gui.components.datatable.Datatable import Datatable
 from app.gui.components.datatable.delegates.FollowUpItemDelegate import \
     FollowUpItemDelegate
@@ -70,9 +69,9 @@ class SummaryTab(Tab):
 
         return datatable
 
-    @Slot(Model)
-    @Slot(Model, QMouseEvent)
-    def openTab(self, model: Model):
+    @Slot(JobApplication)
+    @Slot(JobApplication, QMouseEvent)
+    def openTab(self, model: JobApplication):
         TabService.openTab(JobApplicationTab(
             f"{model.title}, {model.company.name} (ID {model.id})", model=model, icon=IconUtility.getFileIconAsPixmap("blue-folder-32")))
 

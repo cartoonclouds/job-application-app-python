@@ -1,3 +1,4 @@
+from typing import TYPE_CHECKING
 from orator.orm.scopes.soft_deleting import SoftDeletingScope
 from orator.orm.utils import belongs_to, morph_many
 
@@ -6,6 +7,13 @@ from app.models.Action import Action
 
 
 class Job(SoftDeletingScope, Model):
+    if TYPE_CHECKING:
+        id: int
+        title: str
+        requires_followup: bool
+        pinned: bool
+        company_id: int
+
     __fillable__ = ["*"]
 
     __dates__ = ['closing_date', 'deleted_at']

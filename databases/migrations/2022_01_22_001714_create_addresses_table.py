@@ -16,8 +16,9 @@ class CreateAddressesTable(Migration):
             table.text('suburb').nullable()
             table.text('city').nullable()
             table.text('state').nullable()
-            table.text('postcode').nullable()
+            table.int('postcode').nullable()
             table.text('country').nullable()
+            table.bool('is_user').default(False)
 
             table.timestamps()
 

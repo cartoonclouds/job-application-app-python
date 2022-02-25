@@ -1,5 +1,5 @@
 
-from app import types
+
 from app.gui.components.tabs.Tab import Tab
 from PySide6.QtGui import QIcon, QPixmap
 from PySide6.QtWidgets import QTabBar, QTabWidget
@@ -15,11 +15,11 @@ class _TabServiceProvider:
         self.tabs = QTabWidget()
         self.tabs.setTabBar(tabBar)
 
-    # def isTabOpen(self, tab: types.Tab):
+    # def isTabOpen(self, tab: Tab):
     def tabBar(self):
         return self.tabs.tabBar()
 
-    def openTab(self, tab: Tab, focus: bool = True) -> types.Tab:
+    def openTab(self, tab: Tab, focus: bool = True) -> Tab:
         # if tab is already open, return
 
         # Add tab

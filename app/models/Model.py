@@ -1,6 +1,7 @@
 
 
 # pyright: reportMissingModuleSource=false
+from datetime import datetime
 import typing
 from orator.orm.model import Model as oratorModel
 from orator.orm.scopes.scope import Scope
@@ -8,7 +9,7 @@ from orator.query.builder import QueryBuilder  # or maybe QueryBuilder
 from orator.orm.utils import scope
 from PySide6.QtCore import Signal, QObject
 import inflection
-
+from typing import TYPE_CHECKING
 
 from config.database import db
 
@@ -30,6 +31,10 @@ _modelCommunicator = _ModelCommunicator()
 
 
 class Model(oratorModel):
+    if TYPE_CHECKING:
+        created_at: datetime
+        updated_at: datetime
+        deleted_at: datetime
 
     creatingEvent = _modelCommunicator.creating
     createdEvent = _modelCommunicator.created
