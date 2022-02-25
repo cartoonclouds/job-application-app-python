@@ -9,5 +9,9 @@
   "python.linting.mypyEnabled": true,
   "python.analysis.typeCheckingMode": "strict",
   "python.linting.pylintEnabled": false,
-  "python.linting.pydocstyleEnabled": true
+  "python.linting.pydocstyleEnabled": false,
+  "python.linting.pycodestyleEnabled": false,
+  "python.linting.pylamaEnabled": false,
+  "python.linting.prospectorEnabled": false,
+  "python.linting.flake8Enabled": false
 }

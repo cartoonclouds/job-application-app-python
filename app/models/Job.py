@@ -1,12 +1,10 @@
 from typing import TYPE_CHECKING
-from orator.orm.scopes.soft_deleting import SoftDeletingScope
-from orator.orm.utils import belongs_to, morph_many
 
 from app.models.Model import Model
-from app.models.Action import Action
+from orator.orm import *
 
 
-class Job(SoftDeletingScope, Model):
+class Job(SoftDeletes, Model):
     if TYPE_CHECKING:
         id: int
         title: str
@@ -16,25 +14,30 @@ class Job(SoftDeletingScope, Model):
 
     __fillable__ = ["*"]
 
-    __dates__ = ['closing_date', 'deleted_at']
+    __dates__ = ["closing_date", "deleted_at"]
 
     @belongs_to
     def jobApplication(self):
         from app.models.JobApplication import JobApplication
+
         return JobApplication
 
     @belongs_to
     def profession(self):
         from app.models.Profession import Profession
+
         return Profession
 
     @belongs_to
     def address(self):
         from app.models.Address import Address
+
         return Address
 
-    @morph_many('actionable')
+    @morph_many("actionable")
     def actions(self):
+        from app.models.Action import Action
+
         return Action
 
     def displayLabel(self) -> str:

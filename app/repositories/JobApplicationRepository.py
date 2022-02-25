@@ -1,6 +1,7 @@
 
 import collections
 import typing
+
 from app.models.JobApplication import JobApplication
 from app.repositories.Repository import Repository
 from app.utilities.CollectionUtility import CollectionUtility
@@ -11,6 +12,8 @@ from app.utilities.CollectionUtility import CollectionUtility
 
 # https://github.com/google/styleguide/blob/gh-pages/pyguide.md#38-comments-and-docstrings
 
+
+# https://github.com/sdispater/backpack
 
 class JobApplicationRepository(collections.UserDict[str | int, JobApplication], Repository):
     """A repository which helps dealing with Job Applications.

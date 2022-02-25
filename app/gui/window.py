@@ -1,16 +1,18 @@
+# Framework imports
+from PySide6.QtGui import QAction, QIcon, QKeySequence
+from PySide6.QtWidgets import QLabel, QMainWindow, QTabWidget
 
-# from PySide6.QtCore import *
-
+# Third party imports
 import qtawesome as qta
+
+# Application imports
+from app.gui.components.pages.JobApplicationTab import JobApplicationTab
+from app.gui.components.pages.SummaryTab import SummaryTab
 from app.gui.components.tabs.TabBar import TabBar
 from app.gui.services.StatusBarService import StatusBarService
 from app.gui.services.TabService import TabService
-from app.gui.components.pages.JobApplicationTab import JobApplicationTab
-from app.gui.components.pages.SummaryTab import SummaryTab
 from app.storage import Storage
 from app.utilities.IconUtility import IconUtility
-from PySide6.QtGui import QAction, QIcon, QKeySequence
-from PySide6.QtWidgets import QLabel, QMainWindow, QTabWidget
 
 # https://realpython.com/python-menus-toolbars/
 # https://github.com/pythonguis/15-minute-apps/blob/aaf6038ab4b687cf1370ae3c7ca71f46140c5cdb/browser_tabbed/browser_tabbed.py
@@ -21,10 +23,10 @@ class MainWindow(QMainWindow):
         super().__init__(*args, **kwargs)
 
         # Setup window
-        self.setWindowTitle('Main Window App GUI')
+        self.setWindowTitle("Main Window App GUI")
         self.resize(Storage.WINDOW_WIDTH, Storage.WINDOW_HEIGHT)
 
-        fa5_icon: QIcon = qta.icon('fa5.flag')
+        fa5_icon: QIcon = qta.icon("fa5.flag")
         self.setWindowIcon(fa5_icon)
         # self.setWindowIcon(QIcon(os.path.join('images', 'ma-icon-64.png')))
 
@@ -44,14 +46,19 @@ class MainWindow(QMainWindow):
         self.show()
 
     # def resizeEvent(self, event: QResizeEvent) -> None:
-        # return super(MainWindow, self).resizeEvent(event)
+    # return super(MainWindow, self).resizeEvent(event)
 
     def setupTabs(self):
         TabService.initTabs(TabBar())
 
         TabService.openTab(
             SummaryTab(
-                "&Summary", tooltip="Summary tab with stats", closable=False, movable=False, icon=IconUtility.getFileIconAsPixmap("gear"))
+                "&Summary",
+                tooltip="Summary tab with stats",
+                closable=False,
+                movable=False,
+                icon=IconUtility.getFileIconAsPixmap("gear"),
+            )
         )
 
     def setupMenubar(self):
@@ -61,10 +68,10 @@ class MainWindow(QMainWindow):
 
         fileMenu = menubar.addMenu("&File")
 
-        exitAction = QAction('&Exit', self)
+        exitAction = QAction("&Exit", self)
         exitAction.setShortcut(QKeySequence.Quit)
-        exitAction.setToolTip('Exit this program')
-        exitAction.setStatusTip('Exit this program')
+        exitAction.setToolTip("Exit this program")
+        exitAction.setStatusTip("Exit this program")
         exitAction.triggered.connect(self.close)
 
         fileMenu.addAction(exitAction)

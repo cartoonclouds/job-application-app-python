@@ -1,17 +1,11 @@
-
-
-# pyright: reportMissingModuleSource=false
 from datetime import datetime
-import typing
-from orator.orm.model import Model as oratorModel
-from orator.orm.scopes.scope import Scope
-from orator.query.builder import QueryBuilder  # or maybe QueryBuilder
-from orator.orm.utils import scope
-from PySide6.QtCore import Signal, QObject
-import inflection
 from typing import TYPE_CHECKING
 
+import inflection
 from config.database import db
+from orator.orm import *
+from orator.orm.model import Model as oratorModel
+from PySide6.QtCore import QObject, Signal
 
 
 class _ModelCommunicator(QObject):
@@ -49,14 +43,14 @@ class Model(oratorModel):
 
     @classmethod
     def _boot(cls):
-        cls.creating(lambda m: cls.creatingEvent.emit(m))   # type: ignore
-        cls.created(lambda m: cls.createdEvent.emit(m))     # type: ignore
-        cls.updating(lambda m: cls.updatingEvent.emit(m))   # type: ignore
-        cls.updated(lambda m: cls.updatedEvent.emit(m))     # type: ignore
-        cls.saving(lambda m: cls.savingEvent.emit(m))       # type: ignore
-        cls.saved(lambda m: cls.savedEvent.emit(m))         # type: ignore
-        cls.deleting(lambda m: cls.deletingEvent.emit(m))   # type: ignore
-        cls.deleted(lambda m: cls.deletedEvent.emit(m))     # type: ignore
+        cls.creating(lambda m: cls.creatingEvent.emit(m))  # type: ignore
+        cls.created(lambda m: cls.createdEvent.emit(m))  # type: ignore
+        cls.updating(lambda m: cls.updatingEvent.emit(m))  # type: ignore
+        cls.updated(lambda m: cls.updatedEvent.emit(m))  # type: ignore
+        cls.saving(lambda m: cls.savingEvent.emit(m))  # type: ignore
+        cls.saved(lambda m: cls.savedEvent.emit(m))  # type: ignore
+        cls.deleting(lambda m: cls.deletingEvent.emit(m))  # type: ignore
+        cls.deleted(lambda m: cls.deletedEvent.emit(m))  # type: ignore
         # cls.restoring(lambda m: cls.restoringEvent.emit(m))  # type: ignore
         # cls.restored(lambda m: cls.restoredEvent.emit(m))   # type: ignore
 
@@ -84,20 +78,28 @@ class Model(oratorModel):
         Returns:
             (list)
         """
-        return db.table(
-            db.raw('PRAGMA_TABLE_INFO("' + cls.getTableName() + '")')
-        ).select('name').get().pluck('name').all()
+        return (
+            db.table(db.raw('PRAGMA_TABLE_INFO("' + cls.getTableName() + '")'))
+            .select("name")
+            .get()
+            .pluck("name")
+            .all()
+        )
 
-    @ classmethod
+    @classmethod
     def getTableColumnCount(cls) -> int:
         """Returns a count of columns for this table.
 
         Returns:
             (int)
         """
-        return db.table(
-            db.raw('PRAGMA_TABLE_INFO("' + cls.getTableName() + '")')
-        ).select('name').get().pluck('name').count()
+        return (
+            db.table(db.raw('PRAGMA_TABLE_INFO("' + cls.getTableName() + '")'))
+            .select("name")
+            .get()
+            .pluck("name")
+            .count()
+        )
 
     # Scopes
 

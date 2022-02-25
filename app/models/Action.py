@@ -1,9 +1,8 @@
 """Actions model"""
-
 from typing import TYPE_CHECKING
-from orator.orm.utils import morph_to, morph_many, has_one
 
 from app.models.Model import Model
+from orator.orm import *
 
 
 class Action(Model):
@@ -28,10 +27,10 @@ class Action(Model):
     def actionable(self):
         return
 
-    @morph_many('actionable')
+    @morph_many("actionable")
     def childActions(self):
         return Action
 
-    @has_one('id', 'actionable_id')
+    @has_one("id", "actionable_id")
     def parentAction(self):
         return Action

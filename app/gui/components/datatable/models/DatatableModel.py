@@ -2,8 +2,7 @@ from typing import Sequence, Any, TYPE_CHECKING, Optional, Mapping
 from dataclasses import dataclass
 
 from app.models.Model import Model
-from PySide6.QtCore import (QAbstractTableModel, QModelIndex,
-                            QPersistentModelIndex, Qt)
+from PySide6.QtCore import QAbstractTableModel, QModelIndex, QPersistentModelIndex, Qt
 
 if TYPE_CHECKING:
     from app.gui.components.datatable.Datatable import Datatable
@@ -34,9 +33,9 @@ class DatatableModel(QAbstractTableModel):
         self._data = data
         self._headers: Sequence[str] = list(columnHeaders.values())
         self._columns: Sequence[str] = list(columnHeaders.keys())
-        self._parentTable: Optional['Datatable'] = None
+        self._parentTable: Optional["Datatable"] = None
 
-    def setParentTable(self, datatable: 'Datatable'):
+    def setParentTable(self, datatable: "Datatable"):
         """
         Sets the parent table widget so that we can get its font metrics for setting our column width with autoResize.
 
@@ -71,14 +70,18 @@ class DatatableModel(QAbstractTableModel):
             if role == Qt.DisplayRole:
                 return self._headers[section]
 
-    def rowCount(self, parent: Optional[QModelIndex | QPersistentModelIndex] = None) -> int:
+    def rowCount(
+        self, parent: Optional[QModelIndex | QPersistentModelIndex] = None
+    ) -> int:
         """
         Return the row count.
         """
         return len(self._data)
 
-    def columnCount(self, parent: Optional[QModelIndex | QPersistentModelIndex] = None) -> int:
-        """ 
+    def columnCount(
+        self, parent: Optional[QModelIndex | QPersistentModelIndex] = None
+    ) -> int:
+        """
         Return the column count.
         """
         return len(self._columns)

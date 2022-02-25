@@ -1,11 +1,10 @@
 from typing import TYPE_CHECKING
-from orator.orm.scopes.soft_deleting import SoftDeletingScope
-from orator.orm.utils import has_many
 
 from app.models.Model import Model
+from orator.orm import *
 
 
-class Person(SoftDeletingScope, Model):
+class Person(SoftDeletes, Model):
     if TYPE_CHECKING:
         id: int
         name: str
@@ -14,9 +13,10 @@ class Person(SoftDeletingScope, Model):
 
     __fillable__ = ["*"]
 
-    __dates__ = ['deleted_at']
+    __dates__ = ["deleted_at"]
 
     @has_many
     def companies(self):
         from app.models.Company import Company
+
         return Company

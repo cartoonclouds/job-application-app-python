@@ -1,7 +1,7 @@
-
 from typing import TYPE_CHECKING
+
 from app.models.Model import Model
-from orator.orm.utils import has_many
+from orator.orm import *
 
 
 class Address(Model):
@@ -21,9 +21,11 @@ class Address(Model):
     @has_many
     def companies(self):
         from app.models.Company import Company
+
         return Company
 
     @has_many
     def jobs(self):
         from app.models.Job import Job
+
         return Job

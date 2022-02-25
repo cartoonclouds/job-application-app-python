@@ -1,9 +1,7 @@
-
 import datetime
 
 from typing import Mapping, Any, Sequence
-from app.gui.components.datatable.models.DatatableModel import (DatatableModel,
-                                                                ModelData)
+from app.gui.components.datatable.models.DatatableModel import DatatableModel, ModelData
 from app.models.JobApplication import JobApplication
 from PySide6.QtCore import QModelIndex, QPersistentModelIndex, Qt
 
@@ -13,7 +11,9 @@ from PySide6.QtCore import QModelIndex, QPersistentModelIndex, Qt
 class JobApplicationDatatableModel(DatatableModel):
     """A datatable model for Job Applications."""
 
-    def __init__(self, data: Sequence[JobApplication], columnHeaders: Mapping[str, str]) -> None:
+    def __init__(
+        self, data: Sequence[JobApplication], columnHeaders: Mapping[str, str]
+    ) -> None:
         super().__init__(data, columnHeaders)
 
     def data(self, index: QModelIndex | QPersistentModelIndex, role: int) -> Any:
@@ -33,7 +33,9 @@ class JobApplicationDatatableModel(DatatableModel):
             # case Qt.StatusTipRole:
             # case Qt.WhatsThisRole:
 
-    def _handleDisplayRole(self, modelData: ModelData):
+    def _handleDisplayRole(self, modelData: ModelData) -> Any:
+        model: JobApplication = modelData.model
+
         # Perform per-type checks and render accordingly.
         if isinstance(modelData.value, datetime.datetime):
             # Render time to YYY-MM-DD.
@@ -48,14 +50,14 @@ class JobApplicationDatatableModel(DatatableModel):
             return
 
         if modelData.column == "job_id":
-            return modelData.model.job.displayLabel()
+            return model.job.displayLabel()
 
         if modelData.column == "company_id":
-            return modelData.model.company.displayLabel()
+            return model.company.displayLabel()
 
         return modelData.value
 
-    def _handleTextAlignmentRole(self, modelData: ModelData):
+    def _handleTextAlignmentRole(self, modelData: ModelData) -> Any:
         if modelData.column == "id":
             return Qt.AlignCenter
 

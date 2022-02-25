@@ -1,5 +1,5 @@
 
-from typing import Optional
+from typing import Generic, Optional
 from PySide6.QtGui import QResizeEvent, QMouseEvent, QContextMenuEvent, QAction, QCursor
 from PySide6.QtWidgets import QAbstractItemView, QTableView, QMenu
 from PySide6.QtCore import Signal, Qt, QModelIndex, QPersistentModelIndex
@@ -7,6 +7,7 @@ from app.config.App import Sizing
 
 from app.gui.components.datatable.models.DatatableModel import DatatableModel
 from app.models.Model import Model
+from app.types import DTM
 
 
 class Datatable(QTableView):
@@ -26,7 +27,7 @@ class Datatable(QTableView):
 
     # QMouseEvent
 
-    def __init__(self) -> None:
+    def __init__(self, datatableModel: DatatableModel) -> None:
         super().__init__()
 
         self.setSelectionBehavior(QAbstractItemView.SelectRows)
@@ -40,6 +41,9 @@ class Datatable(QTableView):
         self.setStyleSheet(
             'QTableView::item {border-bottom: 1px solid #d6d9dc;}')
 
+        self.setModel(datatableModel)
+        datatableModel.setParentTable(self)
+
     def _getModelAtSelection(self) -> Model:
         index = self.selectionModel().currentIndex()
 
@@ -49,6 +53,9 @@ class Datatable(QTableView):
         datatableModel: DatatableModel = self.model()
 
         return datatableModel.modelAtIndex(index)
+
+    def model(self) -> DatatableModel:
+        return super().model()  # type: ignore
 
     def mouseDoubleClickEvent(self, event: QMouseEvent) -> None:
         if event.button() == Qt.LeftButton:
@@ -89,9 +96,6 @@ class Datatable(QTableView):
         self.contextMenu.popup(self.mapToGlobal(event.pos()))
 
         # return super().contextMenuEvent(arg__1)
-
-    def model(self) -> DatatableModel:
-        return super().model()  # type: ignore
 
     def resizeEvent(self, event: Optional[QResizeEvent] = None) -> None:
         """Resizes columns one of three ways:

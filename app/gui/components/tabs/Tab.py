@@ -1,16 +1,19 @@
 
 
+from typing import Optional
 from PySide6.QtWidgets import QWidget, QTabWidget
 from PySide6.QtGui import QIcon, QPixmap
+
+from app.types import M
 
 
 class Tab(QWidget):
     def __init__(self,
                  label: str,
-                 model: None = None,
+                 model: Optional[M] = None,
                  tooltip: str | None = None,
                  whatsThis: str | None = None,
-                 icon: QIcon | None = None,
+                 icon: Optional[QIcon | QPixmap] = None,
                  closable: bool = True,
                  movable: bool = True
                  ) -> None:
