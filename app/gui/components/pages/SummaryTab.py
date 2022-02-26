@@ -9,8 +9,8 @@ from PySide6.QtCore import (
     Slot,
     QMargins,
 )
-from PySide6.QtGui import QMouseEvent
-from PySide6.QtWidgets import QVBoxLayout
+from PySide6.QtGui import QMouseEvent, QPalette
+from PySide6.QtWidgets import QVBoxLayout, QHBoxLayout, QFrame
 
 # Application imports
 from app.gui.components.datatable.Datatable import Datatable
@@ -22,6 +22,7 @@ from app.gui.components.datatable.models.JobApplicationDatatableModel import (
 )
 from app.gui.components.pages.Header import Header
 from app.gui.components.pages.JobApplicationTab import JobApplicationTab
+from app.gui.components.statistics.StatisticGroup import StatisticGroup
 from app.gui.components.tabs.Tab import Tab
 from app.gui.services.TabService import TabService
 from app.models.JobApplication import JobApplication
@@ -34,19 +35,39 @@ class SummaryTab(Tab):
         super().__init__(label=label, **kwargs)
 
         self.mainLayout = QVBoxLayout()
-        MARGINS = [20] * 4
-        self.setContentsMargins(*MARGINS)
+        # *([10] * 4)
+        self.setContentsMargins(10, 0, 10, 0)
         self.setLayout(self.mainLayout)
 
-        # Setup stats11111111111111111111
+        # Header
+        header = Header("Applications Summary")
+
+        # Setup stats
+        self.statisticsSection = StatisticGroup()
 
         # Setup table
         self.datatable = self._setupTable()
 
-        self.mainLayout.addWidget(Header("Applications Summary"))
+        self.mainLayout.addWidget(header)
+        self.mainLayout.addWidget(self.statisticsSection)
         self.mainLayout.addWidget(self.datatable)
 
+        # self.mainLayout.setStretchFactor(widget, 0)
+
     def _setupTable(self):
+        layout = QHBoxLayout()
+        layout.setContentsMargins(*([20] * 4))
+
+        frame = QFrame()
+        frame.setLayout(layout)
+        frame.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)
+        frame.setStyleSheet(
+            """
+            QFrame {
+                background-color: #FFF
+            }
+        """
+        )
 
         columHeaders = dict(
             zip(
@@ -87,7 +108,9 @@ class SummaryTab(Tab):
 
         datatable.openModel.connect(self.openTab)
 
-        return datatable
+        layout.addWidget(datatable)
+
+        return frame
 
     @Slot(JobApplication)
     @Slot(JobApplication, QMouseEvent)

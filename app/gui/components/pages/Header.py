@@ -1,13 +1,19 @@
-
-
-from PySide6.QtWidgets import QLabel, QHBoxLayout, QWidget
+from PySide6.QtWidgets import (
+    QLabel,
+    QHBoxLayout,
+    QWidget,
+    QFrame,
+    QPlainTextEdit,
+    QLayout,
+)
 from PySide6.QtGui import QFont
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QSize
+from PySide6.QtWidgets import QSizePolicy
 
 from app.utilities.IconUtility import IconUtility
 
 
-class Header(QWidget):
+class Header(QFrame):
     def __init__(self, text: str) -> None:
         super().__init__()
 
@@ -16,10 +22,13 @@ class Header(QWidget):
 
         layout = QHBoxLayout()
         layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        layout.setContentsMargins(0, 0, 0, 0)
+
         self.setLayout(layout)
+        self.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)
 
         label = QLabel(text)
-        label.setFont(QFont(['Helvetica', 'SansSerif'], 18))
+        label.setFont(QFont(["Helvetica", "SansSerif"], 18))
 
         icon = QLabel("")
         icon.setPixmap(self._icon)

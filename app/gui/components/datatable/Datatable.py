@@ -31,22 +31,24 @@ class Datatable(QTableView):
 
         self.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.setSelectionMode(QAbstractItemView.SingleSelection)
-        self.verticalHeader().setMinimumSectionSize(50)
-        self.verticalHeader().setSectionsMovable(False)
         self.setAlternatingRowColors(True)
         self.setWordWrap(False)
-
-        # Remove vertical gridlines
+        self.horizontalHeader().setSectionsMovable(True)
+        self.verticalHeader().hide()
+        self.verticalHeader().setMinimumSectionSize(50)
         self.setShowGrid(False)
+        
+        # https://doc.qt.io/qtforpython/overviews/stylesheet-examples.html#customizing-qtabwidget-and-qtabbar
         self.setStyleSheet(
             """
             QTableView {
                 border: none;
             }
             QHeaderView::section {
+                border: none;
+                padding: 12px
             }
             QTableView::item {
-                border-bottom: none;
             }
         """
         )
