@@ -1,8 +1,7 @@
-
 from typing import Generic, Optional
 from PySide6.QtGui import QResizeEvent, QMouseEvent, QContextMenuEvent, QAction, QCursor
 from PySide6.QtWidgets import QAbstractItemView, QTableView, QMenu
-from PySide6.QtCore import Signal, Qt, QModelIndex, QPersistentModelIndex
+from PySide6.QtCore import Signal, Qt, QModelIndex, QPersistentModelIndex, QPoint
 from app.config.App import Sizing
 
 from app.gui.components.datatable.models.DatatableModel import DatatableModel
@@ -13,7 +12,7 @@ from app.types import DTM
 class Datatable(QTableView):
     """A datatable view model.
 
-    URL: 
+    URL:
         https://doc.qt.io/qtforpython/PySide6/QtWidgets/QTableView.html
         https://doc.qt.io/qtforpython/tutorials/datavisualize/add_tableview.html
         https://www.pythonguis.com/tutorials/qtableview-modelviews-numpy-pandas/
@@ -33,13 +32,24 @@ class Datatable(QTableView):
         self.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.setSelectionMode(QAbstractItemView.SingleSelection)
         self.verticalHeader().setMinimumSectionSize(50)
+        self.verticalHeader().setSectionsMovable(False)
         self.setAlternatingRowColors(True)
         self.setWordWrap(False)
 
         # Remove vertical gridlines
         self.setShowGrid(False)
         self.setStyleSheet(
-            'QTableView::item {border-bottom: 1px solid #d6d9dc;}')
+            """
+            QTableView {
+                border: none;
+            }
+            QHeaderView::section {
+            }
+            QTableView::item {
+                border-bottom: none;
+            }
+        """
+        )
 
         self.setModel(datatableModel)
         datatableModel.setParentTable(self)
@@ -68,6 +78,10 @@ class Datatable(QTableView):
 
     # TODO Set context menu on sub-class JobApplicationDatatable?
 
+    @property
+    def indexAtCursor(self) -> QModelIndex | QPersistentModelIndex:
+        return self.indexAt(self.viewport().mapFromGlobal(QCursor.pos()))
+
     def contextMenuEvent(self, event: QContextMenuEvent) -> None:
         index = self.indexAt(event.pos())
 
@@ -87,11 +101,13 @@ class Datatable(QTableView):
         separator = QAction(self)
         separator.setSeparator(True)
 
-        self.contextMenu.addActions([
-            separator,
-            openAction,
-            title,
-        ])
+        self.contextMenu.addActions(
+            [
+                separator,
+                openAction,
+                title,
+            ]
+        )
 
         self.contextMenu.popup(self.mapToGlobal(event.pos()))
 
@@ -107,23 +123,39 @@ class Datatable(QTableView):
         tableWidth = self.width()
         colWidths = 0
 
-        for colIdx in range(datatableModel.columnCount()):
-            if datatableModel.getColumnName(colIdx) in ["id", "requires_followup", "pinned", "created_at", "updated_at", "deleted_at"]:
-                self.resizeColumnToContents(colIdx)
-                colWidth = self.columnWidth(colIdx)
-                self.setColumnWidth(
-                    colIdx, colWidth + Sizing.TABLE_X_PADDING)
+        fitByContents = [
+            "id",
+            "requires_followup",
+            "created_at",
+            "updated_at",
+        ]
 
-                colWidths += colWidth + Sizing.TABLE_X_PADDING
+        for index, column in enumerate(fitByContents):
+            index = datatableModel.columns.index(column)
 
-        for colIdx in range(datatableModel.columnCount()):
-            if datatableModel.getColumnName(colIdx) in ["title", "job_id", "company_id"]:
+            self.resizeColumnToContents(index)
+            colWidth = self.columnWidth(index) + Sizing.TABLE_X_PADDING
+            self.setColumnWidth(index, colWidth)
 
-                # colWidth = int((tableWidth - colWidths) / 3)
-                colWidth = int((tableWidth - colWidths -
-                               (6 * Sizing.TABLE_X_PADDING)) / 3)
+            colWidths += colWidth
 
-                self.setColumnWidth(
-                    colIdx, colWidth + Sizing.TABLE_X_PADDING)
+        remainingColumnSpace = tableWidth - colWidths
+        remainingColumns = [
+            col for col in datatableModel.columns if col not in fitByContents
+        ]
 
-        # self.horizontalHeader().setStretchLastSection(True)
+        for index, column in enumerate(remainingColumns):
+            colIndex = datatableModel.columns.index(column)
+
+            remainingColumnCount = len(remainingColumns) - index
+
+            colWidth = (
+                remainingColumnSpace / remainingColumnCount
+            ) + Sizing.TABLE_X_PADDING
+
+            remainingColumnSpace = remainingColumnSpace - colWidth
+
+            self.setColumnWidth(colIndex, int(colWidth))
+
+        # TODO Work out why exactly 40 pixels
+        self.setColumnWidth(1, self.columnWidth(1) - 40)

@@ -1,5 +1,3 @@
-
-
 from app.gui.components.tabs.Tab import Tab
 from PySide6.QtGui import QIcon, QPixmap
 from PySide6.QtWidgets import QTabBar, QTabWidget
@@ -13,6 +11,7 @@ class _TabServiceProvider:
 
     def initTabs(self, tabBar: QTabBar):
         self.tabs = QTabWidget()
+
         self.tabs.setTabBar(tabBar)
 
     # def isTabOpen(self, tab: Tab):

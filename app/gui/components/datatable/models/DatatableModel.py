@@ -33,7 +33,7 @@ class DatatableModel(QAbstractTableModel):
         self._data = data
         self._headers: Sequence[str] = list(columnHeaders.values())
         self._columns: Sequence[str] = list(columnHeaders.keys())
-        self._parentTable: Optional["Datatable"] = None
+        self._parentTable: Datatable
 
     def setParentTable(self, datatable: "Datatable"):
         """
@@ -47,9 +47,17 @@ class DatatableModel(QAbstractTableModel):
         """
         self._parentTable = datatable
 
+    @property
+    def datatable(self):
+        return self._parentTable
+
+    @property
+    def columns(self):
+        return self._columns
+
     def _triggerParentResize(self):
-        if isinstance(self._parentTable, Datatable):
-            self._parentTable.resizeEvent()
+        if self.datatable:
+            self.datatable.resizeEvent()
 
     def getColumnName(self, colIdx: int) -> str:
         return self._columns[colIdx]

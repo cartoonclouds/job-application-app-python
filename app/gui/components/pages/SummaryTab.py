@@ -7,14 +7,15 @@ from PySide6.QtCore import (
     QPersistentModelIndex,
     QSortFilterProxyModel,
     Slot,
+    QMargins,
 )
 from PySide6.QtGui import QMouseEvent
 from PySide6.QtWidgets import QVBoxLayout
 
 # Application imports
 from app.gui.components.datatable.Datatable import Datatable
-from app.gui.components.datatable.delegates.FollowUpItemDelegate import (
-    FollowUpItemDelegate,
+from app.gui.components.datatable.delegates.JobApplicationDatatableItemDelegate import (
+    JobApplicationDatatableItemDelegate,
 )
 from app.gui.components.datatable.models.JobApplicationDatatableModel import (
     JobApplicationDatatableModel,
@@ -33,6 +34,8 @@ class SummaryTab(Tab):
         super().__init__(label=label, **kwargs)
 
         self.mainLayout = QVBoxLayout()
+        MARGINS = [20] * 4
+        self.setContentsMargins(*MARGINS)
         self.setLayout(self.mainLayout)
 
         # Setup stats11111111111111111111
@@ -73,8 +76,7 @@ class SummaryTab(Tab):
         )
 
         datatable = Datatable(datatableModel)
-
-        datatable.setItemDelegateForColumn(2, FollowUpItemDelegate(datatableModel))
+        datatable.setItemDelegate(JobApplicationDatatableItemDelegate(datatableModel))
 
         # debug(list(Storage.jobApplications.values()))
 
