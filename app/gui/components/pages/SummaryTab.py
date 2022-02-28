@@ -34,10 +34,10 @@ class SummaryTab(Tab):
     def __init__(self, label: str, **kwargs) -> None:
         super().__init__(label=label, **kwargs)
 
-        self.mainLayout = QVBoxLayout()
+        self.setObjectName("Tab:Summary")
+        self.mainLayout = QVBoxLayout(self)
         # *([10] * 4)
         self.setContentsMargins(10, 0, 10, 0)
-        self.setLayout(self.mainLayout)
 
         # Header
         header = Header("Applications Summary")
@@ -55,11 +55,7 @@ class SummaryTab(Tab):
         # self.mainLayout.setStretchFactor(widget, 0)
 
     def _setupTable(self):
-        layout = QHBoxLayout()
-        layout.setContentsMargins(*([20] * 4))
-
         frame = QFrame()
-        frame.setLayout(layout)
         frame.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)
         frame.setStyleSheet(
             """
@@ -69,14 +65,17 @@ class SummaryTab(Tab):
         """
         )
 
+        layout = QHBoxLayout(frame)
+        layout.setContentsMargins(*([20] * 4))
+
         columHeaders = dict(
             zip(
                 [
                     "id",
                     "title",
                     "requires_followup",
-                    "company_id",
-                    "job_id",
+                    "company",
+                    "job",
                     "created_at",
                     "updated_at",
                 ],

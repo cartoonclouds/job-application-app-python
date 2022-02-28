@@ -114,7 +114,7 @@ class DatatableModel(QAbstractTableModel):
         Returns:
             Model
         """
-        return self._data[index.row()] if index.row() > 0 else None
+        return self._data[index.row()]
 
     def getModelData(self, index: QModelIndex | QPersistentModelIndex) -> ModelData:
         """Constructs a data class with details at the given index.

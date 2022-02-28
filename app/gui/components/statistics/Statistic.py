@@ -7,10 +7,9 @@ class Statistic(QFrame):
     def __init__(self, text: str) -> None:
         super().__init__()
 
-        layout = QHBoxLayout()
+        layout = QHBoxLayout(self)
         layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
-        
-        self.setLayout(layout)
+    
         self.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)
 
         label = QLabel(text)

@@ -6,7 +6,7 @@ from PySide6.QtWidgets import (
     QPlainTextEdit,
     QLayout,
 )
-from PySide6.QtGui import QFont
+from PySide6.QtGui import QFont, QFontMetrics
 from PySide6.QtCore import Qt, QSize
 from PySide6.QtWidgets import QSizePolicy
 
@@ -20,11 +20,10 @@ class Header(QFrame):
         self._text = text
         self._icon = IconUtility.getFileIconAsPixmap("gear")
 
-        layout = QHBoxLayout()
+        layout = QHBoxLayout(self)
         layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
         layout.setContentsMargins(0, 0, 0, 0)
 
-        self.setLayout(layout)
         self.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)
 
         label = QLabel(text)
@@ -32,6 +31,10 @@ class Header(QFrame):
 
         icon = QLabel("")
         icon.setPixmap(self._icon)
+
+        fontMetrics: QFontMetrics = label.fontMetrics()
+        textSize: QSize = fontMetrics.size(0, label.text())
+        self.setMaximumHeight(textSize.height())
 
         layout.addWidget(icon)
         layout.addWidget(label)

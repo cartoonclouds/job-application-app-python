@@ -1,6 +1,14 @@
 from orator.seeds import Seeder
-from app.models import *
+
+# from app.models import *
 from PySide2.QtCore import QObject, Signal, Slot
+from app.models.Action import Action
+from app.models.Address import Address
+from app.models.Company import Company
+from app.models.Job import Job
+from app.models.JobApplication import JobApplication
+from app.models.Person import Person
+from app.models.Profession import Profession
 
 # from seeds.job_application_table_seeder import JobApplicationTableSeeder
 from seeds.factories import factory
@@ -13,29 +21,31 @@ class DatabaseSeeder(Seeder):
         Run the database seeds.
         """
         # Create 5 job applications with associated relations
-        jobApplications = factory(JobApplication, 2).create()
-        jobApplications.each(lambda ja: ja.job().save(factory(Action).make()))
+        jobApplications = factory(JobApplication, 20).create()
+        jobApplications.each(lambda ja: ja.job().save(factory(Job).make()))
+        # jobApplications.each(lambda ja: ja.job().save(factory(Company).make()))
+
+        # # Add addreses and person to companies
+        # companies = Company.get()
+        # companies.each(lambda c: c.address().save(factory(Address).make()))
+        # companies.each(lambda c: c.person().save(factory(Person).make()))
 
         # Get jobs and add 3 actions to each
         # jobs = Job.get()
-        # jobs.each(
-        #     lambda j: j.actions().save(factory(Action).make())
-        # )
-        # jobs.each(
-        #     lambda j: j.actions().save(factory(Action).make())
-        # )
-        # jobs.each(
-        #     lambda j: j.actions().save(factory(Action).make())
-        # )
+        # # jobs.each(lambda j: j.address().save(factory(Address).make()))
+        # # jobs.each(lambda j: j.profession().save(factory(Profession).make()))
 
-        # Get half the actions and add 2 child actions
+        # jobs.each(lambda j: j.actions().save(factory(Action).make()))
+        # jobs.each(lambda j: j.actions().save(factory(Action).make()))
+        # jobs.each(lambda j: j.actions().save(factory(Action).make()))
+
+        # # Get half the actions and add 2 child actions
         # actions = Action.get().take(int(Action.count() / 2))
-        # actions.each(
-        #     lambda a: a.child_actions().save(factory(Action).make())
-        # )
-        # actions.each(
-        #     lambda a: a.child_actions().save(factory(Action).make())
-        # )
+        # actions.each(lambda a: a.child_actions().save(factory(Action).make()))
+        # actions.each(lambda a: a.child_actions().save(factory(Action).make()))
+
+        # ---------------------- #
+
         # job = factory(Job).create()
 
         # job.job_application().save(

@@ -49,10 +49,10 @@ class JobApplicationDatatableModel(DatatableModel):
         if type(modelData.value) == bool:
             return
 
-        if modelData.column == "job_id":
+        if modelData.column == "job":
             return model.job.displayLabel()
 
-        if modelData.column == "company_id":
+        if modelData.column == "company":
             return model.company.displayLabel()
 
         return modelData.value

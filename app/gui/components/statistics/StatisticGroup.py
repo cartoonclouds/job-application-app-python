@@ -17,10 +17,9 @@ class StatisticGroup(QFrame):
     def __init__(self) -> None:
         super().__init__()
 
-        layout = QHBoxLayout()
+        layout = QHBoxLayout(self)
         layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
 
-        self.setLayout(layout)
         self.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)
 
         stat1 = Statistic("Statistic section 1!")

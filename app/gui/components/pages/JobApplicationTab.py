@@ -1,5 +1,7 @@
 # Standard Library
 from typing import Any
+import qtawesome as qta
+from app.gui.components.form.form import Form
 
 from app.gui.components.pages.Header import Header
 from app.gui.components.tabs.Tab import Tab
@@ -15,25 +17,18 @@ class JobApplicationTab(Tab):
     def __init__(self, label: str, **kwargs: Any) -> None:
         super().__init__(label=label, **kwargs)
 
-        layout = QVBoxLayout()
+        self.setObjectName("Tab:JobApplication")
+
+        layout = QVBoxLayout(self)
         # *([10] * 4)
         self.setContentsMargins(10, 0, 10, 0)
-        self.setLayout(layout)
 
         header = Header(f"Job Application - {self.model.title}")
-
-        layout.setStretchFactor(header, 0)
 
         # QGroupBox to go around form
         # https://doc.qt.io/qtforpython/overviews/qtwidgets-widgets-groupbox-example.html#group-box-example
 
-        if self.model:
-            layout.addWidget(self._addJobForm())
+        jobForm = Form(self.model, "Job Information")
 
         layout.addWidget(header)
-
-    def _addJobForm(self):
-        if self.model:
-            titleInput = TextInput("Title")
-            titleInput.setBinding(self.model, "title")
-            return titleInput
+        layout.addWidget(jobForm)

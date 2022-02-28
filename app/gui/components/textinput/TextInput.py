@@ -16,26 +16,18 @@ Label = QPixmap | QMovie | str | int | float | None
 
 
 class TextInput(QWidget):
-    def __init__(self, labelText: Label = None):
+    def __init__(self):
         super().__init__()
 
-        self._layout = QHBoxLayout()
-        self._layout.setContentsMargins(10, 0, 10, 0)
-        self.setLayout(self._layout)
+        self._layout = QHBoxLayout(self)
+        self._layout.setContentsMargins(0, 0, 0, 0)
 
-        self._label = QLabel(self)
         self._input = QLineEdit(self)
 
-        self._label.setBuddy(self._input)
-
-        self._layout.addWidget(self._label)
         self._layout.addWidget(self._input)
 
-        if isinstance(labelText, str):
-            self.setLabelText(labelText)
-
-    def setLabelText(self, text: str):
-        self._label.setText(text)
+    def setPlaceholderText(self, text: str):
+        self._input.setPlaceholderText(text)
 
     def setBinding(
         self,

@@ -61,7 +61,7 @@ pip install pyside6
 - Migrate
 
 ```bash
-orator migrate --config ./config/database.py --path ./databases/migrations/
+orator migrate --config ./config/database.py --path ./databases/migrations/ -v
 ```
 
 - Create seeders
@@ -81,7 +81,8 @@ orator make:seed --path ./databases/seeds/ person_table_seeder
 ```bash
 # https://bic-berkeley.github.io/psych-214-fall-2016/using_pythonpath.html
 # export PYTHONPATH="$PWD/app/models:$PYTHONPATH"
-orator db:seed --config ./config/database.py --path ./databases/seeds
+# https://docs.python.org/3/tutorial/modules.html#packages
+orator db:seed --config ./config/database.py --path ./databases/seeds -v
 ```
 
 # Testing
