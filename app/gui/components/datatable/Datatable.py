@@ -37,7 +37,7 @@ class Datatable(QTableView):
         self.verticalHeader().hide()
         self.verticalHeader().setMinimumSectionSize(50)
         self.setShowGrid(False)
-        
+
         # https://doc.qt.io/qtforpython/overviews/stylesheet-examples.html#customizing-qtabwidget-and-qtabbar
         self.setStyleSheet(
             """
@@ -73,8 +73,9 @@ class Datatable(QTableView):
         if event.button() == Qt.LeftButton:
             rowModel = self._getModelAtSelection()
 
-            self.openModel.emit(rowModel)
-            self.openModeWithEvent.emit(rowModel, event)
+            if rowModel:
+                self.openModel.emit(rowModel)
+                self.openModeWithEvent.emit(rowModel, event)
 
         return super().mouseDoubleClickEvent(event)
 

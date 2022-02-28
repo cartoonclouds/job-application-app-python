@@ -106,6 +106,15 @@ class SummaryTab(Tab):
         # self.table = DataTable(dataTableModel)
         # .setSortingEnabled(True)
 
+        # TABLE EDITING
+        # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QItemEditorFactory.html
+        # https://doc.qt.io/qtforpython/overviews/qtwidgets-itemviews-coloreditorfactory-example.html
+        # https://programmer.group/qt-custom-delegation-draws-control-picture-and-text-in-qtableview.html
+        # https://stackoverflow.com/questions/62414356/add-a-checkbox-to-text-in-a-qtableview-cell-using-delegate
+
+        # FROZEN COLUMNS
+        # https://doc.qt.io/qtforpython/overviews/qtwidgets-itemviews-frozencolumn-example.html
+
         datatable.openModel.connect(self.openTab)
 
         layout.addWidget(datatable)

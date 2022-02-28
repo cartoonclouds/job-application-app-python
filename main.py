@@ -1,7 +1,11 @@
-
 from app.app import App
+from app.models import Action, JobApplication
+
 
 if __name__ == "__main__":
+    # jobApplications = factory(JobApplication, 2).create()
+    # jobApplications.each(lambda ja: ja.job().save(factory(Action).make()))
+
     app = App()
 
     # def example_function(self):

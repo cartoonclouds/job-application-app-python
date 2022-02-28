@@ -10,14 +10,14 @@ class CreateJobApplicationsTable(Migration):
         """
         self.schema.drop_if_exists("job_applications")
 
-        with self.schema.create('job_applications') as table:
-            table.increments('id')
-            table.text('title').nullable()
-            table.boolean('requires_followup').default(False)
-            table.boolean('pinned').default(False)
+        with self.schema.create("job_applications") as table:
+            table.increments("id")
+            table.text("title").nullable()
+            table.boolean("requires_followup").default(False)
+            table.boolean("pinned").default(False)
 
             # Relations
-            table.integer('company_id').unsigned()
+            table.integer("company_id").unsigned()
 
             table.timestamps()
             table.soft_deletes()

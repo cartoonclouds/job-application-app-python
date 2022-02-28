@@ -1,7 +1,6 @@
 from orator.seeds import Seeder
-from app.models.JobApplication import JobApplication
+from app.models import *
 from PySide2.QtCore import QObject, Signal, Slot
-from app.models.Model import Model
 
 # from seeds.job_application_table_seeder import JobApplicationTableSeeder
 from seeds.factories import factory
@@ -9,16 +8,13 @@ from config.database import db
 
 
 class DatabaseSeeder(Seeder):
-
     def run(self):
         """
         Run the database seeds.
         """
         # Create 5 job applications with associated relations
-        # jobApplications = factory(JobApplication, 2).create()
-        # jobApplications.each(
-        #     lambda ja: ja.job().save(factory(Action).make())
-        # )
+        jobApplications = factory(JobApplication, 2).create()
+        jobApplications.each(lambda ja: ja.job().save(factory(Action).make()))
 
         # Get jobs and add 3 actions to each
         # jobs = Job.get()
@@ -70,34 +66,34 @@ class DatabaseSeeder(Seeder):
     # def eventHappened(self, m: Model):
     #     debug(m)
 
-        # print(JobApplication.first().get_table_column_count())
+    # print(JobApplication.first().get_table_column_count())
 
-        # print({"Deleted At"}.issubset(
-        #     {"Created At", "Updated At", "Deleted At"}))
+    # print({"Deleted At"}.issubset(
+    #     {"Created At", "Updated At", "Deleted At"}))
 
-        # jar.load_all()
-        # i = list(jar.items())[0]
+    # jar.load_all()
+    # i = list(jar.items())[0]
 
-        # jobApp = i[1]
+    # jobApp = i[1]
 
-        # print(getattr(jobApp, 'title'))
+    # print(getattr(jobApp, 'title'))
 
-        # SELECT name FROM PRAGMA_table_info("job_applications")
+    # SELECT name FROM PRAGMA_table_info("job_applications")
 
-        # a = columns.items()
-        # print(list(a.values()))
+    # a = columns.items()
+    # print(list(a.values()))
 
-        # new_list = list(d.values())
-        # print(new_list)
+    # new_list = list(d.values())
+    # print(new_list)
 
-        # print(*columns, sep="\n")
-        # print('\n'.join(map(str, columns)))
+    # print(*columns, sep="\n")
+    # print('\n'.join(map(str, columns)))
 
-        # print(db.raw('SELECT * FROM PRAGMA_TABLE_INFO("?")',
-        #       [JobApplication.__table__]))
-        # print(JobApplication.__table__)
-        # jar = JobApplicationRepository(jas)
-        # jar.load_all()
-        #
-        # print('\n'.join(map(str, jar.values())))
-        # print(jar[2])
+    # print(db.raw('SELECT * FROM PRAGMA_TABLE_INFO("?")',
+    #       [JobApplication.__table__]))
+    # print(JobApplication.__table__)
+    # jar = JobApplicationRepository(jas)
+    # jar.load_all()
+    #
+    # print('\n'.join(map(str, jar.values())))
+    # print(jar[2])

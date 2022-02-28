@@ -10,7 +10,7 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import QModelIndex, QPersistentModelIndex, QPoint, Qt
 
-from app.gui.components.statistics.Statistic.Statistic import Statistic
+from app.gui.components.statistics.Statistic import Statistic
 
 
 class StatisticGroup(QFrame):

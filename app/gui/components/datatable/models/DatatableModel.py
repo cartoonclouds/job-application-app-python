@@ -105,7 +105,7 @@ class DatatableModel(QAbstractTableModel):
     #         case Qt.TextAlignmentRole:
     #         case Qt.SizeHintRole:
 
-    def modelAtIndex(self, index: QModelIndex | QPersistentModelIndex) -> Model:
+    def modelAtIndex(self, index: QModelIndex | QPersistentModelIndex) -> Model | None:
         """Finds the data Model of row at the given index.
 
         Args:
@@ -114,7 +114,7 @@ class DatatableModel(QAbstractTableModel):
         Returns:
             Model
         """
-        return self._data[index.row()]
+        return self._data[index.row()] if index.row() > 0 else None
 
     def getModelData(self, index: QModelIndex | QPersistentModelIndex) -> ModelData:
         """Constructs a data class with details at the given index.

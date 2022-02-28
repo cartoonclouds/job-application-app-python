@@ -67,13 +67,13 @@ orator migrate --config ./config/database.py --path ./databases/migrations/
 - Create seeders
 
 ```bash
-orator make:seed job_application_table_seeder
-orator make:seed job_table_seeder
-orator make:seed company_table_seeder
-orator make:seed profession_table_seeder
-orator make:seed action_table_seeder
-orator make:seed address_table_seeder
-orator make:seed person_table_seeder
+orator make:seed --path ./databases/seeds/ job_application_table_seeder
+orator make:seed --path ./databases/seeds/ job_table_seeder
+orator make:seed --path ./databases/seeds/ company_table_seeder
+orator make:seed --path ./databases/seeds/ profession_table_seeder
+orator make:seed --path ./databases/seeds/ action_table_seeder
+orator make:seed --path ./databases/seeds/ address_table_seeder
+orator make:seed --path ./databases/seeds/ person_table_seeder
 ```
 
 - Seed
@@ -81,7 +81,7 @@ orator make:seed person_table_seeder
 ```bash
 # https://bic-berkeley.github.io/psych-214-fall-2016/using_pythonpath.html
 # export PYTHONPATH="$PWD/app/models:$PYTHONPATH"
-orator db:seed --config ./config/database.py
+orator db:seed --config ./config/database.py --path ./databases/seeds
 ```
 
 # Testing
@@ -118,3 +118,7 @@ print(' '.join(map(str, a)))
 
 print"in new line"
 print('\n'.join(map(str, a)))
+
+# Spilt and echo each line
+
+for i in $(echo $PATH | tr ":" "\n"); do echo $i; done
