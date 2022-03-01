@@ -28,6 +28,7 @@ class Form(QFrame):
 
         self.setLayout(self._layout)
 
+    # TODO rowspan and colspan
     def addRow(self, *fields):
         newRowIndex = self.rowCount + 1
         newColIndex = 0
