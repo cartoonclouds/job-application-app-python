@@ -2,7 +2,7 @@ from abc import abstractmethod
 import abc
 from typing import Any
 from enum import Enum, unique, auto
-from PySide6.QtGui import QPixmap, QMovie
+from PySide6.QtGui import QPixmap, QMovie, QFont
 from PySide6.QtWidgets import QWidget, QLabel, QLineEdit, QVBoxLayout, QPlainTextEdit
 from app.models.Model import Model
 
@@ -24,6 +24,10 @@ class Input(QWidget):
         self._input = input()
         self._label = QLabel()
         self._label.setBuddy(self._input)
+        labelFont = self._label.font()
+        labelFont.setPointSize(11)
+        labelFont.setCapitalization(QFont.SmallCaps)
+        self._label.setFont(labelFont)
         self._label.hide()
 
         self._layout.addWidget(self._label)

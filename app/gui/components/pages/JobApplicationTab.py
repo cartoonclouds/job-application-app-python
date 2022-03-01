@@ -1,11 +1,12 @@
 # Standard Library
 from typing import Any
 import qtawesome as qta
-from app.gui.components.form.form import Form
+from app.gui.components.form.CompanyForm import CompanyForm
+from app.gui.components.form.JobForm import JobForm
 
 from app.gui.components.pages.Header import Header
 from app.gui.components.tabs.Tab import Tab
-from PySide6.QtWidgets import QFormLayout, QLineEdit, QVBoxLayout
+from PySide6.QtWidgets import QVBoxLayout
 
 # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QTabWidget.html
 # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QTabBar.html
@@ -26,7 +27,9 @@ class JobApplicationTab(Tab):
         # QGroupBox to go around form
         # https://doc.qt.io/qtforpython/overviews/qtwidgets-widgets-groupbox-example.html#group-box-example
 
-        jobForm = Form("JobInfo", self.model, "Job Information")
+        jobForm = JobForm(self.model.job)
+        companyForm = CompanyForm(self.model.company)
 
         layout.addWidget(header)
         layout.addWidget(jobForm)
+        layout.addWidget(companyForm)
