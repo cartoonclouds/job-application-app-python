@@ -1,17 +1,18 @@
 import sys
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication, QStyleFactory
 from window import MainWindow
 
 
 class App:
     def __init__(self) -> None:
         app = QApplication(sys.argv)
-
+        # app.setStyle("Plastique")
         # https://stackoverflow.com/questions/63442415/changing-font-size-of-all-qlabel-objects-pyqt5
         # custom_font = QFont()
         # custom_font.setWeight(18);
         # QApplication.setFont(custom_font, "QLabel")
 
+        # QApplication.setStyle(QStyleFactory.create("Cleanlooks"))
         window = MainWindow()
 
         # https://docs.python.org/3/library/configparser.html

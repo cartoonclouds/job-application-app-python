@@ -3,6 +3,7 @@ from PySide6.QtWidgets import (
     QFrame,
     QGridLayout,
 )
+from app.gui.components.form.inputs.Input import Input
 from app.gui.components.form.inputs.TextInput import TextInput
 from app.models import Model
 from PySide6.QtCore import Qt
@@ -17,6 +18,13 @@ class Form(QFrame):
         self.setObjectName("Form:" + name)
         self.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)
         # self.setContentsMargins(0, 0, 0, 0)
+        self.setStyleSheet(
+            """
+            QFrame {
+                background-color: #FFF
+            }
+        """
+        )
 
         self._layout = QGridLayout()
         self._layout.setAlignment(Qt.AlignTop)
@@ -28,19 +36,25 @@ class Form(QFrame):
 
         self.setLayout(self._layout)
 
-    # TODO rowspan and colspan
-    def addRow(self, *fields):
+    def addRow(self, *fields, rowspan: int = 1, colspan: int = 1):
         newRowIndex = self.rowCount + 1
         newColIndex = 0
 
         if len(fields) == 1:
             field: TextInput = fields[0]
-            self._layout.addWidget(field, newRowIndex, newColIndex, Qt.AlignTop)
+            self._layout.addWidget(
+                field, newRowIndex, newColIndex, rowspan, colspan, Qt.AlignTop
+            )
         else:
             for field in fields:
+                if not isinstance(field, Input):
+                    continue
+
                 field: TextInput = field
 
-                self._layout.addWidget(field, newRowIndex, newColIndex, Qt.AlignTop)
+                self._layout.addWidget(
+                    field, newRowIndex, newColIndex, rowspan, colspan, Qt.AlignTop
+                )
                 newColIndex += 1
 
     @property

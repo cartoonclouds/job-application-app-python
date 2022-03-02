@@ -3,6 +3,7 @@ from typing import Any
 import qtawesome as qta
 from app.gui.components.form.CompanyForm import CompanyForm
 from app.gui.components.form.JobForm import JobForm
+from app.gui.components.form.inputs.TextInput import TextInput
 
 from app.gui.components.pages.Header import Header
 from app.gui.components.tabs.Tab import Tab
@@ -26,16 +27,35 @@ class JobApplicationTab(Tab):
 
         splitter = QSplitter(Qt.Horizontal)
         splitter.setSizes([80, 800])
-        splitter.setHandleWidth(100)
+        # splitter.setSizes([500, 500])
+        # splitter.setStretchFactor(1, 500)
+
+        # splitter.setHandleWidth(100)
+        # splitter.setSizes([500, 500])
+        # splitter.setStretchFactor(1, 500)
+
+        # Splitter handle
+        # handle: QSplitterHandle = splitter.handle(1)
+        # handleLayout = QVBoxLayout(handle)
+        # handleLayout.setSpacing(0)
+        # # handleLayout.setContentsMargins(10, 0, 10, 0)
+
+        # line = QFrame(handle)
+        # line.setFrameShape(QFrame.HLine)
+        # line.setFrameShadow(QFrame.Sunken)
+        # handleLayout.addWidget(handle)
+
+        # splitter.createHandle()
+        splitter.setStyleSheet("QSplitter::handle { background-color: gray }")
 
         leftLayout = QVBoxLayout()
-        leftLayout.setContentsMargins(0, 0, 0, 0)
+        leftLayout.setContentsMargins(0, 0, 20, 0)
         leftLayout.setSpacing(20)
         leftFrame = QFrame()
         leftFrame.setLayout(leftLayout)
 
         rightLayout = QVBoxLayout()
-        rightLayout.setContentsMargins(0, 0, 0, 0)
+        rightLayout.setContentsMargins(20, 0, 0, 0)
         rightFrame = QFrame()
         rightFrame.setLayout(rightLayout)
 
@@ -44,11 +64,15 @@ class JobApplicationTab(Tab):
         # https://doc.qt.io/qtforpython/overviews/qtwidgets-widgets-groupbox-example.html#group-box-example
 
         # Setup LHS components
-        header = Header(f"Job Application - {self.model.title}")
+        # header = Header(f"Job Application - {self.model.title}")
+
+        header = TextInput("Job Application Title")
+        header.setBinding(self.model, "title")
+        header.setPlaceholderText("Job Application Title")
+
         jobForm = JobForm(self.model.job)
         companyForm = CompanyForm(self.model.company)
 
-        leftLayout.addWidget(header)
         leftLayout.addWidget(jobForm)
         leftLayout.addWidget(companyForm)
 

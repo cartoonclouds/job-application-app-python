@@ -123,3 +123,5 @@ print('\n'.join(map(str, a)))
 # Spilt and echo each line
 
 for i in $(echo $PATH | tr ":" "\n"); do echo $i; done
+
+https://stackoverflow.com/questions/9542738/python-find-in-list

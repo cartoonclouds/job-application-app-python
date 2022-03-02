@@ -14,6 +14,7 @@ class CreateCompaniesTable(Migration):
             table.text('name')
             table.text('email').nullable()
             table.integer('phone').nullable()
+            table.integer('mobile').nullable()
             table.text('website').nullable()
             table.long_text('comments').nullable()
 

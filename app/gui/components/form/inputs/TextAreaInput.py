@@ -5,9 +5,9 @@ from PySide6.QtCore import Slot
 from typing import Any
 
 
-class TextAreaInput(Input):
+class TextAreaInput(Input[QPlainTextEdit]):
     def __init__(self, label: str | None = None):
-        super(TextAreaInput, self).__init__(QPlainTextEdit)
+        super(TextAreaInput, self).__init__(QPlainTextEdit())
 
         if label:
             self.setLabel(label)
@@ -16,7 +16,8 @@ class TextAreaInput(Input):
         self,
         object: Any,
         property: str,
-        updateEvent: UpdateEvent = UpdateEvent.ON_CHANGE,
+        updatePropery: str | None = None,
+        updateEvent: UpdateEvent = UpdateEvent.Change,
     ):
         self._boundObject = object
         self._boundProperty = property
@@ -24,9 +25,9 @@ class TextAreaInput(Input):
 
         self._input.insertPlainText(getattr(self._boundObject, self._boundProperty))
 
-        if self._updateEvent == UpdateEvent.ON_CHANGE:
+        if self._updateEvent == UpdateEvent.Change:
             self._input.textChanged.connect(self._onTextChanged)
 
     @Slot(str)
     def _onTextChanged(self):
-        setattr(self._boundObject, self._boundProperty, self._input.document().toPlainText())
+        self.updateBoundObject(self._input.document().toPlainText())

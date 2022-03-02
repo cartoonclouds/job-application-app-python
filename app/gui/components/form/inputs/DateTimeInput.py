@@ -4,15 +4,15 @@ from PySide6.QtWidgets import QDateTimeEdit, QDateEdit
 from PySide6.QtCore import Slot, QDateTime, QDate
 
 
-class DateTimeInput(Input):
+class DateTimeInput(Input[QDateTimeEdit]):
     def __init__(self, label: str | None = None):
-        super(DateTimeInput, self).__init__(QDateTimeEdit)
+        super(DateTimeInput, self).__init__(QDateTimeEdit())
 
         self._input.setCalendarPopup(True)
         # self._input.setDate(QDateTime.currentDateTime().date())
         # setDisplayFormat()
         # setMinimumDateTime (dt: QDateTime)
-    
+
         if label:
             self.setLabel(label)
 
@@ -20,7 +20,8 @@ class DateTimeInput(Input):
         self,
         object: Any,
         property: str,
-        updateEvent: UpdateEvent = UpdateEvent.ON_CHANGE,
+        updatePropery: str | None = None,
+        updateEvent: UpdateEvent = UpdateEvent.Change,
     ):
         self._boundObject = object
         self._boundProperty = property
@@ -29,10 +30,9 @@ class DateTimeInput(Input):
         self._input.setDateTime(getattr(self._boundObject, self._boundProperty))
         # self._input.setDateTime(QDateTime.currentDateTime())
 
-        if self._updateEvent == UpdateEvent.ON_CHANGE:
+        if self._updateEvent == UpdateEvent.Change:
             self._input.dateTimeChanged.connect(self._onDateTimeChanged)
 
     @Slot(str)
     def _onDateTimeChanged(self, datetime: QDateTime):
-        debug(datetime, datetime.toString())
-        setattr(self._boundObject, self._boundProperty, datetime.toString())
+        self.updateBoundObject(datetime.toString())

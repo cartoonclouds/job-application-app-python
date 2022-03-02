@@ -17,6 +17,18 @@ class CompanyForm(Form):
         titleInput.setBinding(self._model, "name")
         titleInput.setPlaceholderText("Company name")
 
+        phoneInput = TextInput("Phone")
+        phoneInput.setBinding(self._model, "phone")
+        phoneInput.setPlaceholderText("Company phone number")
+
+        mobileInput = TextInput("Mobile")
+        mobileInput.setBinding(self._model, "mobile")
+        mobileInput.setPlaceholderText("Company mobile number")
+
+        titleInput = TextInput("Name")
+        titleInput.setBinding(self._model, "name")
+        titleInput.setPlaceholderText("Company name")
+
         websiteInput = TextInput("Website")
         websiteInput.setBinding(self._model, "website")
         websiteInput.setPlaceholderText("www.job-application.com")
@@ -26,6 +38,7 @@ class CompanyForm(Form):
         commentsInput.setPlaceholderText("Details about this job...")
 
         self.addRow(titleInput)
+        self.addRow(phoneInput, mobileInput)
         self.addRow(websiteInput)
         self.addRow(commentsInput)
         # -------------------------- #

@@ -18,7 +18,21 @@ class _TabServiceProvider:
     def tabBar(self):
         return self.tabs.tabBar()
 
-    def openTab(self, tab: Tab, focus: bool = True) -> Tab:
+    def openTab(self, tab: Tab | int | QPoint):
+        openingTab: Tab
+        tabIndex: int
+
+        if isinstance(tab, Tab):
+            openingTab = tab
+        elif isinstance(tab, QPoint):
+            tabIndex = self.tabBar().tabAt(tab)
+            openingTab = self.tabs.widget(tabIndex)  # type: ignore
+        else:
+            openingTab = self.tabs.widget(tab)  # type: ignore
+
+        openingTab.setActive()
+
+    def addTab(self, tab: Tab, focus: bool = True) -> Tab:
         # if tab is already open, return
 
         # Add tab

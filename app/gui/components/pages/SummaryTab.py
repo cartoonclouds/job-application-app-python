@@ -123,7 +123,7 @@ class SummaryTab(Tab):
     @Slot(JobApplication)
     @Slot(JobApplication, QMouseEvent)
     def openTab(self, model: JobApplication):
-        TabService.openTab(
+        TabService.addTab(
             JobApplicationTab(
                 f"{model.title}, {model.company.name} (ID {model.id})",
                 model=model,
@@ -132,7 +132,7 @@ class SummaryTab(Tab):
         )
 
     def openEmptyTab(self):
-        TabService.openTab(
+        TabService.addTab(
             JobApplicationTab(
                 f"New Application {TabService.tabCount() + 1}",
                 icon=IconUtility.getFileIconAsPixmap("blue-folder-32"),

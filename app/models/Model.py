@@ -7,12 +7,13 @@ from orator.orm import *
 from orator.orm.model import Model as oratorModel
 from PySide6.QtCore import QObject, Signal
 
+
 class Model(oratorModel):
     if TYPE_CHECKING:
         created_at: datetime
         updated_at: datetime
         deleted_at: datetime
-        
+
     class _ModelCommunicator(QObject):
         creating = Signal(oratorModel)
         created = Signal(oratorModel)
@@ -24,7 +25,6 @@ class Model(oratorModel):
         deleted = Signal(oratorModel)
         # restoring = Signal(oratorModel)
         # restored = Signal(oratorModel)
-
 
     _modelCommunicator = _ModelCommunicator()
 
@@ -98,6 +98,7 @@ class Model(oratorModel):
             .pluck("name")
             .count()
         )
+
 
     # Scopes
 

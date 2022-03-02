@@ -1,14 +1,15 @@
 from orator.seeds import Seeder
+from app.models.JobApplication import JobApplication
 
 # from app.models import *
-from PySide2.QtCore import QObject, Signal, Slot
-from app.models.Action import Action
-from app.models.Address import Address
-from app.models.Company import Company
-from app.models.Job import Job
-from app.models.JobApplication import JobApplication
-from app.models.Person import Person
-from app.models.Profession import Profession
+# from PySide2.QtCore import QObject, Signal, Slot
+# from app.models.Action import Action
+# from app.models.Address import Address
+# from app.models.Company import Company
+# from app.models.Job import Job
+# from app.models.JobApplication import JobApplication
+# from app.models.Person import Person
+# from app.models.Profession import Profession
 
 # from seeds.job_application_table_seeder import JobApplicationTableSeeder
 from seeds.factories import factory
@@ -21,8 +22,12 @@ class DatabaseSeeder(Seeder):
         Run the database seeds.
         """
         # Create 5 job applications with associated relations
-        jobApplications = factory(JobApplication, 20).create()
-        jobApplications.each(lambda ja: ja.job().save(factory(Job).make()))
+        # jobApplications = factory(JobApplication, 20).create()
+        # jobApplications.each(lambda ja: ja.job().save(factory(Job).make()))
+
+        ja = JobApplication.get().first()
+
+        debug(ja.job()x.update(y))
         # jobApplications.each(lambda ja: ja.job().save(factory(Company).make()))
 
         # # Add addreses and person to companies

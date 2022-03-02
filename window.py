@@ -11,6 +11,7 @@ from app.gui.components.pages.SummaryTab import SummaryTab
 from app.gui.components.tabs.TabBar import TabBar
 from app.gui.services.StatusBarService import StatusBarService
 from app.gui.services.TabService import TabService
+from app.models.JobApplication import JobApplication
 from app.storage import Storage
 from app.utilities.IconUtility import IconUtility
 
@@ -41,6 +42,28 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(TabService.tabs)
         self.setContentsMargins(1, 1, 1, 1)
 
+        # TODO Utility function to create JAA/empty tab, given JAA ID/random
+        testJaa = JobApplication.find(1)
+
+        # testJaa.job.profession.profession = "Differnt"
+        # testJaa.job.profession.profession.save()
+        debug(callable(testJaa.job.profession))
+
+        TabService.addTab(
+            JobApplicationTab(
+                f"{testJaa.title}, {testJaa.company.name} (ID {testJaa.id})",
+                model=testJaa,
+                icon=IconUtility.getFileIconAsPixmap("blue-folder-32"),
+            )
+        )
+
+        # TabService.addTab(
+        #     JobApplicationTab(
+        #         f"New Application {TabService.tabCount() + 1}",
+        #         icon=IconUtility.getFileIconAsPixmap("blue-folder-32"),
+        #     )
+        # )
+
         # https://www.pythonguis.com/tutorials/pyside6-widgets/
 
         self.show()
@@ -51,7 +74,7 @@ class MainWindow(QMainWindow):
     def setupTabs(self):
         TabService.initTabs(TabBar())
 
-        TabService.openTab(
+        TabService.addTab(
             SummaryTab(
                 "&Summary",
                 tooltip="Summary tab with stats",
