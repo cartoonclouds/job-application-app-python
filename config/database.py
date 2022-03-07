@@ -4,11 +4,11 @@ from orator.database_manager import DatabaseManager
 
 
 databases = {
-    'sqlite': {
-        'driver': 'sqlite',
-        'database': 'jaa_database.sqlite',
-        'prefix': '',
-        'log_queries': True
+    "sqlite": {
+        "driver": "sqlite",
+        "database": "jaa_database.sqlite",
+        "prefix": "",
+        "log_queries": False,
     },
 }
 

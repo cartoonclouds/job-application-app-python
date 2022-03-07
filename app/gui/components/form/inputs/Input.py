@@ -1,29 +1,44 @@
-from abc import abstractmethod
+# Standard Library
 import abc
-from typing import Any, TypeAlias, cast, no_type_check, overload
-from enum import Enum, unique, auto
 import typing
-from PySide6.QtGui import QPixmap, QMovie, QFont
+from abc import abstractmethod
+from enum import Enum, auto, unique
+from typing import Any, Generic, TypeAlias, TypeVar, cast, no_type_check, overload
+import logging
+
+# Framework imports
+from PySide6.QtCore import (
+    QAbstractItemModel,
+    QAbstractListModel,
+    QAbstractTableModel,
+    Qt,
+    QRegularExpression,
+)
+from PySide6.QtGui import (
+    QFont,
+    QMovie,
+    QPixmap,
+    QPalette,
+    QColor,
+    QRegularExpressionValidator,
+)
 from PySide6.QtWidgets import (
-    QWidget,
-    QLabel,
-    QLineEdit,
-    QVBoxLayout,
-    QPlainTextEdit,
     QComboBox,
     QDateTimeEdit,
+    QLabel,
+    QLineEdit,
+    QPlainTextEdit,
+    QVBoxLayout,
+    QWidget,
+    QCompleter,
 )
-from PySide6.QtCore import (
-    QAbstractListModel,
-    QAbstractItemModel,
-    QAbstractTableModel,
-)
-from typing import TypeVar, Generic
+
+# Application imports
 from app.gui.components.models.ProfessionListModel import ProfessionListModel
-
 from app.models import Model
-
-T = TypeVar("T", QComboBox, QPlainTextEdit, QLineEdit, QDateTimeEdit)
+from app.models.Profession import Profession
+from app.types import T
+from app.utilities.mixins.ObjectMixin import ObjectMixin
 
 WidgetModel: TypeAlias = (
     ProfessionListModel | QAbstractItemModel | QAbstractListModel | QAbstractTableModel
@@ -37,7 +52,7 @@ class UpdateEvent(Enum):
 
 
 # https://stackoverflow.com/questions/4821104/dynamic-instantiation-from-string-name-of-a-class-in-dynamically-imported-module
-class Input(Generic[T], QWidget):
+class Input(Generic[T], QWidget, ObjectMixin):
     def __init__(self, component: T):
         super(Input, self).__init__()
 
@@ -47,7 +62,7 @@ class Input(Generic[T], QWidget):
         self._input: T = component
         self._boundObject: None | Model = None
         self._boundProperty: None | str = None
-        self._updatePropery: None | str = None
+        self._updateProperty: None | str = None
         self._updateEvent: UpdateEvent = UpdateEvent.Change
 
         self._label = QLabel()
@@ -68,7 +83,7 @@ class Input(Generic[T], QWidget):
 
     @property
     @no_type_check
-    def dataModel(self) -> None | WidgetModel:
+    def dataModel(self) -> WidgetModel:
         return self._input.model()
         # if hasattr(self._input, "model") and isinstance(
         #     self._input.model(), QAbstractListModel
@@ -87,34 +102,58 @@ class Input(Generic[T], QWidget):
     def setPlaceholderText(self, text: str):
         self._input.setPlaceholderText(text)
 
+    def setCompleter(self, completer: QCompleter):
+        completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+        completer.setFilterMode(Qt.MatchContains)
+        self._input.setCompleter(completer)
+
+    def setInputMask(self, mask: str):
+        # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QLineEdit.html#PySide6.QtWidgets.PySide6.QtWidgets.QLineEdit.setInputMask
+        self._input.setInputMask(mask)
+
+    def setValidator(self, v):
+        pass
+        # https://doc.qt.io/qtforpython/PySide6/QtGui/QValidator.html
+        # https://doc.qt.io/qtforpython/PySide6/QtGui/QRegularExpressionValidator.html
+        # https://doc.qt.io/qtforpython/PySide6/QtCore/QRegularExpression.html
+        # QRegExp, QRegExpValidator
+        # validator = QRegularExpressionValidator(QRegularExpression("[0-9A-Fa-f]{6}"))
+        # self._input.setValidator(validator)
+
+        # self.qle.editingFinished.connect(self.onEditingFinished)
+
     def setBinding(
         self,
         object: Any,
         property: str,
-        updatePropery: str | None = None,
+        updateProperty: str | None = None,
         updateEvent: UpdateEvent = UpdateEvent.Change,
     ) -> None:
         raise NotImplementedError
 
-    def getBinding(self):
-        return [self._boundObject, self._boundProperty]
+    def setUpdateBinding(self, object: Any, property: str):
+        self._boundUpdateObject = object
+        self._boundUpdateProperty = property
 
-    def hasBoundProperty(self) -> bool:
-        return self._boundObject != None and self._boundProperty != None
+    def hasBoundUpdateProperty(self) -> bool:
+        return self.attrexists("_boundUpdateProperty") and self.attrexists(
+            "_boundUpdateObject"
+        )
 
-    def updateBoundObject(self, value: Any):
-        if self.hasBoundProperty:
-            isRelation = callable(getattr(self._boundObject, self._boundProperty))
-
-            if isRelation:
-                updateArgs = dict(zip([self._boundProperty], [value]))
-
-                self._boundObject.update(updateArgs)
-            else:
-                setattr(
-                    self._boundObject,
-                    self._boundProperty,
-                    value,
-                )
+    def updateBoundObject(self, updateObject: Profession, value: Any):
+        if self.hasBoundUpdateProperty():
+            updateObject = self._boundUpdateObject
+            updateProperty = self._boundUpdateProperty
         else:
-            setattr(self._boundObject, self._boundProperty, value)
+            updateObject = self._boundObject
+            updateProperty = self._boundProperty
+
+        updateArgs = dict(zip([updateProperty], [value]))
+
+        debug(updateObject, updateArgs)
+
+        setattr(updateObject, updateProperty, value)
+
+    # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QDataWidgetMapper.html
+    #
+    # TODO Use QDataWidgetMapper to map

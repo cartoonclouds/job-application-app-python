@@ -5,6 +5,7 @@ from PySide6.QtCore import Slot
 
 
 class TextInput(Input[QLineEdit]):
+    # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QLineEdit.html
     def __init__(self, label: str | None = None):
         super(TextInput, self).__init__(QLineEdit())
 
@@ -15,24 +16,25 @@ class TextInput(Input[QLineEdit]):
         self,
         object: Any,
         property: str,
-        updatePropery: str | None = None,
+        updateProperty: str | None = None,
         updateEvent: UpdateEvent = UpdateEvent.Change,
     ):
         self._boundObject = object
         self._boundProperty = property
+        self._updateProperty = updateProperty
         self._updateEvent = updateEvent
 
         self._input.setText(str(getattr(self._boundObject, self._boundProperty)))
 
         if self._updateEvent == UpdateEvent.Change:
-            self._input.textChanged.connect(self._onTextChanged)
+            self._input.editingFinished.connect(self._onTextChanged)
         else:
             self._input.returnPressed.connect(self._onReturnedPressed)
 
     @Slot(str)
     def _onTextChanged(self, text: str):
-        self.updateBoundObject(text)
+        self.updateBoundObject(self._boundObject, text)
 
     @Slot(str)
     def _onReturnedPressed(self, text: str):
-        self.updateBoundObject(text)
+        self.updateBoundObject(self._boundObject, text)

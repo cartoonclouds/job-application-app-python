@@ -1,11 +1,14 @@
+# Standard Library
 from datetime import datetime
 from typing import TYPE_CHECKING
 
+# Framework imports
+from PySide6.QtCore import QObject, Signal
+
+# Third party imports
 import inflection
 from config.database import db
-from orator.orm import *
 from orator.orm.model import Model as oratorModel
-from PySide6.QtCore import QObject, Signal
 
 
 class Model(oratorModel):
@@ -38,6 +41,8 @@ class Model(oratorModel):
     deletedEvent = _modelCommunicator.deleted
     # restoringEvent = _modelCommunicator.restoring
     # restoredEvent = _modelCommunicator.restored
+
+    # Class variables are accessed with the instance.variable or class_name.variable syntaxes.
 
     @classmethod
     def _boot(cls):
@@ -98,7 +103,6 @@ class Model(oratorModel):
             .pluck("name")
             .count()
         )
-
 
     # Scopes
 

@@ -1,10 +1,14 @@
+# Standard Library
 from typing import TYPE_CHECKING
 
+# Third party imports
+from orator.orm import mixins, utils
+
+# Application imports
 from app.models.Model import Model
-from orator.orm import *
 
 
-class Company(SoftDeletes, Model):
+class Company(mixins.SoftDeletes, Model):
     if TYPE_CHECKING:
         id: int
         name: str
@@ -19,20 +23,23 @@ class Company(SoftDeletes, Model):
 
     __dates__ = ["deleted_at"]
 
-    @has_many
+    @utils.has_many
     def jobApplications(self):
+        # Application imports
         from app.models.JobApplication import JobApplication
 
         return JobApplication
 
-    @belongs_to
+    @utils.belongs_to
     def address(self):
+        # Application imports
         from app.models.Address import Address
 
         return Address
 
-    @belongs_to
+    @utils.belongs_to
     def person(self):
+        # Application imports
         from app.models.Person import Person
 
         return Person

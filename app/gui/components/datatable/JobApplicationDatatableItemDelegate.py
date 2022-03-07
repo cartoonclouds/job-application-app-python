@@ -8,26 +8,22 @@ from PySide6.QtCore import (
     Qt,
     QPoint,
     QRectF,
+    QObject,
 )
-from app.gui.components.datatable.models.JobApplicationDatatableModel import (
-    JobApplicationDatatableModel,
-)
+from app.gui.components.datatable.DatatableItemDelegate import DatatableItemDelegate
 
 from app.utilities.IconUtility import IconUtility
 
 
-class JobApplicationDatatableItemDelegate(QStyledItemDelegate):
+class JobApplicationDatatableItemDelegate(DatatableItemDelegate):
     requiresFollowUpIconTrue: QPixmap
     requiresFollowUpIconFalse: QPixmap
 
-    def __init__(self, parent: JobApplicationDatatableModel) -> None:
-        super(JobApplicationDatatableItemDelegate, self).__init__(parent)
-
-        self._model: JobApplicationDatatableModel = parent
-        self._model.datatable.setMouseTracking(True)
+    def __init__(self) -> None:
+        super(JobApplicationDatatableItemDelegate, self).__init__()
 
         # Sets background to opaque
-        # self._model.datatable.setAutoFillBackground(true)
+        # self.datatable.setAutoFillBackground(true)
 
         self.requiresFollowUpIconTrue = IconUtility.getFileIconAsPixmap("light-bulb-24")
         self.requiresFollowUpIconFalse = IconUtility.getFileIconAsPixmap(
@@ -59,13 +55,13 @@ class JobApplicationDatatableItemDelegate(QStyledItemDelegate):
         painter.setBrush(brush)
 
         leftMostColumn = index.siblingAtColumn(0)
-        rightMostColumn = index.siblingAtColumn(self._model.columnCount(index))
+        rightMostColumn = index.siblingAtColumn(self.datatableModel.columnCount(index))
 
-        topLeftX = self._model.datatable.columnViewportPosition(0)
-        topLeftY = self._model.datatable.rowViewportPosition(index.row())
+        topLeftX = self.datatable.columnViewportPosition(0)
+        topLeftY = self.datatable.rowViewportPosition(index.row())
 
-        bottomRightX = topLeftX + self._model.datatable.width() - 20
-        bottomRightY = topLeftY + self._model.datatable.rowHeight(index.row())
+        bottomRightX = topLeftX + self.datatable.width() - 20
+        bottomRightY = topLeftY + self.datatable.rowHeight(index.row())
 
         rowRect = QRectF(QPoint(topLeftX, topLeftY), QPoint(bottomRightX, bottomRightY))
 
@@ -94,12 +90,12 @@ class JobApplicationDatatableItemDelegate(QStyledItemDelegate):
         """Paint the items in the table."""
         painter.save()
 
-        modelData = self._model.getModelData(index)
+        modelData = self.datatableModel.getModelData(index)
 
         # self.paintRowBorder(painter, option, index)
 
         # Hover state
-        hoverRow = self._model.datatable.indexAtCursor
+        hoverRow = self.datatable.indexAtCursor
 
         if not (option.state & QStyle.State_Selected) and index.row() == hoverRow.row():
             # Change background colour
@@ -108,7 +104,7 @@ class JobApplicationDatatableItemDelegate(QStyledItemDelegate):
             painter.fillRect(option.rect, Qt.white)
 
             # Change cursor
-            self._model.datatable.setCursor(Qt.PointingHandCursor)
+            self.datatable.setCursor(Qt.PointingHandCursor)
 
         if option.state & QStyle.State_Selected:
             option.state = option.state ^ QStyle.State_Selected
@@ -141,7 +137,7 @@ class JobApplicationDatatableItemDelegate(QStyledItemDelegate):
         self, option: QStyleOptionViewItem, index: QModelIndex | QPersistentModelIndex
     ) -> QSize:
         """Returns the size needed to display the item in a QSize object."""
-        modelData = self._model.getModelData(index)
+        modelData = self.datatableModel.getModelData(index)
 
         if modelData.column == "requires_follwup":
             if modelData.value:
@@ -150,17 +146,3 @@ class JobApplicationDatatableItemDelegate(QStyledItemDelegate):
                 return self.requiresFollowUpIconFalse.size()
 
         return super().sizeHint(option, index)  # standard processing
-
-    def _getCenteredIconCoords(
-        self, option: QStyleOptionViewItem, icon: QPixmap
-    ) -> QRect:
-        colCoords: QRect = option.rect
-        colWidth: int = colCoords.width()
-        colHeight: int = colCoords.height()
-        colX: int = colCoords.topLeft().x()
-        colY: int = colCoords.topLeft().y()
-
-        iconX: int = int(colX + (colWidth / 2) - (icon.width() / 2))
-        iconY: int = int(colY + (colHeight / 2) - (icon.height() / 2)) - 5
-
-        return QRect(iconX, iconY, icon.width(), icon.height())

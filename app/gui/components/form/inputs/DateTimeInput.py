@@ -5,6 +5,7 @@ from PySide6.QtCore import Slot, QDateTime, QDate
 
 
 class DateTimeInput(Input[QDateTimeEdit]):
+    # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QDateTimeEdit.html
     def __init__(self, label: str | None = None):
         super(DateTimeInput, self).__init__(QDateTimeEdit())
 
@@ -20,19 +21,19 @@ class DateTimeInput(Input[QDateTimeEdit]):
         self,
         object: Any,
         property: str,
-        updatePropery: str | None = None,
+        updateProperty: str | None = None,
         updateEvent: UpdateEvent = UpdateEvent.Change,
     ):
         self._boundObject = object
         self._boundProperty = property
+        self._updateProperty = updateProperty
         self._updateEvent = updateEvent
 
         self._input.setDateTime(getattr(self._boundObject, self._boundProperty))
-        # self._input.setDateTime(QDateTime.currentDateTime())
-
+        
         if self._updateEvent == UpdateEvent.Change:
             self._input.dateTimeChanged.connect(self._onDateTimeChanged)
 
     @Slot(str)
     def _onDateTimeChanged(self, datetime: QDateTime):
-        self.updateBoundObject(datetime.toString())
+        self.updateBoundObject(self._boundObject, datetime.toString())

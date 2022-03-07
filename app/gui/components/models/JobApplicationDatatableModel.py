@@ -1,19 +1,42 @@
 import datetime
 
 from typing import Mapping, Any, Sequence
-from app.gui.components.datatable.models.DatatableModel import DatatableModel, ModelData
+from app.gui.components.datatable.DatatableModel import DatatableModel, ModelData
 from app.models.JobApplication import JobApplication
 from PySide6.QtCore import QModelIndex, QPersistentModelIndex, Qt
 
 # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QTableWidgetItem.html
 
 
-class JobApplicationDatatableModel(DatatableModel):
+class JobApplicationDatatableModel(DatatableModel[JobApplication]):
     """A datatable model for Job Applications."""
 
-    def __init__(
-        self, data: Sequence[JobApplication], columnHeaders: Mapping[str, str]
-    ) -> None:
+    def __init__(self) -> None:
+        columnHeaders: Mapping[str, str] = dict(
+            zip(
+                [
+                    "id",
+                    "title",
+                    "requires_followup",
+                    "company",
+                    "job",
+                    "created_at",
+                    "updated_at",
+                ],
+                [
+                    "ID",
+                    "Title",
+                    "Requires Followup",
+                    "Company",
+                    "Job",
+                    "Created At",
+                    "Updated At",
+                ],
+            )
+        )
+
+        data: Sequence[JobApplication] = list(JobApplication.all())
+
         super().__init__(data, columnHeaders)
 
     def data(self, index: QModelIndex | QPersistentModelIndex, role: int) -> Any:

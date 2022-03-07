@@ -1,11 +1,19 @@
-from typing import Sequence, Any, TYPE_CHECKING, Optional, Mapping
+# Standard Library
 from dataclasses import dataclass
+from typing import Any, Generic, Mapping, Optional, Sequence
 
-from app.models.Model import Model
-from PySide6.QtCore import QAbstractTableModel, QModelIndex, QPersistentModelIndex, Qt
+# Framework imports
+from PySide6.QtCore import (
+    QAbstractTableModel,
+    QModelIndex,
+    QPersistentModelIndex,
+    Qt,
+    Signal,
+)
 
-if TYPE_CHECKING:
-    from app.gui.components.datatable.Datatable import Datatable
+# Application imports
+from app.models import Model
+from app.types import M
 
 
 @dataclass(frozen=True)
@@ -15,10 +23,11 @@ class ModelData:
     value: Any
 
 
-class DatatableModel(QAbstractTableModel):
+class DatatableModel(Generic[M], QAbstractTableModel):
     """A Datatable model baseclass.
 
     URL: https://doc.qt.io/qtforpython/PySide6/QtCore/QAbstractTableModel.html
+         https://doc.qt.io/qtforpython/PySide6/QtCore/QAbstractItemModel.html
 
     Raises:
         ValueError
@@ -26,49 +35,28 @@ class DatatableModel(QAbstractTableModel):
         AttributeError
     """
 
-    def __init__(self, data: Sequence[Model], columnHeaders: Mapping[str, str]) -> None:
+    dataUpdated = Signal()
+
+    def __init__(self, data: Sequence[M], columnHeaders: Mapping[str, str]) -> None:
         super().__init__()
 
         # Set instance variables
-        self._data = data
-        self._headers: Sequence[str] = list(columnHeaders.values())
-        self._columns: Sequence[str] = list(columnHeaders.keys())
-        self._parentTable: Datatable
+        self._data: Sequence[M] = data
 
-    def setParentTable(self, datatable: "Datatable"):
-        """
-        Sets the parent table widget so that we can get its font metrics for setting our column width with autoResize.
-
-        Args:
-            datatable (Datatable)
-
-        Raises:
-            TypeError
-        """
-        self._parentTable = datatable
-
-    @property
-    def datatable(self):
-        return self._parentTable
+        self.setHeaders(list(columnHeaders.values()))
+        self.setColumns(list(columnHeaders.keys()))
 
     @property
     def columns(self):
         return self._columns
 
-    def _triggerParentResize(self):
-        if self.datatable:
-            self.datatable.resizeEvent()
-
-    def getColumnName(self, colIdx: int) -> str:
-        return self._columns[colIdx]
-
     def setHeaders(self, headers: Sequence[str]):
         self._headers = headers
-        self._triggerParentResize()
+        self.dataUpdated.emit()
 
     def setColumns(self, columns: Sequence[str]):
         self._columns = columns
-        self._triggerParentResize()
+        self.dataUpdated.emit()
 
     def headerData(self, section: int, orientation: Qt.Orientation, role: int) -> Any:
         """
@@ -105,7 +93,7 @@ class DatatableModel(QAbstractTableModel):
     #         case Qt.TextAlignmentRole:
     #         case Qt.SizeHintRole:
 
-    def modelAtIndex(self, index: QModelIndex | QPersistentModelIndex) -> Model | None:
+    def modelAtIndex(self, index: QModelIndex | QPersistentModelIndex) -> M:
         """Finds the data Model of row at the given index.
 
         Args:

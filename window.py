@@ -1,6 +1,10 @@
 # Framework imports
-from PySide6.QtGui import QAction, QIcon, QKeySequence
-from PySide6.QtWidgets import QLabel, QMainWindow, QTabWidget
+import os
+import sys
+from PySide6.QtGui import QAction, QIcon, QKeySequence, QGuiApplication
+from PySide6.QtWidgets import QLabel, QMainWindow, QTabWidget, QMessageBox
+from PySide6.QtSql import QSqlDatabase, QSqlDriver
+import logging
 
 # Third party imports
 import qtawesome as qta
@@ -19,9 +23,12 @@ from app.utilities.IconUtility import IconUtility
 # https://github.com/pythonguis/15-minute-apps/blob/aaf6038ab4b687cf1370ae3c7ca71f46140c5cdb/browser_tabbed/browser_tabbed.py
 
 
+# https://stackoverflow.com/questions/61394268/difference-between-subclassing-qmainwindow-and-qapplication
 class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        self.setupLogging()
 
         # Setup window
         self.setWindowTitle("Main Window App GUI")
@@ -44,10 +51,6 @@ class MainWindow(QMainWindow):
 
         # TODO Utility function to create JAA/empty tab, given JAA ID/random
         testJaa = JobApplication.find(1)
-
-        # testJaa.job.profession.profession = "Differnt"
-        # testJaa.job.profession.profession.save()
-        debug(callable(testJaa.job.profession))
 
         TabService.addTab(
             JobApplicationTab(
@@ -99,9 +102,47 @@ class MainWindow(QMainWindow):
 
         fileMenu.addAction(exitAction)
 
+        # https://stackoverflow.com/questions/533631/what-is-a-mixin-and-why-are-they-useful
+        #  GUI mixin to show alerts?
+
         # new_tab_action = QAction(
         #     QIcon(os.path.join('images', 'ui-tab--plus.png')), "New Tab", self)
         # new_tab_action.setStatusTip("Open a new tab")
         # new_tab_action.triggered.connect(lambda _: self.add_new_tab())
         # file_menu.addAction(new_tab_action)
         return menubar
+
+    def setupLogging(self):
+
+        # kwargs.pop("datefmt", None)
+
+        # https://docs.python.org/3/library/string.html#formatstrings
+
+        # https://docs.python.org/3/howto/logging.html
+        # https://docs.python.org/3/library/logging.html
+        # https://docs.python.org/3/library/logging.html#logrecord-attributes
+        # https://docs.python.org/3/howto/logging.html#useful-handlers
+        # If debug to file => do on different thread
+        # https://docs.python.org/3/howto/logging-cookbook.html#a-qt-gui-for-logging
+        # Need to filter out Orator logging
+        # https://www.programcreek.com/python/example/3364/logging.Filter
+        # https://gist.github.com/acdha/9238791
+        """
+        Level    |   When it's used
+        ===========================
+        DEBUG    |   Detailed information, typically of interest only when diagnosing problems.
+        INFO     |   Confirmation that things are working as expected.
+        WARNING  |   An indication that something unexpected happened, or indicative of some problem in the near future (e.g. 'disk space low'). The software is still working as expected.
+        ERROR    |   Due to a more serious problem, the software has not been able to perform some function.
+        CRITICAL |   A serious error, indicating that the program itself may be unable to continue running.
+        """
+        logging.basicConfig(
+            format="%(asctime)s %(levelname)-8s %(name)-12s.%(funcName)s:%(lineno)d %(message)s",
+            handlers=[
+                logging.FileHandler(filename="debug.log", encoding="utf-8", mode="a"),
+                logging.StreamHandler(),
+            ],
+            datefmt="%d/%m/%Y %H:%M:%S%z",
+            level=logging.DEBUG,
+            force=True,
+        )

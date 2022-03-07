@@ -1,8 +1,12 @@
 """Actions model"""
+# Standard Library
 from typing import TYPE_CHECKING
 
+# Third party imports
+from orator.orm import utils
+
+# Application imports
 from app.models.Model import Model
-from orator.orm import *
 
 
 class Action(Model):
@@ -23,14 +27,14 @@ class Action(Model):
         "pinned": "boolean",
     }
 
-    @morph_to
+    @utils.morph_to
     def actionable(self):
         return
 
-    @morph_many("actionable")
+    @utils.morph_many("actionable")
     def childActions(self):
         return Action
 
-    @has_one("id", "actionable_id")
+    @utils.has_one("id", "actionable_id")
     def parentAction(self):
         return Action

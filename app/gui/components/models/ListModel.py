@@ -1,11 +1,7 @@
 from typing import Any, Sequence, TypeVar, Generic
 from PySide6.QtCore import QAbstractListModel, Qt, QModelIndex, QPersistentModelIndex
 
-from app.models.Profession import Profession
-from app.models.Job import Job
-
-
-M = TypeVar("M", Profession, Job)
+from app.types import M
 
 
 class ListModel(Generic[M], QAbstractListModel):
@@ -42,8 +38,5 @@ class ListModel(Generic[M], QAbstractListModel):
 
         return self.rawData[itemIndex]
 
-    def __getitem__(self, __name: str) -> Any:
-        if isinstance(__name, int):
-            return self._data[__name]
-
-        return super().__getattribute__(__name)
+    def getAt(self, index: int) -> M:
+        return self._data[index]

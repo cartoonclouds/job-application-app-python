@@ -1,12 +1,15 @@
 from typing import Generic, Optional
 from PySide6.QtGui import QResizeEvent, QMouseEvent, QContextMenuEvent, QAction, QCursor
-from PySide6.QtWidgets import QAbstractItemView, QTableView, QMenu
+from PySide6.QtWidgets import QAbstractItemView, QTableView, QMenu, QStyledItemDelegate
 from PySide6.QtCore import Signal, Qt, QModelIndex, QPersistentModelIndex, QPoint
 from app.config.App import Sizing
 
-from app.gui.components.datatable.models.DatatableModel import DatatableModel
+from app.gui.components.datatable.DatatableModel import DatatableModel
+from app.gui.components.models.SQL_JobApplicationDatatableModel import (
+    JobApplicationDatatableModel,
+)
 from app.models.Model import Model
-from app.types import DTM
+from app.types import M
 
 
 class Datatable(QTableView):
@@ -14,8 +17,11 @@ class Datatable(QTableView):
 
     URL:
         https://doc.qt.io/qtforpython/PySide6/QtWidgets/QTableView.html
+        https://doc.qt.io/qtforpython/PySide6/QtWidgets/QAbstractItemView.html
         https://doc.qt.io/qtforpython/tutorials/datavisualize/add_tableview.html
         https://www.pythonguis.com/tutorials/qtableview-modelviews-numpy-pandas/
+
+        https://doc.qt.io/qtforpython/PySide6/QtWidgets/QTableWidgetItem.html
 
         https://wiki.qt.io/Qt_for_Python_Signals_and_Slots
     """
@@ -26,7 +32,11 @@ class Datatable(QTableView):
 
     # QMouseEvent
 
-    def __init__(self, datatableModel: DatatableModel) -> None:
+    def __init__(
+        self,
+        datatableModel: JobApplicationDatatableModel,
+        datatableItemDelegate: QStyledItemDelegate,
+    ) -> None:
         super().__init__()
 
         self.setSelectionBehavior(QAbstractItemView.SelectRows)
@@ -37,6 +47,7 @@ class Datatable(QTableView):
         self.verticalHeader().hide()
         self.verticalHeader().setMinimumSectionSize(50)
         self.setShowGrid(False)
+        # self.setSortingEnabled(True)
 
         # https://doc.qt.io/qtforpython/overviews/stylesheet-examples.html#customizing-qtabwidget-and-qtabbar
         self.setStyleSheet(
@@ -54,7 +65,10 @@ class Datatable(QTableView):
         )
 
         self.setModel(datatableModel)
-        datatableModel.setParentTable(self)
+        datatableModel.dataUpdated.connect(self.resizeEvent())
+
+        self.setItemDelegate(datatableItemDelegate)
+        datatableItemDelegate.setParent(self)
 
     def _getModelAtSelection(self) -> Model:
         index = self.selectionModel().currentIndex()
@@ -66,7 +80,7 @@ class Datatable(QTableView):
 
         return datatableModel.modelAtIndex(index)
 
-    def model(self) -> DatatableModel:
+    def model(self) -> DatatableModel[M]:
         return super().model()  # type: ignore
 
     def mouseDoubleClickEvent(self, event: QMouseEvent) -> None:

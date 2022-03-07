@@ -4,6 +4,8 @@ from PySide6.QtCore import QObject, QSortFilterProxyModel
 
 
 class CustomSortModel(QSortFilterProxyModel):
+    # https://github.com/pyside/Examples/blob/master/examples/itemviews/basicsortfiltermodel.py
+    
     def __init__(self, parent: Optional[QObject] = None) -> None:
         """
         Custom QSortFilterProxyModel to allow sorting and filtering of our custom data model.

@@ -3,7 +3,8 @@ from app.gui.components.form.inputs.DateTimeInput import DateTimeInput
 from app.gui.components.form.inputs.SelectBox import SelectBox
 from app.gui.components.form.inputs.TextAreaInput import TextAreaInput
 from app.gui.components.form.inputs.TextInput import TextInput
-from app.models import Company
+from app.models.Company import Company
+from PySide6.QtWidgets import QCompleter
 
 
 class CompanyForm(Form):
@@ -17,6 +18,11 @@ class CompanyForm(Form):
         titleInput.setBinding(self._model, "name")
         titleInput.setPlaceholderText("Company name")
 
+        # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QCompleter.html
+        titleInput.setCompleter(QCompleter(list(Company.all().pluck("name"))))
+        # on completer.activated.connect(update other fields)
+        titleInput.setInputMask("9999-999-999")
+
         phoneInput = TextInput("Phone")
         phoneInput.setBinding(self._model, "phone")
         phoneInput.setPlaceholderText("Company phone number")
@@ -24,10 +30,6 @@ class CompanyForm(Form):
         mobileInput = TextInput("Mobile")
         mobileInput.setBinding(self._model, "mobile")
         mobileInput.setPlaceholderText("Company mobile number")
-
-        titleInput = TextInput("Name")
-        titleInput.setBinding(self._model, "name")
-        titleInput.setPlaceholderText("Company name")
 
         websiteInput = TextInput("Website")
         websiteInput.setBinding(self._model, "website")

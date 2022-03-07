@@ -1,7 +1,20 @@
+from argparse import Action
 from typing import Type, TypeAlias, TypeVar
-from app.gui.components.datatable.models.DatatableModel import DatatableModel
+from app.models.Profession import Profession
+from app.models.JobApplication import JobApplication
+from app.models.Job import Job
+from typing import Any, Sequence, TypeVar, Generic, TypeAlias
 
-from app.models import Model as Models
+from PySide6.QtWidgets import (
+    QWidget,
+    QLabel,
+    QLineEdit,
+    QVBoxLayout,
+    QPlainTextEdit,
+    QComboBox,
+    QDateTimeEdit,
+)
+from typing import TypeVar, Generic
 
 
 # Mypy is a static type checker for Python 3
@@ -19,11 +32,15 @@ from app.models import Model as Models
 # @no_type_check, a decorator to disable type checking per class or function (see below)
 # @no_type_check_decorator, a decorator to create your own decorators with the same meaning as @no_type_check (see below)
 
-T = TypeVar("T")  # Declare type variable. Use for generics
+# T = TypeVar("T")  # Declare type variable. Use for generics
+# M = TypeVar("M", bound=Models.Model)
+# DTM = TypeVar("DTM", bound=DatatableModel)
+# M_co = TypeVar("M_co", bound=Models.Model, covariant=True)
 
-M = TypeVar("M", bound=Models.Model)
-DTM = TypeVar("DTM", bound=DatatableModel)
-M_co = TypeVar("M_co", bound=Models.Model, covariant=True)
+MT = JobApplication | Profession | Job | Action
+M = TypeVar("M", JobApplication, Profession, Job, Action)
+
+T = TypeVar("T", QComboBox, QPlainTextEdit, QLineEdit, QDateTimeEdit)
 
 # You can use a ClassVar[t] annotation to explicitly declare that a particular attribute should not be set on instances:
 #  https://mypy.readthedocs.io/en/stable/class_basics.html#class-attribute-annotations

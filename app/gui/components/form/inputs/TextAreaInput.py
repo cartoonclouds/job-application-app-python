@@ -16,11 +16,12 @@ class TextAreaInput(Input[QPlainTextEdit]):
         self,
         object: Any,
         property: str,
-        updatePropery: str | None = None,
+        updateProperty: str | None = None,
         updateEvent: UpdateEvent = UpdateEvent.Change,
     ):
         self._boundObject = object
         self._boundProperty = property
+        self._updateProperty = updateProperty
         self._updateEvent = updateEvent
 
         self._input.insertPlainText(getattr(self._boundObject, self._boundProperty))
@@ -30,4 +31,4 @@ class TextAreaInput(Input[QPlainTextEdit]):
 
     @Slot(str)
     def _onTextChanged(self):
-        self.updateBoundObject(self._input.document().toPlainText())
+        self.updateBoundObject(self._boundObject, self._input.document().toPlainText())

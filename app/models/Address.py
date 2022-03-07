@@ -1,7 +1,11 @@
+# Standard Library
 from typing import TYPE_CHECKING
 
+# Third party imports
+from orator.orm import utils
+
+# Application imports
 from app.models.Model import Model
-from orator.orm import *
 
 
 class Address(Model):
@@ -18,14 +22,16 @@ class Address(Model):
 
     __fillable__ = ["*"]
 
-    @has_many
+    @utils.has_many
     def companies(self):
+        # Application imports
         from app.models.Company import Company
 
         return Company
 
-    @has_many
+    @utils.has_many
     def jobs(self):
+        # Application imports
         from app.models.Job import Job
 
         return Job

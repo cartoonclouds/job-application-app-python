@@ -1,5 +1,6 @@
 # Standard Library
 from functools import partial
+import sys
 
 # Framework imports
 from PySide6.QtCore import (
@@ -10,14 +11,22 @@ from PySide6.QtCore import (
     QMargins,
 )
 from PySide6.QtGui import QMouseEvent, QPalette
-from PySide6.QtWidgets import QVBoxLayout, QHBoxLayout, QFrame
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QVBoxLayout, QHBoxLayout, QFrame, QMessageBox
+from PySide6.QtSql import (
+    QSqlDatabase,
+    QSqlDriver,
+    QSqlRelationalTableModel,
+    QSqlRelation,
+    QSqlTableModel,
+)
 
 # Application imports
 from app.gui.components.datatable.Datatable import Datatable
-from app.gui.components.datatable.delegates.JobApplicationDatatableItemDelegate import (
+from app.gui.components.datatable.JobApplicationDatatableItemDelegate import (
     JobApplicationDatatableItemDelegate,
 )
-from app.gui.components.datatable.models.JobApplicationDatatableModel import (
+from app.gui.components.models.JobApplicationDatatableModel import (
     JobApplicationDatatableModel,
 )
 from app.gui.components.pages.Header import Header
@@ -68,42 +77,13 @@ class SummaryTab(Tab):
         layout = QHBoxLayout(frame)
         layout.setContentsMargins(*([20] * 4))
 
-        columHeaders = dict(
-            zip(
-                [
-                    "id",
-                    "title",
-                    "requires_followup",
-                    "company",
-                    "job",
-                    "created_at",
-                    "updated_at",
-                ],
-                [
-                    "ID",
-                    "Title",
-                    "Requires Followup",
-                    "Company",
-                    "Job",
-                    "Created At",
-                    "Updated At",
-                ],
-            )
-        )
+        datatableModel = JobApplicationDatatableModel()
+        datatable = Datatable(datatableModel, JobApplicationDatatableItemDelegate())
 
-        datatableModel = JobApplicationDatatableModel(
-            list(Storage.jobApplications.values()), columHeaders
-        )
-
-        datatable = Datatable(datatableModel)
-        datatable.setItemDelegate(JobApplicationDatatableItemDelegate(datatableModel))
-
-        # debug(list(Storage.jobApplications.values()))
 
         # proxyModel = CustomSortModel()
         # proxyModel.setSourceModel(dataTableModel)
         # self.table = DataTable(dataTableModel)
-        # .setSortingEnabled(True)
 
         # TABLE EDITING
         # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QItemEditorFactory.html

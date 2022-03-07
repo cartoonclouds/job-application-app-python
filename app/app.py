@@ -1,6 +1,7 @@
 import sys
 from PySide6.QtWidgets import QApplication, QStyleFactory
 from window import MainWindow
+import logging
 
 
 class App:

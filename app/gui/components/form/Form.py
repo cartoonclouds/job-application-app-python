@@ -8,6 +8,8 @@ from app.gui.components.form.inputs.TextInput import TextInput
 from app.models import Model
 from PySide6.QtCore import Qt
 
+# Validator https://docs.python-cerberus.org/en/stable/
+
 
 class Form(QFrame):
     def __init__(self, name: str, model: Model, title: str) -> None:

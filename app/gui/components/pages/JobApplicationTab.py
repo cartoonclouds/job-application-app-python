@@ -21,6 +21,11 @@ class JobApplicationTab(Tab):
         self.setObjectName("Tab:JobApplication")
         self.setContentsMargins(10, 0, 10, 0)
 
+        # Header
+        header = Header("Job Application", True)
+        # header.setBinding(self.model, "title")
+        # header.setPlaceholderText("Job Application Title")
+
         # Setup Layout
         layout = QVBoxLayout()
         self.setLayout(layout)
@@ -65,10 +70,6 @@ class JobApplicationTab(Tab):
 
         # Setup LHS components
         # header = Header(f"Job Application - {self.model.title}")
-
-        header = TextInput("Job Application Title")
-        header.setBinding(self.model, "title")
-        header.setPlaceholderText("Job Application Title")
 
         jobForm = JobForm(self.model.job)
         companyForm = CompanyForm(self.model.company)

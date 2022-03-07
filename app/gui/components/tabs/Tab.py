@@ -6,6 +6,7 @@ from app.types import M
 
 
 class Tab(QWidget):
+    # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QTabWidget.html
     def __init__(
         self,
         label: str,

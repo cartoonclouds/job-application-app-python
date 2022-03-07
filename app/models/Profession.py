@@ -1,7 +1,11 @@
+# Standard Library
 from typing import TYPE_CHECKING
 
+# Third party imports
+from orator.orm import utils
+
+# Application imports
 from app.models.Model import Model
-from orator.orm import *
 
 
 class Profession(Model):
@@ -13,8 +17,9 @@ class Profession(Model):
 
     __timestamps__ = False
 
-    @has_many
+    @utils.has_many
     def jobs(self):
+        # Application imports
         from app.models.Job import Job
 
         return Job
