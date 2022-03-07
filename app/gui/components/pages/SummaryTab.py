@@ -36,7 +36,7 @@ from app.gui.components.tabs.Tab import Tab
 from app.gui.services.TabService import TabService
 from app.models.JobApplication import JobApplication
 from app.storage import Storage
-from app.utilities.IconUtility import IconUtility
+from app.utils.IconUtility import IconUtility
 
 
 class SummaryTab(Tab):
@@ -46,10 +46,10 @@ class SummaryTab(Tab):
         self.setObjectName("Tab:Summary")
         self.mainLayout = QVBoxLayout(self)
         # *([10] * 4)
-        self.setContentsMargins(10, 0, 10, 0)
+        self.setContentsMargins(Storage.WIDGET_SPACING * 2, 0, 10, 0)
 
         # Header
-        header = Header("Applications Summary")
+        header = Header("Applications Summary", IconUtility.getFileIconAsPixmap("gear"))
 
         # Setup stats
         self.statisticsSection = StatisticGroup()
@@ -101,7 +101,6 @@ class SummaryTab(Tab):
         return frame
 
     @Slot(JobApplication)
-    @Slot(JobApplication, QMouseEvent)
     def openTab(self, model: JobApplication):
         TabService.addTab(
             JobApplicationTab(

@@ -1,75 +1,53 @@
 # Standard Library
-import abc
-import typing
-from abc import abstractmethod
 from enum import Enum, auto, unique
-from typing import Any, Generic, TypeAlias, TypeVar, cast, no_type_check, overload
-import logging
+from typing import Any, Generic, TypeAlias, no_type_check, overload
 
 # Framework imports
 from PySide6.QtCore import (
     QAbstractItemModel,
     QAbstractListModel,
     QAbstractTableModel,
-    Qt,
     QRegularExpression,
+    Qt,
+    QMargins,
 )
-from PySide6.QtGui import (
-    QFont,
-    QMovie,
-    QPixmap,
-    QPalette,
-    QColor,
-    QRegularExpressionValidator,
-)
-from PySide6.QtWidgets import (
-    QComboBox,
-    QDateTimeEdit,
-    QLabel,
-    QLineEdit,
-    QPlainTextEdit,
-    QVBoxLayout,
-    QWidget,
-    QCompleter,
-)
+from PySide6.QtGui import QFont, QRegularExpressionValidator
+from PySide6.QtWidgets import QCompleter, QLabel, QVBoxLayout, QWidget
 
 # Application imports
 from app.gui.components.models.ProfessionListModel import ProfessionListModel
 from app.models import Model
 from app.models.Profession import Profession
+from app.storage import Storage
 from app.types import T
-from app.utilities.mixins.ObjectMixin import ObjectMixin
+from app.utils.mixins.ObjectMixin import ObjectMixin
 
 WidgetModel: TypeAlias = (
     ProfessionListModel | QAbstractItemModel | QAbstractListModel | QAbstractTableModel
 )
 
 
-@unique
-class UpdateEvent(Enum):
-    Change = auto()
-    Enter = auto()
-
-
 # https://stackoverflow.com/questions/4821104/dynamic-instantiation-from-string-name-of-a-class-in-dynamically-imported-module
 class Input(Generic[T], QWidget, ObjectMixin):
     def __init__(self, component: T):
         super(Input, self).__init__()
+        self.setObjectName("Input")
 
         self._layout = QVBoxLayout()
-        self._layout.setContentsMargins(0, 0, 0, 0)
+        self._layout.setContentsMargins(Storage.ZERO_MARGINS)
+        self._layout.setSpacing(Storage.WIDGET_SPACING)
 
         self._input: T = component
+        self._inputModel: None | WidgetModel = None
         self._boundObject: None | Model = None
         self._boundProperty: None | str = None
         self._updateProperty: None | str = None
-        self._updateEvent: UpdateEvent = UpdateEvent.Change
 
         self._label = QLabel()
         self._label.setBuddy(self._input)
         self._label.hide()
         labelFont = self._label.font()
-        labelFont.setPointSize(11)
+        labelFont.setPointSize(Storage.FORM_LABEL_SIZE)
         labelFont.setCapitalization(QFont.SmallCaps)
         self._label.setFont(labelFont)
 
@@ -78,7 +56,20 @@ class Input(Generic[T], QWidget, ObjectMixin):
 
         self.setLayout(self._layout)
 
+    def setAlignment(self, alignment: Qt.Alignment):
+        self._layout.setAlignment(alignment)
+
+    def contentsMargins(self) -> QMargins:
+        return self._layout.contentsMargins()
+
+    def setContentsMargins(self, margins: QMargins) -> None:
+        return self._layout.setContentsMargins(margins)
+
+    def hasModel(self) -> bool:
+        return isinstance(self._inputModel, WidgetModel)
+
     def setModel(self, model: WidgetModel):
+        self._inputModel = model
         self._input.setModel(model)
 
     @property
@@ -122,12 +113,14 @@ class Input(Generic[T], QWidget, ObjectMixin):
 
         # self.qle.editingFinished.connect(self.onEditingFinished)
 
+    def isModified(self) -> bool:
+        return NotImplementedError
+
     def setBinding(
         self,
         object: Any,
         property: str,
         updateProperty: str | None = None,
-        updateEvent: UpdateEvent = UpdateEvent.Change,
     ) -> None:
         raise NotImplementedError
 
@@ -141,6 +134,8 @@ class Input(Generic[T], QWidget, ObjectMixin):
         )
 
     def updateBoundObject(self, updateObject: Profession, value: Any):
+        value = value if value != None else ""
+
         if self.hasBoundUpdateProperty():
             updateObject = self._boundUpdateObject
             updateProperty = self._boundUpdateProperty

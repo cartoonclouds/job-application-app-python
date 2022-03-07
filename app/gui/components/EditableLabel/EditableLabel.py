@@ -1,7 +1,9 @@
 #!/usr/bin/env python
-from typing import overload
+from tkinter import E
 import typing
 from PySide6 import QtCore, QtGui, QtWidgets
+
+from app.storage import Storage
 
 
 class KeyPressHandler(QtCore.QObject):
@@ -21,37 +23,56 @@ class KeyPressHandler(QtCore.QObject):
                 self.returnPressed.emit(True)
                 return True
             # TODO Only on ASCINUM
-            self.textChanged.emit(True)
+            # self.textChanged.emit(True)
 
         return QtCore.QObject.eventFilter(self, obj, event)
 
 
 class EditableLabel(QtWidgets.QWidget):
-    """Editable label"""
+    """
+    Editable label
+
+    URL: https://gist.github.com/mfessenden/baa2b87b8addb0b60e54a11c1da48046
+    """
 
     textChanged = QtCore.Signal(str)
 
-    # TODO tidy up
     # TODO Add dotted line beneath to signify editable
 
     def __init__(self, text: str, parent: QtWidgets.QWidget | None = None, **kwargs):
         QtWidgets.QWidget.__init__(self, parent=parent)
 
+        self._editing: bool = False
+
         self.isEditable: bool = kwargs.get("editable", True)
         self.keyPressHandler = KeyPressHandler(self)
 
         self.mainLayout = QtWidgets.QHBoxLayout(self)
-        self.mainLayout.setContentsMargins(0, 0, 0, 0)
-        self.mainLayout.setObjectName("EditableLabel:MainLayout")
+        self.mainLayout.setContentsMargins(Storage.ZERO_MARGINS)
+        self.mainLayout.setObjectName("EditableLabel")
 
         self.label = QtWidgets.QLabel(self)
-        self.label.setStyleSheet("border-bottom: 3px dotted grey;")
+        self.label.setSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, self.label.sizePolicy().verticalPolicy()
+        )
+        self.label.setStyleSheet("border-bottom: 3px dotted grey;")  # TODO Not working!
 
-        self.label.setObjectName("EditableLabel:label")
-        self.mainLayout.addWidget(self.label)
+        self.icon = QtWidgets.QLabel()
+
         self.lineEdit = QtWidgets.QLineEdit(self)
-        self.lineEdit.setObjectName("EditableLabel:lineEdit")
-        self.mainLayout.addWidget(self.lineEdit)
+        self.lineEdit.setStyleSheet("border: none;")
+        self.lineEdit.setSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, self.lineEdit.sizePolicy().verticalPolicy()
+        )
+
+        icon = kwargs.get("icon")
+
+        if icon:
+            self.lineEdit.addAction(
+                icon, QtWidgets.QLineEdit.ActionPosition.LeadingPosition
+            )
+            self.icon.setPixmap(icon)
+
         # hide the line edit initially
         self.lineEdit.setHidden(True)
 
@@ -59,6 +80,13 @@ class EditableLabel(QtWidgets.QWidget):
 
         # setup signals
         self.create_signals()
+
+        self.mainLayout.addWidget(self.icon)
+        self.mainLayout.addWidget(self.label)
+        self.mainLayout.addWidget(self.lineEdit)
+
+    def isModified(self) -> bool:
+        return self.lineEdit.isModified()
 
     def setFont(self, font: QtGui.QFont | str | typing.Sequence[str]) -> None:
         self.lineEdit.setFont(font)
@@ -74,7 +102,7 @@ class EditableLabel(QtWidgets.QWidget):
         # give the lineEdit both a `returnPressed` and `escapedPressed` action
         self.keyPressHandler.escapePressed.connect(self.escapePressedAction)
         self.keyPressHandler.returnPressed.connect(self.returnPressedAction)
-        self.keyPressHandler.textChanged.connect(self.textChangedAction)
+        # self.keyPressHandler.textChanged.connect(self.textChangedAction)
 
     def text(self):
         """Standard QLabel text getter"""
@@ -91,18 +119,27 @@ class EditableLabel(QtWidgets.QWidget):
         if event.button() == QtCore.Qt.MouseButton.LeftButton:
             self.setLabelEditableAction()
 
+    def toggleEditing(self, editable: bool | None = None):
+        if isinstance(editable, bool):
+            self._editing = not editable
+        else:
+            self._editing = not self._editing
+
+        self.icon.setHidden(not self._editing)
+        self.label.setHidden(not self._editing)
+        self.label.blockSignals(not self._editing)
+        self.lineEdit.setHidden(self._editing)
+        self.lineEdit.blockSignals(self._editing)
+
     def setLabelEditableAction(self):
         """Action to make the widget editable"""
         if not self.isEditable:
             return
 
-        self.label.setHidden(True)
-        self.label.blockSignals(True)
-        self.lineEdit.setHidden(False)
+        self.toggleEditing(True)
         self.lineEdit.setText(self.label.text())
-        self.lineEdit.blockSignals(False)
         self.lineEdit.setFocus(QtCore.Qt.MouseFocusReason)
-        self.lineEdit.selectAll()
+        self.lineEdit.setCursorPosition(0)
 
     def labelUpdatedAction(self):
         """Indicates the widget text has been updated"""
@@ -110,11 +147,11 @@ class EditableLabel(QtWidgets.QWidget):
 
         if textToUpdate != self.label.text():
             self.label.setText(textToUpdate)
+            self.textChanged.emit(textToUpdate)
 
-        self.label.setHidden(False)
-        self.lineEdit.setHidden(True)
-        self.lineEdit.blockSignals(True)
-        self.label.blockSignals(False)
+        self.toggleEditing()
+        self.lineEdit.setFocus(QtCore.Qt.MouseFocusReason)
+        self.lineEdit.selectAll()
 
     def returnPressedAction(self):
         """Return/enter event handler"""
@@ -122,10 +159,7 @@ class EditableLabel(QtWidgets.QWidget):
 
     def escapePressedAction(self):
         """Escape event handler"""
-        self.label.setHidden(False)
-        self.lineEdit.setHidden(True)
-        self.lineEdit.blockSignals(True)
-        self.label.blockSignals(False)
+        self.toggleEditing()
 
     def textChangedAction(self):
         self.labelUpdatedAction()

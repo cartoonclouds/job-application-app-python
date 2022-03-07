@@ -17,7 +17,7 @@ from app.gui.services.StatusBarService import StatusBarService
 from app.gui.services.TabService import TabService
 from app.models.JobApplication import JobApplication
 from app.storage import Storage
-from app.utilities.IconUtility import IconUtility
+from app.utils.IconUtility import IconUtility
 
 # https://realpython.com/python-menus-toolbars/
 # https://github.com/pythonguis/15-minute-apps/blob/aaf6038ab4b687cf1370ae3c7ca71f46140c5cdb/browser_tabbed/browser_tabbed.py

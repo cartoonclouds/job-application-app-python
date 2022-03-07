@@ -7,8 +7,18 @@ from app.gui.components.form.inputs.TextInput import TextInput
 
 from app.gui.components.pages.Header import Header
 from app.gui.components.tabs.Tab import Tab
-from PySide6.QtWidgets import QVBoxLayout, QSplitter, QFrame, QLabel
+from PySide6.QtWidgets import (
+    QVBoxLayout,
+    QSplitter,
+    QFrame,
+    QLabel,
+    QPushButton,
+    QHBoxLayout,
+)
 from PySide6.QtCore import Qt
+from app.storage import Storage
+
+from app.utils.IconUtility import IconUtility
 
 # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QTabWidget.html
 # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QTabBar.html
@@ -19,12 +29,12 @@ class JobApplicationTab(Tab):
         super().__init__(label=label, **kwargs)
 
         self.setObjectName("Tab:JobApplication")
-        self.setContentsMargins(10, 0, 10, 0)
+        self.setContentsMargins(
+            Storage.WIDGET_SPACING * 2, 0, Storage.WIDGET_SPACING * 2, 0
+        )
 
         # Header
-        header = Header("Job Application", True)
-        # header.setBinding(self.model, "title")
-        # header.setPlaceholderText("Job Application Title")
+        header = self._setupHeader()
 
         # Setup Layout
         layout = QVBoxLayout()
@@ -54,13 +64,13 @@ class JobApplicationTab(Tab):
         splitter.setStyleSheet("QSplitter::handle { background-color: gray }")
 
         leftLayout = QVBoxLayout()
-        leftLayout.setContentsMargins(0, 0, 20, 0)
+        leftLayout.setContentsMargins(0, 0, Storage.WIDGET_SPACING * 3, 0)
         leftLayout.setSpacing(20)
         leftFrame = QFrame()
         leftFrame.setLayout(leftLayout)
 
         rightLayout = QVBoxLayout()
-        rightLayout.setContentsMargins(20, 0, 0, 0)
+        rightLayout.setContentsMargins(Storage.WIDGET_SPACING * 3, 0, 0, 0)
         rightFrame = QFrame()
         rightFrame.setLayout(rightLayout)
 
@@ -69,8 +79,6 @@ class JobApplicationTab(Tab):
         # https://doc.qt.io/qtforpython/overviews/qtwidgets-widgets-groupbox-example.html#group-box-example
 
         # Setup LHS components
-        # header = Header(f"Job Application - {self.model.title}")
-
         jobForm = JobForm(self.model.job)
         companyForm = CompanyForm(self.model.company)
 
@@ -87,3 +95,38 @@ class JobApplicationTab(Tab):
         # Add components to tab
         layout.addWidget(header)
         layout.addWidget(splitter)
+
+    def _setupHeader(self):
+        layout = QHBoxLayout()
+        layout.setContentsMargins(
+            0, Storage.WIDGET_SPACING * 2, 0, Storage.WIDGET_SPACING * 2
+        )
+        layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+
+        frame = QFrame()
+        frame.setLayout(layout)
+        frame.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)
+
+        header = Header(
+            f"Job Application - {self.model.title}",
+            IconUtility.getFileIconAsPixmap("gear"),
+            True,
+        )
+        header.textChanged.connect(self._updateJobApplicationTitle)
+
+        saveButton = QPushButton("Save")
+        # Toggle buttons
+        pinButton = QPushButton("Pin")
+        requiredFollowupButton = QPushButton("Required Followup")
+
+        layout.addWidget(header)
+        layout.addWidget(saveButton)
+        layout.addWidget(pinButton)
+        layout.addWidget(requiredFollowupButton)
+
+        header.resize(header.sizeHint())
+
+        return frame
+
+    def _updateJobApplicationTitle(self, text: str):
+        setattr(self.model, "title", text)

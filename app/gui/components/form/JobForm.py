@@ -1,6 +1,7 @@
 import logging
 from app.gui.components.EditableLabel.EditableLabel import EditableLabel
 from app.gui.components.form.Form import Form
+from app.gui.components.form.PayOptions import PayOptions
 from app.gui.components.form.inputs.DateTimeInput import DateTimeInput
 from app.gui.components.form.inputs.SelectBox import SelectBox
 from app.gui.components.form.inputs.TextAreaInput import TextAreaInput
@@ -10,7 +11,8 @@ from app.models import Job
 from PySide6.QtWidgets import QComboBox
 
 from app.models.Profession import Profession
-from app.utilities.mixins.Logger import LoggerMixin
+from app.utils.EnumUtility import EmploymentType
+from app.utils.mixins.Logger import LoggerMixin
 
 # https://docs.python.org/3/library/datetime.html#strftime-and-strptime-format-codes
 
@@ -18,6 +20,7 @@ from app.utilities.mixins.Logger import LoggerMixin
 class JobForm(Form, LoggerMixin):
     def __init__(self, model: Job) -> None:
         super(JobForm, self).__init__("JobInfo", model, "Job Information")
+        self.setObjectName("Form:Job")
 
         # -------------------------- #
         # -- insert form elements -- #
@@ -26,9 +29,16 @@ class JobForm(Form, LoggerMixin):
         titleInput.setBinding(model, "title")
         titleInput.setPlaceholderText("Job title")
 
+        employmentTypeInput = SelectBox("Employment Type")
+        employmentTypeInput.addItems(EmploymentType.AS_LIST())
+        employmentTypeInput.setEditable(True)
+        employmentTypeInput.setBinding(model, "employment_type")
+        employmentTypeInput.setPlaceholderText("Employment Type")
+
         websiteInput = TextInput("Website")
         websiteInput.setBinding(model, "website")
         websiteInput.setPlaceholderText("www.job-application.com")
+        websiteInput.setPrefix("http://")
 
         professionInput = SelectBox("Profession")
         professionInput.setModel(ProfessionListModel(professionInput))
@@ -37,21 +47,22 @@ class JobForm(Form, LoggerMixin):
         professionInput.setUpdateBinding(model, "profession_id")
         professionInput.setPlaceholderText("Profession")
 
+        payOptionsInput = PayOptions("Pay Options", model)
+
         commentsInput = TextAreaInput("Comments")
         commentsInput.setBinding(model, "comments")
         commentsInput.setPlaceholderText("Details about this job...")
+        commentsInput.setHeight(2)
 
         closingDateInput = DateTimeInput("Closing Date")
         closingDateInput.setBinding(model, "closing_date")
 
-        # salary / rate/rate_unit
-        # employment_type
         # address_id
 
         self.addRow(titleInput, closingDateInput)
-        self.addRow(professionInput)
-        self.addRow(websiteInput)
-        self.addRow(professionInput)
-        self.addRow(commentsInput, 1, 2)
+        self.addRow(employmentTypeInput, columnSpan=2)
+        self.addRow(professionInput, columnSpan=2)
+        self.addRow(payOptionsInput, columnSpan=2)
+        self.addRow(websiteInput, columnSpan=2)
+        self.addRow(commentsInput, columnSpan=2)
         # -------------------------- #
-

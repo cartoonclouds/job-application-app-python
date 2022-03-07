@@ -15,6 +15,8 @@ class App:
 
         # QApplication.setStyle(QStyleFactory.create("Cleanlooks"))
         window = MainWindow()
+        
+        window.setWindowModified(True)
 
         # https://docs.python.org/3/library/configparser.html
 

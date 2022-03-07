@@ -1,61 +1,62 @@
+# Framework imports
+from PySide6.QtCore import Qt, Signal, QSize
+from PySide6.QtGui import QFont, QPixmap, QResizeEvent, QScreen, QGuiApplication
 from PySide6.QtWidgets import (
-    QLabel,
-    QHBoxLayout,
-    QWidget,
     QFrame,
-    QPlainTextEdit,
-    QLayout,
+    QHBoxLayout,
+    QLabel,
+    QWidget,
+    QApplication,
+    QSizePolicy,
 )
-from PySide6.QtGui import QFont, QFontMetrics
-from PySide6.QtCore import Qt, QSize
-from PySide6.QtWidgets import QSizePolicy
+
+# Application imports
 from app.gui.components.EditableLabel.EditableLabel import EditableLabel
+from app.storage import Storage
 
-from app.utilities.IconUtility import IconUtility
 
+class Header(QWidget):
+    textChanged = Signal(str)
 
-class Header(QFrame):
-    def __init__(self, text: str, editable: bool = False) -> None:
+    def __init__(
+        self, text: str, icon: QPixmap | None = None, editable: bool = False
+    ) -> None:
         super().__init__()
 
         self._text = text
-        self._icon = IconUtility.getFileIconAsPixmap("gear")
+        self._editable = editable
+        self._icon = icon
+        self.setObjectName("Header")
 
         layout = QHBoxLayout(self)
         layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
-        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setContentsMargins(Storage.ZERO_MARGINS)
 
-        self.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)
+        self.label = self.createLabel(text)
 
-        self.setEditable(editable)
+        if isinstance(icon, QPixmap) and not self._editable:
+            iconLabel = self.createIcon(icon)
+            layout.addWidget(iconLabel)
 
-        label = self.createLabel(text)
-
-        icon = QLabel("")
-        icon.setPixmap(self._icon)
-
-        layout.addWidget(icon)
-        layout.addWidget(label)
+        layout.addWidget(self.label)
+        self.setLayout(layout)
 
     def createLabel(self, text: str):
         if self._editable:
             # create the editable label
-            label = EditableLabel(text)
+            label = EditableLabel(text, icon=self._icon)
+
             # connect our custom signal
-            label.textChanged.connect(self.labelTextChangedAction)
+            label.textChanged.connect(lambda t: self.textChanged.emit(t))
         else:
             label = QLabel(text)
 
         label.setFont(QFont(["Helvetica", "SansSerif"], 18))
 
-        fontMetrics: QFontMetrics = label.fontMetrics()
-        textSize: QSize = fontMetrics.size(0, label.text())
-        self.setMaximumHeight(textSize.height())
-
         return label
 
-    def setEditable(self, editable: bool):
-        self._editable = editable
+    def createIcon(self, icon: QPixmap) -> QLabel:
+        labelIcon = QLabel("")
+        labelIcon.setPixmap(icon)
 
-    def labelTextChangedAction(self, text):
-        debug('# label updated: "{0}"'.format(text))
+        return labelIcon

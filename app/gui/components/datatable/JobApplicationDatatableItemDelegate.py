@@ -12,7 +12,7 @@ from PySide6.QtCore import (
 )
 from app.gui.components.datatable.DatatableItemDelegate import DatatableItemDelegate
 
-from app.utilities.IconUtility import IconUtility
+from app.utils.IconUtility import IconUtility
 
 
 class JobApplicationDatatableItemDelegate(DatatableItemDelegate):

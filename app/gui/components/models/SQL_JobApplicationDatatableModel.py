@@ -12,7 +12,7 @@ from typing import Mapping, Any, Sequence
 from app.gui.components.datatable.DatatableModel import DatatableModel, ModelData
 from app.models.JobApplication import JobApplication
 from PySide6.QtCore import QModelIndex, QPersistentModelIndex, Qt
-from app.utilities.mixins.DatabaseConnection import DatabaseConnectionMixin
+from app.utils.mixins.DatabaseConnection import DatabaseConnectionMixin
 from config.database import db
 
 # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QTableWidgetItem.html

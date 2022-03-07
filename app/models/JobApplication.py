@@ -3,6 +3,8 @@ from typing import TYPE_CHECKING
 
 # Third party imports
 from orator.orm import mixins, utils
+from app.models.Company import Company
+from app.models.Job import Job
 
 # Application imports
 from app.models.Model import Model
@@ -37,3 +39,10 @@ class JobApplication(mixins.SoftDeletes, Model):
         from app.models.Company import Company
 
         return Company
+
+    def createFullJobApplication(self) -> "JobApplication":
+        jobApp = JobApplication()
+        jobApp.job().save(Job())
+        jobApp.company().associate(Company())
+
+        return jobApp

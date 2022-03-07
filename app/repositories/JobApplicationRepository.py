@@ -1,10 +1,9 @@
-
 import collections
 import typing
 
 from app.models.JobApplication import JobApplication
 from app.repositories.Repository import Repository
-from app.utilities.CollectionUtility import CollectionUtility
+from app.utils.CollectionUtility import CollectionUtility
 
 # https://docs.python.org/3/library/collections.html#collections.UserDict
 # https://stackoverflow.com/questions/7148419/subclass-dict-userdict-dict-or-abc
@@ -15,24 +14,32 @@ from app.utilities.CollectionUtility import CollectionUtility
 
 # https://github.com/sdispater/backpack
 
-class JobApplicationRepository(collections.UserDict[str | int, JobApplication], Repository):
+
+class JobApplicationRepository(
+    collections.UserDict[str | int, JobApplication], Repository
+):
     """A repository which helps dealing with Job Applications.
 
-        Attributes:
-            table_columns (list[str]): A list of table columns
+    Attributes:
+        table_columns (list[str]): A list of table columns
 
-        Methods:
-            loadAll(): Loads all Job Applications from the database.
+    Methods:
+        loadAll(): Loads all Job Applications from the database.
     """
 
-    def __init__(self, d: typing.MutableMapping[str | int, JobApplication] | typing.Iterable[JobApplication] | None = None) -> None:
+    def __init__(
+        self,
+        d: typing.MutableMapping[str | int, JobApplication]
+        | typing.Iterable[JobApplication]
+        | None = None,
+    ) -> None:
         """Constructs the job application repository.
 
         Args:
             d (typing.MutableMapping[str | int, JobApplication] | typing.Iterable[JobApplication], optional): [description]. Defaults to None.
         """
         if not isinstance(d, dict) and d is not None:
-            d = CollectionUtility.keyBy('id', d)
+            d = CollectionUtility.keyBy("id", d)
 
         super().__init__(d)
 
@@ -42,8 +49,7 @@ class JobApplicationRepository(collections.UserDict[str | int, JobApplication], 
         except:
             return False
 
-        keyedJobApplications = CollectionUtility.keyBy(
-            'id', jobApplications)
+        keyedJobApplications = CollectionUtility.keyBy("id", jobApplications)
 
         self.data = dict(keyedJobApplications)
 

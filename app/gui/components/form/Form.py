@@ -1,25 +1,32 @@
-from PySide6.QtWidgets import (
-    QLabel,
-    QFrame,
-    QGridLayout,
-)
-from app.gui.components.form.inputs.Input import Input
+# Framework imports
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QFrame, QGridLayout, QLabel, QWidget
+
+# Application imports
+from app.gui.components.EditableLabel.EditableLabel import EditableLabel
+from app.gui.components.form.inputs.DateTimeInput import DateTimeInput
+from app.gui.components.form.inputs.SelectBox import SelectBox
+from app.gui.components.form.inputs.TextAreaInput import TextAreaInput
 from app.gui.components.form.inputs.TextInput import TextInput
 from app.models import Model
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Signal
+
+InputWidget = EditableLabel | DateTimeInput | SelectBox | TextAreaInput | TextInput
+
 
 # Validator https://docs.python-cerberus.org/en/stable/
 
 
 class Form(QFrame):
+    formModified = Signal(bool)
+    
     def __init__(self, name: str, model: Model, title: str) -> None:
         super(Form, self).__init__()
 
         self._model = model
         self._title = title
-        self.setObjectName("Form:" + name)
+        self.setObjectName("Form")
         self.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)
-        # self.setContentsMargins(0, 0, 0, 0)
         self.setStyleSheet(
             """
             QFrame {
@@ -30,17 +37,34 @@ class Form(QFrame):
 
         self._layout = QGridLayout()
         self._layout.setAlignment(Qt.AlignTop)
+        self._layout.setSpacing(12)
 
         self.formTitle = QLabel(self._title)
-        self.formTitle.move(0, -60)
-        self.formTitle.setContentsMargins(0, 6, 0, 0)
+        # self.formTitle.move(0, -60)
+        # self.formTitle.setContentsMargins(0, 6, 0, 0)
         self.addRow(self.formTitle)
 
         self.setLayout(self._layout)
 
-    def addRow(self, *fields, rowspan: int = 1, colspan: int = 1):
+    # https://stackoverflow.com/questions/19211828/using-any-and-all-to-check-if-a-list-contains-one-set-of-values-or-another
+    def isModified(self):
+        """Determines if any input element in the form has been modified"""
+        return len(self.modifiedWidgets()) > 0
+
+    def modifiedWidgets(self):
+        """Returns any element in the form that has been modified"""
+        return [w for w in self.inputWidgets() if w.isModified()]
+
+    def inputWidgets(self):
+        """Returns all form input elements"""
+        return [w for w in self.children() if isinstance(w, InputWidget)]
+
+    def addRow(self, *fields, **cellSpan):
         newRowIndex = self.rowCount + 1
         newColIndex = 0
+
+        colspan: int = cellSpan.get("columnSpan", 1)
+        rowspan: int = cellSpan.get("rowSpan", 1)
 
         if len(fields) == 1:
             field: TextInput = fields[0]
@@ -49,7 +73,7 @@ class Form(QFrame):
             )
         else:
             for field in fields:
-                if not isinstance(field, Input):
+                if not isinstance(field, QWidget):
                     continue
 
                 field: TextInput = field

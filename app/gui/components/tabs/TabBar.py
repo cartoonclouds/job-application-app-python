@@ -1,5 +1,12 @@
 # Framework imports
-from PySide6.QtCore import QEvent, QModelIndex, QObject, QPersistentModelIndex, QPoint, Qt
+from PySide6.QtCore import (
+    QEvent,
+    QModelIndex,
+    QObject,
+    QPersistentModelIndex,
+    QPoint,
+    Qt,
+)
 from PySide6.QtGui import QMouseEvent
 from PySide6.QtWidgets import QApplication, QTabBar, QTabWidget, QWidget
 
@@ -17,7 +24,8 @@ class TabBar(QTabBar):
 
     def __init__(self, *args, **kargs) -> None:
         super(TabBar, self).__init__(*args, **kargs)
-
+        
+        self.setObjectName("TabBar")
         self.setTabsClosable(True)
         self.setDocumentMode(True)
         self.setMovable(True)

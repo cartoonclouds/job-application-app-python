@@ -18,6 +18,7 @@ class Tab(QWidget):
         movable: bool = True,
     ) -> None:
         super().__init__()
+        self.setObjectName("Tab")
 
         self.model = model
 

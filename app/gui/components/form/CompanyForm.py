@@ -10,6 +10,7 @@ from PySide6.QtWidgets import QCompleter
 class CompanyForm(Form):
     def __init__(self, model: Company) -> None:
         super(CompanyForm, self).__init__("CompanyInfo", model, "Company Information")
+        self.setObjectName("Form:Company")
 
         # -------------------------- #
         # -- insert form elements -- #
@@ -20,27 +21,36 @@ class CompanyForm(Form):
 
         # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QCompleter.html
         titleInput.setCompleter(QCompleter(list(Company.all().pluck("name"))))
-        # on completer.activated.connect(update other fields)
-        titleInput.setInputMask("9999-999-999")
 
         phoneInput = TextInput("Phone")
         phoneInput.setBinding(self._model, "phone")
         phoneInput.setPlaceholderText("Company phone number")
+        # on completer.activated.connect(update other fields)
+        # https://www.stylemanual.gov.au/grammar-punctuation-and-conventions/numbers-and-measurements/telephone-numbers
+        # https://developers.google.com/style/phone-numbers
+        # https://uxplanet.org/phone-number-field-design-best-practices-23957cbd86d5
+        # https://stackoverflow.com/questions/26868803/australian-phone-number-validation
+        # https://uxmovement.com/forms/bad-practices-on-phone-number-form-fields/
+        phoneInput.setInputMask("(99) 9999 9999")
 
         mobileInput = TextInput("Mobile")
         mobileInput.setBinding(self._model, "mobile")
         mobileInput.setPlaceholderText("Company mobile number")
+        mobileInput.setPrefix("+61 ")
+        mobileInput.setInputMask("+99 999 999 999")
 
         websiteInput = TextInput("Website")
         websiteInput.setBinding(self._model, "website")
         websiteInput.setPlaceholderText("www.job-application.com")
+        websiteInput.setPrefix("http://")
 
         commentsInput = TextAreaInput("Comments")
         commentsInput.setBinding(self._model, "comments")
         commentsInput.setPlaceholderText("Details about this job...")
+        commentsInput.setHeight(2)
 
-        self.addRow(titleInput)
+        self.addRow(titleInput, columnSpan=2)
         self.addRow(phoneInput, mobileInput)
-        self.addRow(websiteInput)
-        self.addRow(commentsInput)
+        self.addRow(websiteInput, columnSpan=2)
+        self.addRow(commentsInput, columnSpan=2)
         # -------------------------- #

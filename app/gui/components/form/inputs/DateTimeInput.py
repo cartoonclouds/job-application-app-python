@@ -1,5 +1,5 @@
 from typing import Any
-from app.gui.components.form.inputs.Input import Input, UpdateEvent
+from app.gui.components.form.inputs.Input import Input
 from PySide6.QtWidgets import QDateTimeEdit, QDateEdit
 from PySide6.QtCore import Slot, QDateTime, QDate
 
@@ -8,7 +8,9 @@ class DateTimeInput(Input[QDateTimeEdit]):
     # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QDateTimeEdit.html
     def __init__(self, label: str | None = None):
         super(DateTimeInput, self).__init__(QDateTimeEdit())
+        self.setObjectName("Input:DateTimeInput:" + str(label))
 
+        self._isModified: bool = False
         self._input.setCalendarPopup(True)
         # self._input.setDate(QDateTime.currentDateTime().date())
         # setDisplayFormat()
@@ -22,18 +24,20 @@ class DateTimeInput(Input[QDateTimeEdit]):
         object: Any,
         property: str,
         updateProperty: str | None = None,
-        updateEvent: UpdateEvent = UpdateEvent.Change,
     ):
         self._boundObject = object
         self._boundProperty = property
         self._updateProperty = updateProperty
-        self._updateEvent = updateEvent
 
         self._input.setDateTime(getattr(self._boundObject, self._boundProperty))
-        
-        if self._updateEvent == UpdateEvent.Change:
-            self._input.dateTimeChanged.connect(self._onDateTimeChanged)
+
+        self._input.dateTimeChanged.connect(self._onDateTimeChanged)
 
     @Slot(str)
     def _onDateTimeChanged(self, datetime: QDateTime):
         self.updateBoundObject(self._boundObject, datetime.toString())
+
+        self._isModified = True
+
+    def isModified(self) -> bool:
+        return self._isModified
