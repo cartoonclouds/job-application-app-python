@@ -4,17 +4,7 @@ from functools import partial
 # Framework imports
 from PySide6.QtCore import QMargins, Qt
 from PySide6.QtGui import QFont
-from PySide6.QtWidgets import (
-    QFrame,
-    QHBoxLayout,
-    QLabel,
-    QPushButton,
-    QRadioButton,
-    QSplitter,
-    QStackedLayout,
-    QVBoxLayout,
-    QWidget,
-)
+from PySide6.QtWidgets import QFrame, QHBoxLayout, QLabel, QPushButton, QRadioButton, QSplitter, QStackedLayout, QVBoxLayout, QWidget
 
 # Application imports
 from app.gui.components.form.inputs.SelectBox import SelectBox

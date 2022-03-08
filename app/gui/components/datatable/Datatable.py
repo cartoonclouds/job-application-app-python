@@ -4,11 +4,15 @@ from PySide6.QtWidgets import QAbstractItemView, QTableView, QMenu, QStyledItemD
 from PySide6.QtCore import Signal, Qt, QModelIndex, QPersistentModelIndex, QPoint
 from app.config.App import Sizing
 
+from app.gui.components.models.ActionDatatableModel import ActionDatatableModel
 from app.gui.components.models.JobApplicationDatatableModel import (
     JobApplicationDatatableModel,
 )
+
 from app.models.Model import Model
 from app.types import TModel
+
+DTModel = ActionDatatableModel | JobApplicationDatatableModel
 
 
 class Datatable(QTableView):
@@ -33,8 +37,8 @@ class Datatable(QTableView):
 
     def __init__(
         self,
-        datatableModel: JobApplicationDatatableModel,
-        datatableItemDelegate: QStyledItemDelegate,
+        datatableModel: DTModel,
+        datatableItemDelegate: Optional[QStyledItemDelegate] = None,
     ) -> None:
         super().__init__()
 
@@ -66,8 +70,9 @@ class Datatable(QTableView):
         self.setModel(datatableModel)
         datatableModel.dataUpdated.connect(self.resizeEvent())
 
-        self.setItemDelegate(datatableItemDelegate)
-        datatableItemDelegate.setParent(self)
+        if datatableItemDelegate is not None:
+            self.setItemDelegate(datatableItemDelegate)
+            datatableItemDelegate.setParent(self)
 
     def _getModelAtSelection(self) -> Model:
         index = self.selectionModel().currentIndex()
@@ -75,11 +80,11 @@ class Datatable(QTableView):
         return self._getModelAtIndex(index)
 
     def _getModelAtIndex(self, index: QModelIndex | QPersistentModelIndex) -> TModel:
-        datatableModel: JobApplicationDatatableModel = self.model()
+        datatableModel: DTModel = self.model()
 
         return datatableModel.modelAtIndex(index)
 
-    def model(self) -> JobApplicationDatatableModel:
+    def model(self) -> DTModel:
         return super().model()  # type: ignore
 
     def mouseDoubleClickEvent(self, event: QMouseEvent) -> None:
@@ -147,6 +152,9 @@ class Datatable(QTableView):
         ]
 
         for index, column in enumerate(fitByContents):
+            if not hasattr(datatableModel.columns, column):
+                continue
+            
             index = datatableModel.columns.index(column)
 
             self.resizeColumnToContents(index)

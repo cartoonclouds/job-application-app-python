@@ -2,10 +2,12 @@
 from typing import Any
 import qtawesome as qta
 from app.gui.components.Splitter.Splitter import Splitter
+from app.gui.components.datatable.Datatable import Datatable
 from app.gui.components.form.CompanyForm import CompanyForm
 from app.gui.components.form.JobForm import JobForm
 from app.gui.components.form.inputs.TextInput import TextInput
 from app.gui.components.form.inputs.ToggleButtonSquare import ToggleButtonSquare
+from app.gui.components.models.ActionDatatableModel import ActionDatatableModel
 
 from app.gui.components.pages.Header import Header
 from app.gui.components.tabs.Tab import Tab
@@ -119,7 +121,10 @@ class JobApplicationTab(Tab):
         frame = QFrame()
         frame.setLayout(layout)
 
-        layout.addWidget(QLabel("Right Hand Side Datatable"))
+        datatableModel = ActionDatatableModel()
+        datatable = Datatable(datatableModel)
+
+        layout.addWidget(datatable)
         layout.addWidget(QLabel("Right Hand Side File Dropzone"))
 
         return frame

@@ -43,6 +43,7 @@ from typing import TypeVar, Generic
 # DM = TypeVar("DM", JobApplicationDatatableModel, ActionDatatableModel)
 TModel = JobApplication | Profession | Job | Action | Company
 
+
 M = TypeVar("M", JobApplication, Profession, Job, Action, Company)
 
 T = TypeVar("T", QComboBox, QPlainTextEdit, QLineEdit, QDateTimeEdit, QPushButton)

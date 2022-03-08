@@ -58,6 +58,8 @@ class JobForm(Form, LoggerMixin):
         closingDateInput.setBinding(model, "closing_date")
 
         # address_id
+        
+        
 
         self.addRow(titleInput, closingDateInput)
         self.addRow(employmentTypeInput, columnSpan=2)
