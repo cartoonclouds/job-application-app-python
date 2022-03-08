@@ -54,8 +54,10 @@ class JobApplicationDatatableItemDelegate(DatatableItemDelegate):
         brush = QBrush(Qt.red)
         painter.setBrush(brush)
 
-        leftMostColumn = index.siblingAtColumn(0)
-        rightMostColumn = index.siblingAtColumn(self.datatableModel.columnCount(index))
+        # leftMostColumn: QModelIndex = index.siblingAtColumn(0)
+        # rightMostColumn: QModelIndex = index.siblingAtColumn(
+        #     self.datatableModel.columnCount(index)
+        # )
 
         topLeftX = self.datatable.columnViewportPosition(0)
         topLeftY = self.datatable.rowViewportPosition(index.row())

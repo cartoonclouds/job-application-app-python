@@ -2,7 +2,11 @@
 from PySide6.QtCore import QObject, QRect
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QStyledItemDelegate, QStyleOptionViewItem
-from app.gui.components.datatable import Datatable, DatatableModel
+from app.gui.components.datatable.Datatable import Datatable
+from app.gui.components.datatable.DatatableModel import DatatableModel
+from app.gui.components.models.JobApplicationDatatableModel import (
+    JobApplicationDatatableModel,
+)
 
 from app.types import M
 
@@ -18,10 +22,10 @@ class DatatableItemDelegate(QStyledItemDelegate):
         return self.parent()
 
     @property
-    def datatableModel(self) -> DatatableModel:
+    def datatableModel(self) -> JobApplicationDatatableModel:
         return self.datatable.model()
 
-    def setParent(self, parent: QObject) -> None:
+    def setParent(self, parent: Datatable) -> None:
         parent.setMouseTracking(True)
 
         return super().setParent(parent)

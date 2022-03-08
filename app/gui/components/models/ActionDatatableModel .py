@@ -2,14 +2,15 @@ import datetime
 
 from typing import Mapping, Any, Sequence
 from app.gui.components.datatable.DatatableModel import DatatableModel, ModelData
+from app.models.Action import Action
 from app.models.JobApplication import JobApplication
 from PySide6.QtCore import QModelIndex, QPersistentModelIndex, Qt
 
 # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QTableWidgetItem.html
 
 
-class JobApplicationDatatableModel(DatatableModel[JobApplication]):
-    """A datatable model for Job Applications."""
+class ActionDatatableModel(DatatableModel[Action]):
+    """A datatable model for Actions."""
 
     def __init__(self) -> None:
         columnHeaders: Mapping[str, str] = dict(
@@ -57,7 +58,7 @@ class JobApplicationDatatableModel(DatatableModel[JobApplication]):
             # case Qt.WhatsThisRole:
 
     def _handleDisplayRole(self, modelData: ModelData) -> Any:
-        assert isinstance(modelData.model, JobApplication) 
+        assert isinstance(modelData.model, JobApplication)
         model: JobApplication = modelData.model
 
         # Perform per-type checks and render accordingly.

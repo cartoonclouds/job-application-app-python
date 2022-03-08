@@ -11,6 +11,8 @@ from app.gui.components.form.inputs.TextInput import TextInput
 from app.models import Model
 from PySide6.QtCore import Signal
 
+from app.types import TModel
+
 InputWidget = EditableLabel | DateTimeInput | SelectBox | TextAreaInput | TextInput
 
 
@@ -18,11 +20,10 @@ InputWidget = EditableLabel | DateTimeInput | SelectBox | TextAreaInput | TextIn
 
 
 class Form(QFrame):
-    formModified = Signal(bool)
-    
-    def __init__(self, name: str, model: Model, title: str) -> None:
+    def __init__(self, name: str, model: TModel, title: str) -> None:
         super(Form, self).__init__()
 
+        self._name = name
         self._model = model
         self._title = title
         self.setObjectName("Form")
@@ -39,9 +40,11 @@ class Form(QFrame):
         self._layout.setAlignment(Qt.AlignTop)
         self._layout.setSpacing(12)
 
-        self.formTitle = QLabel(self._title)
-        # self.formTitle.move(0, -60)
+        self.formTitle = QLabel(self._title, self)
+        # self.formTitle.move(0, -15)
+        # self.formTitle.raise_()
         # self.formTitle.setContentsMargins(0, 6, 0, 0)
+
         self.addRow(self.formTitle)
 
         self.setLayout(self._layout)

@@ -1,6 +1,6 @@
 # Standard Library
 from enum import Enum, auto, unique
-from typing import Any, Generic, TypeAlias, no_type_check, overload
+from typing import Any, Generic, Optional, TypeAlias, no_type_check, overload
 
 # Framework imports
 from PySide6.QtCore import (
@@ -12,14 +12,13 @@ from PySide6.QtCore import (
     QMargins,
 )
 from PySide6.QtGui import QFont, QRegularExpressionValidator
-from PySide6.QtWidgets import QCompleter, QLabel, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QCompleter, QLabel, QVBoxLayout, QWidget, QHBoxLayout
 
 # Application imports
 from app.gui.components.models.ProfessionListModel import ProfessionListModel
-from app.models import Model
 from app.models.Profession import Profession
 from app.storage import Storage
-from app.types import T
+from app.types import T, TModel
 from app.utils.mixins.ObjectMixin import ObjectMixin
 
 WidgetModel: TypeAlias = (
@@ -38,10 +37,10 @@ class Input(Generic[T], QWidget, ObjectMixin):
         self._layout.setSpacing(Storage.WIDGET_SPACING)
 
         self._input: T = component
-        self._inputModel: None | WidgetModel = None
-        self._boundObject: None | Model = None
-        self._boundProperty: None | str = None
-        self._updateProperty: None | str = None
+        self._inputModel: Optional[WidgetModel] = None
+        self._boundObject: Optional[TModel] = None
+        self._boundProperty: Optional[str] = None
+        self._updateProperty: Optional[str] = None
 
         self._label = QLabel()
         self._label.setBuddy(self._input)
@@ -139,9 +138,11 @@ class Input(Generic[T], QWidget, ObjectMixin):
         if self.hasBoundUpdateProperty():
             updateObject = self._boundUpdateObject
             updateProperty = self._boundUpdateProperty
-        else:
+        elif self._boundProperty is not None:
             updateObject = self._boundObject
             updateProperty = self._boundProperty
+        else:
+            raise Exception("Bound object or property not set")
 
         updateArgs = dict(zip([updateProperty], [value]))
 

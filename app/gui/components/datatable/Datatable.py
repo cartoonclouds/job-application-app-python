@@ -4,12 +4,11 @@ from PySide6.QtWidgets import QAbstractItemView, QTableView, QMenu, QStyledItemD
 from PySide6.QtCore import Signal, Qt, QModelIndex, QPersistentModelIndex, QPoint
 from app.config.App import Sizing
 
-from app.gui.components.datatable.DatatableModel import DatatableModel
-from app.gui.components.models.SQL_JobApplicationDatatableModel import (
+from app.gui.components.models.JobApplicationDatatableModel import (
     JobApplicationDatatableModel,
 )
 from app.models.Model import Model
-from app.types import M
+from app.types import TModel
 
 
 class Datatable(QTableView):
@@ -75,12 +74,12 @@ class Datatable(QTableView):
 
         return self._getModelAtIndex(index)
 
-    def _getModelAtIndex(self, index: QModelIndex | QPersistentModelIndex) -> Model:
-        datatableModel: DatatableModel = self.model()
+    def _getModelAtIndex(self, index: QModelIndex | QPersistentModelIndex) -> TModel:
+        datatableModel: JobApplicationDatatableModel = self.model()
 
         return datatableModel.modelAtIndex(index)
 
-    def model(self) -> DatatableModel[M]:
+    def model(self) -> JobApplicationDatatableModel:
         return super().model()  # type: ignore
 
     def mouseDoubleClickEvent(self, event: QMouseEvent) -> None:
@@ -105,7 +104,7 @@ class Datatable(QTableView):
         if not index.isValid():
             return
 
-        rowModel: Model = self._getModelAtIndex(index)
+        rowModel: TModel = self._getModelAtIndex(index)
 
         self.contextMenu = QMenu(self)
 

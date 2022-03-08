@@ -12,14 +12,13 @@ from PySide6.QtCore import (
 )
 
 # Application imports
-from app.models import Model
-from app.types import M
+from app.types import M, TModel
 
 
 @dataclass(frozen=True)
 class ModelData:
     column: str
-    model: Model
+    model: TModel
     value: Any
 
 

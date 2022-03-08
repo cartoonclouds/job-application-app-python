@@ -68,6 +68,7 @@ class JobApplicationTab(Tab):
         leftLayout.setSpacing(20)
         leftFrame = QFrame()
         leftFrame.setLayout(leftLayout)
+        leftFrame.setMaximumWidth(600)
 
         rightLayout = QVBoxLayout()
         rightLayout.setContentsMargins(Storage.WIDGET_SPACING * 3, 0, 0, 0)

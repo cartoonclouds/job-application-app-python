@@ -22,7 +22,7 @@ from app.utils.EnumUtility import PayTypes, PayUnits
 
 class PayOptions(QWidget):
     def __init__(
-        self, label: str, model: Job, initialOption: PayTypes = PayTypes.RATE
+        self, label: str, model: Job, initialOption: PayTypes = PayTypes.SALARY
     ) -> None:
         super().__init__()
 
@@ -33,7 +33,7 @@ class PayOptions(QWidget):
         layout.setContentsMargins(Storage.ZERO_MARGINS)
         layout.setSpacing(Storage.WIDGET_SPACING)
         stackWidget = self._setupStacks()
-        self._stacks = stackWidget.layout()
+        self._stacks: QStackedLayout = stackWidget.layout()
 
         labelWidget = QLabel(label)
         labelFont = labelWidget.font()
@@ -63,6 +63,8 @@ class PayOptions(QWidget):
 
         salaryOption = QRadioButton("Salary")
         rateOption = QRadioButton("Rate")
+
+        # pay_option
 
         salaryOption.setChecked(self._initialOption == PayTypes.SALARY)
         rateOption.setChecked(self._initialOption == PayTypes.RATE)
@@ -97,8 +99,8 @@ class PayOptions(QWidget):
         input = TextInput()  # double('salary', 8)
         input.setBinding(self._model, "rate")
         input.setPrefix("$")
-        input.setInputMask("$##.##")
-        input.setPlaceholderText("$##.##")
+        input.setInputMask("##.##")
+        input.setPlaceholderText("##.##")
 
         label = QLabel("per")
         label.setAlignment(Qt.AlignBottom)
@@ -130,7 +132,8 @@ class PayOptions(QWidget):
         salaryInput = TextInput()  # double('salary', 8)
         salaryInput.setBinding(self._model, "salary")
         salaryInput.setPrefix("$")
-        salaryInput.setInputMask("$##.##")
+        # salaryInput.setSuffix("per year")
+        salaryInput.setInputMask("##.##")
         salaryInput.setPlaceholderText("$##.##")
 
         label = QLabel("per year")

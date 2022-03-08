@@ -18,7 +18,6 @@ class SelectBox(Input[QComboBox]):
         super(SelectBox, self).__init__(QComboBox())
         self.setObjectName("Input:SelectBox:" + str(label))
 
-    
         self._isModified: bool = False
         self._input.setInsertPolicy(QComboBox.InsertAtTop)
 
@@ -68,7 +67,7 @@ class SelectBox(Input[QComboBox]):
             )
         else:
             self.updateBoundObject(self._boundObject, self._input.itemText(index))
-            
+
         self._isModified = True
 
     def isModified(self) -> bool:

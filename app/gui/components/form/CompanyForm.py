@@ -37,12 +37,14 @@ class CompanyForm(Form):
         mobileInput.setBinding(self._model, "mobile")
         mobileInput.setPlaceholderText("Company mobile number")
         mobileInput.setPrefix("+61 ")
-        mobileInput.setInputMask("+99 999 999 999")
+        mobileInput.setInputMask("999 999 999")
 
         websiteInput = TextInput("Website")
         websiteInput.setBinding(self._model, "website")
         websiteInput.setPlaceholderText("www.job-application.com")
         websiteInput.setPrefix("http://")
+
+        # address
 
         commentsInput = TextAreaInput("Comments")
         commentsInput.setBinding(self._model, "comments")

@@ -7,8 +7,8 @@ from app.gui.components.form.inputs.SelectBox import SelectBox
 from app.gui.components.form.inputs.TextAreaInput import TextAreaInput
 from app.gui.components.form.inputs.TextInput import TextInput
 from app.gui.components.models.ProfessionListModel import ProfessionListModel
-from app.models import Job
 from PySide6.QtWidgets import QComboBox
+from app.models.Job import Job
 
 from app.models.Profession import Profession
 from app.utils.EnumUtility import EmploymentType
@@ -39,6 +39,7 @@ class JobForm(Form, LoggerMixin):
         websiteInput.setBinding(model, "website")
         websiteInput.setPlaceholderText("www.job-application.com")
         websiteInput.setPrefix("http://")
+        # websiteInput.setSuffix(".com")
 
         professionInput = SelectBox("Profession")
         professionInput.setModel(ProfessionListModel(professionInput))
@@ -62,7 +63,7 @@ class JobForm(Form, LoggerMixin):
         self.addRow(titleInput, closingDateInput)
         self.addRow(employmentTypeInput, columnSpan=2)
         self.addRow(professionInput, columnSpan=2)
-        self.addRow(payOptionsInput, columnSpan=2)
+        self.addRow(payOptionsInput)
         self.addRow(websiteInput, columnSpan=2)
         self.addRow(commentsInput, columnSpan=2)
         # -------------------------- #

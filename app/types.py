@@ -1,8 +1,10 @@
-from argparse import Action
 from typing import Type, TypeAlias, TypeVar
+
+from app.models.Company import Company
 from app.models.Profession import Profession
 from app.models.JobApplication import JobApplication
 from app.models.Job import Job
+from app.models.Action import Action
 from typing import Any, Sequence, TypeVar, Generic, TypeAlias
 
 from PySide6.QtWidgets import (
@@ -37,8 +39,9 @@ from typing import TypeVar, Generic
 # DTM = TypeVar("DTM", bound=DatatableModel)
 # M_co = TypeVar("M_co", bound=Models.Model, covariant=True)
 
-MT = JobApplication | Profession | Job | Action
-M = TypeVar("M", JobApplication, Profession, Job, Action)
+# DM = TypeVar("DM", JobApplicationDatatableModel, ActionDatatableModel)
+TModel = JobApplication | Profession | Job | Action | Company
+M = TypeVar("M", JobApplication, Profession, Job, Action, Company)
 
 T = TypeVar("T", QComboBox, QPlainTextEdit, QLineEdit, QDateTimeEdit)
 
