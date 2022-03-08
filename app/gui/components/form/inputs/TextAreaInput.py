@@ -11,6 +11,8 @@ class TextAreaInput(Input[QPlainTextEdit]):
         super(TextAreaInput, self).__init__(QPlainTextEdit())
         self.setObjectName("Input:TextAreaInput:" + str(label))
 
+        self._input.textChanged.connect(lambda: self.modified.emit(True))
+        
         if label:
             self.setLabel(label)
 

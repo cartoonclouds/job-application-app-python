@@ -66,4 +66,10 @@ class JobForm(Form, LoggerMixin):
         self.addRow(payOptionsInput)
         self.addRow(websiteInput, columnSpan=2)
         self.addRow(commentsInput, columnSpan=2)
+        
+        
+        self.modified.connect(self._formModified)
         # -------------------------- #
+
+    def _formModified(self):
+        debug('Modified? ' + str(self.isModified()))

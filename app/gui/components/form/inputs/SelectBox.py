@@ -20,6 +20,7 @@ class SelectBox(Input[QComboBox]):
 
         self._isModified: bool = False
         self._input.setInsertPolicy(QComboBox.InsertAtTop)
+        self._input.currentIndexChanged.connect(lambda: self.modified.emit(True))
 
         if label:
             self.setLabel(label)

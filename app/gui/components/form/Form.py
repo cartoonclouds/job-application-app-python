@@ -20,6 +20,8 @@ InputWidget = EditableLabel | DateTimeInput | SelectBox | TextAreaInput | TextIn
 
 
 class Form(QFrame):
+    modified = Signal(bool)
+
     def __init__(self, name: str, model: TModel, title: str) -> None:
         super(Form, self).__init__()
 
@@ -70,7 +72,11 @@ class Form(QFrame):
         rowspan: int = cellSpan.get("rowSpan", 1)
 
         if len(fields) == 1:
-            field: TextInput = fields[0]
+            field = fields[0]
+
+            if hasattr(field, "modified"):
+                field.modified.connect(lambda: self.modified.emit(True))
+
             self._layout.addWidget(
                 field, newRowIndex, newColIndex, rowspan, colspan, Qt.AlignTop
             )
@@ -79,7 +85,8 @@ class Form(QFrame):
                 if not isinstance(field, QWidget):
                     continue
 
-                field: TextInput = field
+                if hasattr(field, "modified"):
+                    field.modified.connect(lambda: self.modified.emit(True))
 
                 self._layout.addWidget(
                     field, newRowIndex, newColIndex, rowspan, colspan, Qt.AlignTop

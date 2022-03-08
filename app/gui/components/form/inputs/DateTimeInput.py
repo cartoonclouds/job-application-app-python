@@ -12,6 +12,7 @@ class DateTimeInput(Input[QDateTimeEdit]):
 
         self._isModified: bool = False
         self._input.setCalendarPopup(True)
+        self._input.dateTimeChanged.connect(lambda: self.modified.emit(True))
         # self._input.setDate(QDateTime.currentDateTime().date())
         # setDisplayFormat()
         # setMinimumDateTime (dt: QDateTime)

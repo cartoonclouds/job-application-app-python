@@ -13,6 +13,7 @@ class TextInput(Input[QLineEdit]):
 
         self._prefix: Optional[str] = None
         self._suffix: Optional[str] = None
+        self._input.editingFinished.connect(lambda: self.modified.emit(True))
 
         if label:
             self.setLabel(label)

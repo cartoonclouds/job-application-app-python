@@ -10,6 +10,7 @@ from PySide6.QtCore import (
     QRegularExpression,
     Qt,
     QMargins,
+    Signal
 )
 from PySide6.QtGui import QFont, QRegularExpressionValidator
 from PySide6.QtWidgets import QCompleter, QLabel, QVBoxLayout, QWidget, QHBoxLayout
@@ -28,6 +29,8 @@ WidgetModel: TypeAlias = (
 
 # https://stackoverflow.com/questions/4821104/dynamic-instantiation-from-string-name-of-a-class-in-dynamically-imported-module
 class Input(Generic[T], QWidget, ObjectMixin):
+    modified = Signal(bool)
+
     def __init__(self, component: T):
         super(Input, self).__init__()
         self.setObjectName("Input")
