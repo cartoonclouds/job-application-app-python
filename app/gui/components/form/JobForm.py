@@ -1,16 +1,15 @@
+# Standard Library
 import logging
-from app.gui.components.EditableLabel.EditableLabel import EditableLabel
+
+# Application imports
 from app.gui.components.form.Form import Form
-from app.gui.components.form.PayOptions import PayOptions
 from app.gui.components.form.inputs.DateTimeInput import DateTimeInput
 from app.gui.components.form.inputs.SelectBox import SelectBox
 from app.gui.components.form.inputs.TextAreaInput import TextAreaInput
 from app.gui.components.form.inputs.TextInput import TextInput
+from app.gui.components.form.PayOptions import PayOptions
 from app.gui.components.models.ProfessionListModel import ProfessionListModel
-from PySide6.QtWidgets import QComboBox
 from app.models.Job import Job
-
-from app.models.Profession import Profession
 from app.utils.EnumUtility import EmploymentType
 from app.utils.mixins.Logger import LoggerMixin
 
@@ -66,10 +65,9 @@ class JobForm(Form, LoggerMixin):
         self.addRow(payOptionsInput)
         self.addRow(websiteInput, columnSpan=2)
         self.addRow(commentsInput, columnSpan=2)
-        
-        
+
         self.modified.connect(self._formModified)
         # -------------------------- #
 
     def _formModified(self):
-        debug('Modified? ' + str(self.isModified()))
+        debug("Modified? " + str(self.isModified()))

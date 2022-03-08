@@ -10,11 +10,10 @@ from PySide6.QtCore import (
     QRegularExpression,
     Qt,
     QMargins,
-    Signal
+    Signal,
 )
 from PySide6.QtGui import QFont, QRegularExpressionValidator
 from PySide6.QtWidgets import QCompleter, QLabel, QVBoxLayout, QWidget, QHBoxLayout
-
 # Application imports
 from app.gui.components.models.ProfessionListModel import ProfessionListModel
 from app.models.Profession import Profession
@@ -25,7 +24,6 @@ from app.utils.mixins.ObjectMixin import ObjectMixin
 WidgetModel: TypeAlias = (
     ProfessionListModel | QAbstractItemModel | QAbstractListModel | QAbstractTableModel
 )
-
 
 # https://stackoverflow.com/questions/4821104/dynamic-instantiation-from-string-name-of-a-class-in-dynamically-imported-module
 class Input(Generic[T], QWidget, ObjectMixin):

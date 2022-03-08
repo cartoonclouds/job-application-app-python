@@ -1,19 +1,31 @@
 # Framework imports
+from typing import Sequence, TypeVar
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QFrame, QGridLayout, QLabel, QWidget
 
 # Application imports
 from app.gui.components.EditableLabel.EditableLabel import EditableLabel
+from app.gui.components.form.PayOptions import PayOptions
 from app.gui.components.form.inputs.DateTimeInput import DateTimeInput
 from app.gui.components.form.inputs.SelectBox import SelectBox
 from app.gui.components.form.inputs.TextAreaInput import TextAreaInput
 from app.gui.components.form.inputs.TextInput import TextInput
-from app.models import Model
+from app.gui.components.form.inputs.ToggleButtonSquare import ToggleButtonSquare
 from PySide6.QtCore import Signal
 
 from app.types import TModel
 
-InputWidget = EditableLabel | DateTimeInput | SelectBox | TextAreaInput | TextInput
+TInput = TypeVar(
+    "TInput",
+    EditableLabel,
+    DateTimeInput,
+    SelectBox,
+    TextAreaInput,
+    TextInput,
+    ToggleButtonSquare,
+    PayOptions,
+    QLabel,
+)
 
 
 # Validator https://docs.python-cerberus.org/en/stable/
@@ -60,11 +72,13 @@ class Form(QFrame):
         """Returns any element in the form that has been modified"""
         return [w for w in self.inputWidgets() if w.isModified()]
 
-    def inputWidgets(self):
+    def inputWidgets(self) -> Sequence[TInput]:
         """Returns all form input elements"""
-        return [w for w in self.children() if isinstance(w, InputWidget)]
+        return [w for w in self.children() if isinstance(w, TInput)]
 
-    def addRow(self, *fields, **cellSpan):
+    def addRow(
+        self, *fields: TInput | Sequence[TInput], **cellSpan: dict[str, int] | int
+    ):
         newRowIndex = self.rowCount + 1
         newColIndex = 0
 

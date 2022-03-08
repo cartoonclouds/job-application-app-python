@@ -16,7 +16,7 @@ from PySide6.QtWidgets import (
     QLabel,
     QPushButton,
     QHBoxLayout,
-    QSplitterHandle
+    QSplitterHandle,
 )
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QPaintEvent
@@ -59,7 +59,6 @@ class JobApplicationTab(Tab):
         layout.addWidget(header)
         layout.addWidget(splitter)
 
-
     def _setupLeftFrame(self):
         layout = QVBoxLayout()
         layout.setContentsMargins(0, 0, Storage.WIDGET_SPACING * 3, 0)
@@ -80,9 +79,7 @@ class JobApplicationTab(Tab):
 
     def _setupHeader(self):
         layout = QHBoxLayout()
-        layout.setContentsMargins(
-            0, Storage.WIDGET_SPACING * 2, 0, Storage.WIDGET_SPACING * 2
-        )
+        layout.setContentsMargins(0, 0, 0, 0)
         layout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
         frame = QFrame()
@@ -122,8 +119,8 @@ class JobApplicationTab(Tab):
         frame = QFrame()
         frame.setLayout(layout)
 
-        label = QLabel("Right Hand Side Frame")
-        layout.addWidget(label)
+        layout.addWidget(QLabel("Right Hand Side Datatable"))
+        layout.addWidget(QLabel("Right Hand Side File Dropzone"))
 
         return frame
 

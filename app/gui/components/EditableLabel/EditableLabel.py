@@ -35,6 +35,7 @@ class EditableLabel(QtWidgets.QWidget):
     URL: https://gist.github.com/mfessenden/baa2b87b8addb0b60e54a11c1da48046
     """
 
+    modified = QtCore.Signal(bool)
     textChanged = QtCore.Signal(str)
 
     # TODO Add dotted line beneath to signify editable
@@ -64,6 +65,7 @@ class EditableLabel(QtWidgets.QWidget):
         self.lineEdit.setSizePolicy(
             QtWidgets.QSizePolicy.Expanding, self.lineEdit.sizePolicy().verticalPolicy()
         )
+        self.lineEdit.editingFinished.connect(lambda: self.modified.emit(True))
 
         icon = kwargs.get("icon")
 

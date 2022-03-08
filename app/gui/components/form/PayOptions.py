@@ -1,19 +1,23 @@
+# Standard Library
 from functools import partial
+
+# Framework imports
+from PySide6.QtCore import QMargins, Qt
+from PySide6.QtGui import QFont
 from PySide6.QtWidgets import (
-    QVBoxLayout,
-    QSplitter,
     QFrame,
+    QHBoxLayout,
     QLabel,
     QPushButton,
-    QHBoxLayout,
-    QStackedLayout,
-    QWidget,
     QRadioButton,
+    QSplitter,
+    QStackedLayout,
+    QVBoxLayout,
+    QWidget,
 )
-from PySide6.QtGui import QFont
-from PySide6.QtCore import Qt, QMargins
-from app.gui.components.form.inputs.SelectBox import SelectBox
 
+# Application imports
+from app.gui.components.form.inputs.SelectBox import SelectBox
 from app.gui.components.form.inputs.TextInput import TextInput
 from app.models.Job import Job
 from app.storage import Storage
