@@ -1,6 +1,4 @@
 import logging
-
-
 class LoggerMixin:
     @property
     def log(self):

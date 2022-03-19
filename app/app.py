@@ -16,8 +16,7 @@ class App:
         # QApplication.setStyle(QStyleFactory.create("QPlastiqueStyle"))
         # QApplication.setStyle(QStyleFactory.create("Cleanlooks"))
         window = MainWindow()
-
-        window.setWindowModified(True)
+        window.setWindowTitle("Job Application Tracker [*]")
 
         # QScreen to get Window information
 

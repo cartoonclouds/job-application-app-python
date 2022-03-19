@@ -1,5 +1,3 @@
-
-
 class ObjectMixin:
     def attrexists(self, __name: str) -> bool:
         try:

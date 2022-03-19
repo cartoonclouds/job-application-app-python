@@ -14,6 +14,7 @@ from PySide6.QtCore import (
 )
 from PySide6.QtGui import QFont, QRegularExpressionValidator
 from PySide6.QtWidgets import QCompleter, QLabel, QVBoxLayout, QWidget, QHBoxLayout
+
 # Application imports
 from app.gui.components.models.ProfessionListModel import ProfessionListModel
 from app.models.Profession import Profession
@@ -33,7 +34,7 @@ class Input(Generic[T], QWidget, ObjectMixin):
         super(Input, self).__init__()
         self.setObjectName("Input")
 
-        self._layout = QVBoxLayout()
+        self._layout = QHBoxLayout()
         self._layout.setContentsMargins(Storage.ZERO_MARGINS)
         self._layout.setSpacing(Storage.WIDGET_SPACING)
 
@@ -43,15 +44,10 @@ class Input(Generic[T], QWidget, ObjectMixin):
         self._boundProperty: Optional[str] = None
         self._updateProperty: Optional[str] = None
 
-        self._label = QLabel()
-        self._label.setBuddy(self._input)
+        self._label = Input.createLabel("", self._input)
+        self._label.setParent(self)
         self._label.hide()
-        labelFont = self._label.font()
-        labelFont.setPointSize(Storage.FORM_LABEL_SIZE)
-        labelFont.setCapitalization(QFont.SmallCaps)
-        self._label.setFont(labelFont)
 
-        self._layout.addWidget(self._label)
         self._layout.addWidget(self._input)
 
         self.setLayout(self._layout)
@@ -81,7 +77,9 @@ class Input(Generic[T], QWidget, ObjectMixin):
         # ):
         #     return cast(QAbstractListModel, self._input.model())
         # else:
-        #     return None
+
+    def getInput(self) -> T:
+        return self._input
 
     def setLabel(self, label: str):
         self._label.setText(label)
@@ -145,11 +143,20 @@ class Input(Generic[T], QWidget, ObjectMixin):
         else:
             raise Exception("Bound object or property not set")
 
-        updateArgs = dict(zip([updateProperty], [value]))
-
-        debug(updateObject, updateArgs)
+        # debug(updateObject, dict(zip([updateProperty], [value])))
 
         setattr(updateObject, updateProperty, value)
+
+    @classmethod
+    def createLabel(cls, text: str, input: T | QWidget) -> QLabel:
+        label = QLabel(text)
+        label.setBuddy(input)
+        labelFont = label.font()
+        labelFont.setPointSize(Storage.FORM_LABEL_SIZE)
+        # labelFont.setCapitalization(QFont.SmallCaps)
+        label.setFont(labelFont)
+
+        return label
 
     # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QDataWidgetMapper.html
     #

@@ -2,7 +2,7 @@
 from typing import TYPE_CHECKING
 
 # Third party imports
-from orator.orm import mixins, utils
+from orator.orm import mixins, utils, accessor
 
 # Application imports
 from app.models.Model import Model
@@ -47,6 +47,26 @@ class Job(mixins.SoftDeletes, Model):
         from app.models.Action import Action
 
         return Action
+
+    @accessor
+    def salary(self) -> float:
+        salary = float(self.get_raw_attribute("salary"))
+
+        return round(salary / 100, 2)
+
+    @accessor
+    def salaryRaw(self) -> float:
+        return float(self.get_raw_attribute("salary"))
+
+    @accessor
+    def rate(self) -> float:
+        rate = float(self.get_raw_attribute("rate"))
+
+        return round(rate / 100, 2)
+
+    @accessor
+    def rateRaw(self) -> float:
+        return float(self.get_raw_attribute("rate"))
 
     def displayLabel(self) -> str:
         return f"{self.title} (ID {self.id})"

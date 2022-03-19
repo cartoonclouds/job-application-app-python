@@ -1,11 +1,14 @@
 from typing import Any
 from app.gui.components.form.inputs.Input import Input
 from PySide6.QtWidgets import QDateTimeEdit, QDateEdit
-from PySide6.QtCore import Slot, QDateTime, QDate
+from PySide6.QtCore import Slot, QDateTime, QDate, Qt
+
+from app.storage import Storage
 
 
 class DateTimeInput(Input[QDateTimeEdit]):
     # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QDateTimeEdit.html
+    # https://doc.qt.io/qtforpython/PySide6/QtCore/QDateTime.html
     def __init__(self, label: str | None = None):
         super(DateTimeInput, self).__init__(QDateTimeEdit())
         self.setObjectName("Input:DateTimeInput:" + str(label))
@@ -14,7 +17,7 @@ class DateTimeInput(Input[QDateTimeEdit]):
         self._input.setCalendarPopup(True)
         self._input.dateTimeChanged.connect(lambda: self.modified.emit(True))
         # self._input.setDate(QDateTime.currentDateTime().date())
-        # setDisplayFormat()
+        self._input.setDisplayFormat(Storage.DATE_FORMAT)
         # setMinimumDateTime (dt: QDateTime)
 
         if label:
@@ -36,7 +39,7 @@ class DateTimeInput(Input[QDateTimeEdit]):
 
     @Slot(str)
     def _onDateTimeChanged(self, datetime: QDateTime):
-        self.updateBoundObject(self._boundObject, datetime.toString())
+        self.updateBoundObject(self._boundObject, datetime.toPython())
 
         self._isModified = True
 

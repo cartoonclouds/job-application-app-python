@@ -1,7 +1,15 @@
 # Framework imports
-from typing import Sequence, TypeVar
-from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QFrame, QGridLayout, QLabel, QWidget
+from typing import Any, List, Sequence, TypeVar
+from PySide6.QtCore import Qt, Signal
+from PySide6.QtWidgets import (
+    QFrame,
+    QGridLayout,
+    QLabel,
+    QWidget,
+    QFormLayout,
+    QGroupBox,
+    QHBoxLayout,
+)
 
 # Application imports
 from app.gui.components.EditableLabel.EditableLabel import EditableLabel
@@ -11,9 +19,11 @@ from app.gui.components.form.inputs.SelectBox import SelectBox
 from app.gui.components.form.inputs.TextAreaInput import TextAreaInput
 from app.gui.components.form.inputs.TextInput import TextInput
 from app.gui.components.form.inputs.ToggleButtonSquare import ToggleButtonSquare
-from PySide6.QtCore import Signal
+from PySide6.QtGui import QPalette, QColor, QPaintEvent
+from app.storage import Storage
 
 from app.types import TModel
+from app.utils.mixins.ListMixin import ListMixin
 
 TInput = TypeVar(
     "TInput",
@@ -31,8 +41,8 @@ TInput = TypeVar(
 # Validator https://docs.python-cerberus.org/en/stable/
 
 
-class Form(QFrame):
-    modified = Signal(bool)
+class Form(QFrame, ListMixin):
+    modified = Signal(bool, QFrame)
 
     def __init__(self, name: str, model: TModel, title: str) -> None:
         super(Form, self).__init__()
@@ -40,7 +50,9 @@ class Form(QFrame):
         self._name = name
         self._model = model
         self._title = title
+        self._inputs: Sequence[TInput] = []
         self.setObjectName("Form")
+        self.setContentsMargins(0, Storage.WIDGET_SPACING * 5, 0, 0)
         self.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)
         self.setStyleSheet(
             """
@@ -50,16 +62,17 @@ class Form(QFrame):
         """
         )
 
-        self._layout = QGridLayout()
+        self._layout = QFormLayout()
         self._layout.setAlignment(Qt.AlignTop)
         self._layout.setSpacing(12)
 
-        self.formTitle = QLabel(self._title, self)
-        # self.formTitle.move(0, -15)
-        # self.formTitle.raise_()
-        # self.formTitle.setContentsMargins(0, 6, 0, 0)
-
-        self.addRow(self.formTitle)
+        self.title = QLabel(self._title, self)
+        self.title.setMinimumWidth(self.width())
+        self.title.setContentsMargins(Storage.WIDGET_MARGINS)
+        self.title.setStyleSheet(
+            "background-color: #ababab; border-right:1px solid #333"
+        )
+        self.title.show()
 
         self.setLayout(self._layout)
 
@@ -70,59 +83,60 @@ class Form(QFrame):
 
     def modifiedWidgets(self):
         """Returns any element in the form that has been modified"""
-        return [w for w in self.inputWidgets() if w.isModified()]
+        return [w for w in self.inputs() if w.isModified()]
 
-    def inputWidgets(self) -> Sequence[TInput]:
+    def inputs(self) -> Sequence[TInput]:
         """Returns all form input elements"""
-        return [w for w in self.children() if isinstance(w, TInput)]
+        return self._inputs
 
-    def addRow(
-        self, *fields: TInput | Sequence[TInput], **cellSpan: dict[str, int] | int
-    ):
-        newRowIndex = self.rowCount + 1
-        newColIndex = 0
-
-        colspan: int = cellSpan.get("columnSpan", 1)
-        rowspan: int = cellSpan.get("rowSpan", 1)
-
+    def addRow(self, *fields: TInput | Sequence[TInput]):
         if len(fields) == 1:
             field = fields[0]
 
-            if hasattr(field, "modified"):
-                field.modified.connect(lambda: self.modified.emit(True))
-
-            self._layout.addWidget(
-                field, newRowIndex, newColIndex, rowspan, colspan, Qt.AlignTop
-            )
+            self._addWidget(self._layout, field)
         else:
+            hLayout = QHBoxLayout()
+            hLayout.setContentsMargins(Storage.ZERO_MARGINS)
+
+            row = QWidget()
+            row.setLayout(hLayout)
+
             for field in fields:
                 if not isinstance(field, QWidget):
                     continue
 
-                if hasattr(field, "modified"):
-                    field.modified.connect(lambda: self.modified.emit(True))
+                layout = QFormLayout()
+                self._addWidget(layout, field)
+                hLayout.addLayout(layout)
 
-                self._layout.addWidget(
-                    field, newRowIndex, newColIndex, rowspan, colspan, Qt.AlignTop
-                )
-                newColIndex += 1
+            # Only set the first column's input's margin left to align all left most labels
+            fields[0].getInput().setContentsMargins(Storage.WIDGET_SPACING, 0, 0, 0)
+            fields[1].getLabel().setAlignment(Qt.AlignRight | Qt.AlignVCenter)
 
-    @property
-    def rowCount(self) -> int:
-        return self._layout.rowCount()
+            self._layout.addRow(row)
 
-    @property
-    def columnCount(self) -> int:
-        return self._layout.columnCount()
+    def _addWidget(self, layout: QFormLayout, field: TInput):
+        if not isinstance(field, QWidget):
+            return
+
+        self._inputs.append(field)
+
+        if hasattr(field, "modified"):
+            field.modified.connect(lambda: self.modified.emit(self.isModified(), self))
+
+        layout.addRow(field.getLabel(), field)
 
     def setTitle(self, title: str):
         self._title = title
-        self.formTitle.setText(title)
+        self.title.setText(title)
 
-    # def paintEvent(self, painter: QPaintEvent) -> None:
-    #     # self.formTitle.move(painter.rect().x(), painter.rect().y() + 6)
+    def paintEvent(self, painter: QPaintEvent) -> None:
+        maxWidth = 0
 
-    #     self.formTitle.raise_()
-    #     self.stackUnder(jobForm.formTitle)
+        for input in self.inputs():
+            maxWidth = max(maxWidth, input.getLabel().width())
 
-    #     return super().paintEvent(painter)
+        for input in self.inputs():
+            input.getLabel().setMinimumWidth(maxWidth)
+
+        return super().paintEvent(painter)

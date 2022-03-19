@@ -2,9 +2,20 @@
 from functools import partial
 
 # Framework imports
-from PySide6.QtCore import QMargins, Qt
+from PySide6.QtCore import QMargins, Qt, Signal
 from PySide6.QtGui import QFont
-from PySide6.QtWidgets import QFrame, QHBoxLayout, QLabel, QPushButton, QRadioButton, QSplitter, QStackedLayout, QVBoxLayout, QWidget
+from PySide6.QtWidgets import (
+    QFrame,
+    QHBoxLayout,
+    QLabel,
+    QPushButton,
+    QRadioButton,
+    QSplitter,
+    QStackedLayout,
+    QVBoxLayout,
+    QWidget,
+)
+from app.gui.components.form.inputs.Input import Input
 
 # Application imports
 from app.gui.components.form.inputs.SelectBox import SelectBox
@@ -15,39 +26,54 @@ from app.utils.EnumUtility import PayTypes, PayUnits
 
 
 class PayOptions(QWidget):
+    modified = Signal(bool)
+
     def __init__(
-        self, label: str, model: Job, initialOption: PayTypes = PayTypes.SALARY
+        self, label: str, model: Job, initialOption: PayTypes = PayTypes.RATE
     ) -> None:
         super().__init__()
 
         self._model = model
         self._initialOption = initialOption
+        self.setObjectName("Input:PayOptions:" + label)
 
-        layout = QVBoxLayout()
+        layout = QHBoxLayout()
         layout.setContentsMargins(Storage.ZERO_MARGINS)
         layout.setSpacing(Storage.WIDGET_SPACING)
+
         stackWidget = self._setupStacks()
         self._stacks: QStackedLayout = stackWidget.layout()
+        self._stacks.setCurrentIndex(PayTypes.atIndex(initialOption))
 
-        labelWidget = QLabel(label)
-        labelFont = labelWidget.font()
-        labelFont.setPointSize(Storage.FORM_LABEL_SIZE)
-        labelFont.setCapitalization(QFont.SmallCaps)
-        labelWidget.setFont(labelFont)
+        debug("initialOption " + str(PayTypes.atIndex(initialOption)))
 
+        self._label = Input.createLabel(label, self)
+        # self._label.setStyleSheet("border: 2px solid red;")
+
+        optionsLayout = QVBoxLayout()
+        optionsLayout.setContentsMargins(0, Storage.WIDGET_SPACING / 2, 0, 0)
         optionsStack = self._setupOptions()
+        optionsFrame = QWidget()
+        optionsFrame.setLayout(optionsLayout)
 
-        # labelWidget.setStyleSheet("border: 2px solid red;")
+        optionsLayout.addWidget(optionsStack)
+        optionsLayout.addWidget(stackWidget)
+
+        # optionsFrame.setStyleSheet("border: 2px solid red;")
         # optionsStack.setStyleSheet("border: 2px solid green;")
         # stackWidget.setStyleSheet("border: 2px solid blue;")
 
-        layout.addWidget(labelWidget)
-        layout.addWidget(optionsStack)
-        layout.addWidget(stackWidget)
-
-        self._setOption(initialOption)
+        # layout.addWidget(labelWidget)
+        layout.addWidget(optionsFrame)
 
         self.setLayout(layout)
+
+    def setLabel(self, label: str):
+        self._label.setText(label)
+        self._label.show()
+
+    def getLabel(self) -> QLabel | None:
+        return self._label
 
     def _setupOptions(self):
         layout = QHBoxLayout()
@@ -58,13 +84,14 @@ class PayOptions(QWidget):
         salaryOption = QRadioButton("Salary")
         rateOption = QRadioButton("Rate")
 
-        # pay_option
-
         salaryOption.setChecked(self._initialOption == PayTypes.SALARY)
         rateOption.setChecked(self._initialOption == PayTypes.RATE)
 
         salaryOption.toggled.connect(partial(self._setOption, PayTypes.SALARY))
         rateOption.toggled.connect(partial(self._setOption, PayTypes.RATE))
+
+        salaryOption.toggled.connect(lambda: self.modified.emit(self.isModified()))
+        rateOption.toggled.connect(lambda: self.modified.emit(self.isModified()))
 
         layout.addWidget(salaryOption)
         layout.addWidget(rateOption)
@@ -75,10 +102,15 @@ class PayOptions(QWidget):
         layout = QStackedLayout()
         frame = QWidget()
 
-        layout.addWidget(self._setupSalary())
-        layout.addWidget(self._setupRate())
+        salaryContainer, self.salaryInput = self._setupSalary()
+        rateContainer, self.rateInput, self.rateUnits = self._setupRate()
 
-        layout.setCurrentIndex(1)
+        self.salaryInput.modified.connect(lambda: self.modified.emit(self.isModified()))
+        self.rateInput.modified.connect(lambda: self.modified.emit(self.isModified()))
+        self.rateUnits.modified.connect(lambda: self.modified.emit(self.isModified()))
+
+        layout.addWidget(salaryContainer)
+        layout.addWidget(rateContainer)
 
         frame.setLayout(layout)
 
@@ -90,7 +122,7 @@ class PayOptions(QWidget):
         rateWidget = QWidget()
         rateWidget.setLayout(layout)
 
-        input = TextInput()  # double('salary', 8)
+        input = TextInput("Rate")  # double('salary', 8)
         input.setBinding(self._model, "rate")
         input.setPrefix("$")
         input.setInputMask("##.##")
@@ -102,7 +134,7 @@ class PayOptions(QWidget):
         labelMargin.setBottom(6)  # TODO Make dynamic to text height
         label.setContentsMargins(labelMargin)
 
-        unitInput = SelectBox()
+        unitInput = SelectBox("Rate Units")
         unitInput.setAlignment(Qt.AlignBottom)
 
         unitInput.addItems(PayUnits.AS_LIST())
@@ -115,7 +147,7 @@ class PayOptions(QWidget):
         layout.addWidget(label)
         layout.addWidget(unitInput)
 
-        return rateWidget
+        return rateWidget, input, unitInput
 
     def _setupSalary(self):
         layout = QHBoxLayout()
@@ -139,9 +171,20 @@ class PayOptions(QWidget):
         layout.addWidget(salaryInput)
         layout.addWidget(label)
 
-        return salaryWidget
+        return salaryWidget, salaryInput
 
     def _setOption(self, payType: PayTypes, checked: None | bool = None):
         stackIndex = PayTypes.atIndex(payType)
-
         self._stacks.setCurrentIndex(stackIndex)
+
+        setattr(self._model, "pay_option", payType)
+
+        debug(self._model, dict(zip(["pay_option"], [payType])))
+
+    def isModified(self) -> bool:
+        return (
+            PayTypes.atIndex(self._initialOption) != self._stacks.currentIndex()
+            or self.salaryInput.isModified()
+            or self.rateInput.isModified()
+            or self.rateUnits.isModified()
+        )

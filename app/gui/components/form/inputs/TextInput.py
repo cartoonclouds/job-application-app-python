@@ -13,7 +13,9 @@ class TextInput(Input[QLineEdit]):
 
         self._prefix: Optional[str] = None
         self._suffix: Optional[str] = None
-        self._input.editingFinished.connect(lambda: self.modified.emit(True))
+        self._input.editingFinished.connect(
+            lambda: self.modified.emit(self.isModified())
+        )
 
         if label:
             self.setLabel(label)
@@ -28,9 +30,11 @@ class TextInput(Input[QLineEdit]):
         self._boundProperty = property
         self._updateProperty = updateProperty
 
-        propertyValue = str(getattr(self._boundObject, self._boundProperty))
+        self._initialPropertyValue = str(
+            getattr(self._boundObject, self._boundProperty)
+        )
 
-        self._input.setText(propertyValue)
+        self._input.setText(self._initialPropertyValue)
 
         self._input.editingFinished.connect(self._onTextChanged)
 
@@ -39,7 +43,7 @@ class TextInput(Input[QLineEdit]):
         self.updateBoundObject(self._boundObject, self._input.text())
 
     def isModified(self) -> bool:
-        return self._input.isModified()
+        return self._input.displayText() != self._initialPropertyValue
 
     def setPrefix(self, prefix: str):
         self._prefix = prefix

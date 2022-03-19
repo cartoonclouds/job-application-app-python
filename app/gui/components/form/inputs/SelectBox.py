@@ -18,7 +18,6 @@ class SelectBox(Input[QComboBox]):
         super(SelectBox, self).__init__(QComboBox())
         self.setObjectName("Input:SelectBox:" + str(label))
 
-        self._isModified: bool = False
         self._input.setInsertPolicy(QComboBox.InsertAtTop)
         self._input.currentIndexChanged.connect(lambda: self.modified.emit(True))
 
@@ -48,12 +47,12 @@ class SelectBox(Input[QComboBox]):
         self._updateProperty = updateProperty
 
         propertyValue = getattr(self._boundObject, self._boundProperty)
-        propertyIndex = self._input.findText(propertyValue)
+        self._initialPropertyIndex = self._input.findText(propertyValue)
 
         # TODO listen on self._boundObject for save eveny
 
         self._input.setCurrentText(propertyValue)
-        self._input.setCurrentIndex(propertyIndex)
+        self._input.setCurrentIndex(self._initialPropertyIndex)
 
         self._input.currentIndexChanged.connect(self._onSelectionChanged)
 
@@ -69,7 +68,5 @@ class SelectBox(Input[QComboBox]):
         else:
             self.updateBoundObject(self._boundObject, self._input.itemText(index))
 
-        self._isModified = True
-
     def isModified(self) -> bool:
-        return self._isModified
+        return self._input.currentIndex() != self._initialPropertyIndex

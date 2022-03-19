@@ -51,8 +51,8 @@ class CompanyForm(Form):
         commentsInput.setPlaceholderText("Details about this job...")
         commentsInput.setHeight(2)
 
-        self.addRow(titleInput, columnSpan=2)
+        self.addRow(titleInput)
         self.addRow(phoneInput, mobileInput)
-        self.addRow(websiteInput, columnSpan=2)
-        self.addRow(commentsInput, columnSpan=2)
+        self.addRow(websiteInput)
+        self.addRow(commentsInput)
         # -------------------------- #

@@ -1,6 +1,13 @@
 # Framework imports
 from PySide6.QtCore import Qt, Signal, QSize
-from PySide6.QtGui import QFont, QPixmap, QResizeEvent, QScreen, QGuiApplication
+from PySide6.QtGui import (
+    QFont,
+    QPixmap,
+    QResizeEvent,
+    QScreen,
+    QGuiApplication,
+    QPalette,
+)
 from PySide6.QtWidgets import (
     QFrame,
     QHBoxLayout,
