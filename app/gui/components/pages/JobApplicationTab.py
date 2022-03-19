@@ -20,10 +20,12 @@ from PySide6.QtWidgets import (
     QPushButton,
     QHBoxLayout,
     QSplitterHandle,
+    QMainWindow,
 )
 from PySide6.QtCore import Qt, QSize, Slot
 from PySide6.QtGui import QPaintEvent, QFontMetrics
 from app.storage import Storage
+from app.utils.GUIUtilities import GUIUtilities
 
 from app.utils.IconUtility import IconUtility
 
@@ -150,6 +152,5 @@ class JobApplicationTab(Tab):
 
     @Slot(bool, Form)
     def _formModified(self, modified: bool, form: Form):
-        debug(form, "Modified? " + str(modified))
-
-        # window.setWindowModified(False)
+        window: QMainWindow = GUIUtilities.findMainWindow()
+        window.setWindowModified(modified)
