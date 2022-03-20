@@ -16,6 +16,7 @@ from PySide6.QtWidgets import (
     QComboBox,
     QPushButton,
     QDateTimeEdit,
+    QDoubleSpinBox,
 )
 from typing import TypeVar, Generic
 
@@ -46,7 +47,15 @@ TModel = JobApplication | Profession | Job | Action | Company
 
 M = TypeVar("M", JobApplication, Profession, Job, Action, Company)
 
-T = TypeVar("T", QComboBox, QPlainTextEdit, QLineEdit, QDateTimeEdit, QPushButton)
+T = TypeVar(
+    "T",
+    QComboBox,
+    QPlainTextEdit,
+    QLineEdit,
+    QDateTimeEdit,
+    QPushButton,
+    QDoubleSpinBox,
+)
 
 # You can use a ClassVar[t] annotation to explicitly declare that a particular attribute should not be set on instances:
 #  https://mypy.readthedocs.io/en/stable/class_basics.html#class-attribute-annotations

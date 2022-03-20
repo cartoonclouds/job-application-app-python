@@ -1,4 +1,5 @@
 from orator.migrations import Migration
+from orator.schema.blueprint import Blueprint
 
 
 class CreateActionsTable(Migration):
@@ -10,6 +11,8 @@ class CreateActionsTable(Migration):
         self.schema.drop_if_exists("actions")
 
         with self.schema.create('actions') as table:
+            table: Blueprint
+            
             table.increments('id')
             table.text('title').nullable()
             table.boolean('requires_followup').default(False)

@@ -1,6 +1,7 @@
 """CreateJobApplicationsTable Migration."""
 
 from orator.migrations import Migration
+from orator.schema.blueprint import Blueprint
 
 
 class CreateJobApplicationsTable(Migration):
@@ -11,6 +12,8 @@ class CreateJobApplicationsTable(Migration):
         self.schema.drop_if_exists("job_applications")
 
         with self.schema.create("job_applications") as table:
+            table: Blueprint
+            
             table.increments("id")
             table.text("title").nullable()
             table.boolean("requires_followup").default(False)

@@ -114,7 +114,7 @@ class Model(oratorModel):
     
     # @utils.scope
     # def starts_with(
-    #     cls, query: query.QueryBuilder, column: query.QueryBuilder | str, text: str
+    #     cls, query: schema.query.QueryBuilder, column: query.QueryBuilder | str, text: str
     # ) -> query.QueryBuilder:
     #     return query.where(column, "LIKE", "{}%".format(text))
 

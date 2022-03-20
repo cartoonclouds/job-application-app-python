@@ -1,4 +1,5 @@
 from orator.migrations import Migration
+from orator.schema.blueprint import Blueprint
 
 
 class CreateCompaniesTable(Migration):
@@ -10,6 +11,8 @@ class CreateCompaniesTable(Migration):
         self.schema.drop_if_exists("companies")
 
         with self.schema.create('companies') as table:
+            table: Blueprint
+            
             table.increments('id')
             table.text('name')
             table.text('email').nullable()

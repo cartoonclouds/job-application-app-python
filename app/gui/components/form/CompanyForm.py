@@ -42,7 +42,7 @@ class CompanyForm(Form):
         websiteInput = TextInput("Website")
         websiteInput.setBinding(self._model, "website")
         websiteInput.setPlaceholderText("www.job-application.com")
-        websiteInput.setPrefix("http://")
+        websiteInput.setPrefix("www")
 
         # address
 

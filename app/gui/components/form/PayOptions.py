@@ -16,6 +16,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 from app.gui.components.form.inputs.Input import Input
+from app.gui.components.form.inputs.NumberInput import NumberInput
 
 # Application imports
 from app.gui.components.form.inputs.SelectBox import SelectBox
@@ -29,7 +30,7 @@ class PayOptions(QWidget):
     modified = Signal(bool)
 
     def __init__(
-        self, label: str, model: Job, initialOption: PayTypes = PayTypes.RATE
+        self, label: str, model: Job, initialOption: PayTypes = PayTypes.SALARY
     ) -> None:
         super().__init__()
 
@@ -100,14 +101,14 @@ class PayOptions(QWidget):
         layout = QStackedLayout()
         frame = QWidget()
 
-        salaryContainer, self.salaryInput = self._setupSalary()
+        self.salaryInput = self._setupSalary()
         rateContainer, self.rateInput, self.rateUnits = self._setupRate()
 
         self.salaryInput.modified.connect(lambda: self.modified.emit(self.isModified()))
         self.rateInput.modified.connect(lambda: self.modified.emit(self.isModified()))
         self.rateUnits.modified.connect(lambda: self.modified.emit(self.isModified()))
 
-        layout.addWidget(salaryContainer)
+        layout.addWidget(self.salaryInput)
         layout.addWidget(rateContainer)
 
         frame.setLayout(layout)
@@ -120,11 +121,11 @@ class PayOptions(QWidget):
         rateWidget = QWidget()
         rateWidget.setLayout(layout)
 
-        input = TextInput("Rate")
+        input = NumberInput("Rate")
         input.setBinding(self._model, "rate")
-        input.setPrefix("$")
-        input.setInputMask("##.##")
-        input.setPlaceholderText("##.##")
+        # input.setPrefix("$")
+        input.setDecimals(2)
+        input.setSingleStep(0.01)
 
         label = QLabel("per")
         label.setAlignment(Qt.AlignBottom)
@@ -148,10 +149,10 @@ class PayOptions(QWidget):
         return rateWidget, input, unitInput
 
     def _setupSalary(self):
-        layout = QHBoxLayout()
-        layout.setContentsMargins(Constants.ZERO_MARGINS)
-        salaryWidget = QWidget()
-        salaryWidget.setLayout(layout)
+        # layout = QHBoxLayout()
+        # layout.setContentsMargins(Constants.ZERO_MARGINS)
+        # salaryWidget = QWidget()
+        # salaryWidget.setLayout(layout)
 
         salaryInput = TextInput()
         salaryInput.setBinding(self._model, "salary")
@@ -160,24 +161,18 @@ class PayOptions(QWidget):
         salaryInput.setInputMask("##.##")
         salaryInput.setPlaceholderText("$##.##")
 
-        label = QLabel("per year")
-        label.setAlignment(Qt.AlignBottom)
-        labelMargin = label.contentsMargins()
-        labelMargin.setBottom(6)  # TODO Make dynamic to text height
-        label.setContentsMargins(labelMargin)
+        # layout.addWidget(salaryInput)
 
-        layout.addWidget(salaryInput)
-        layout.addWidget(label)
-
-        return salaryWidget, salaryInput
+        return salaryInput
 
     def _setOption(self, payType: PayTypes, checked: None | bool = None):
-        stackIndex = PayTypes.atIndex(payType)
-        self._stacks.setCurrentIndex(stackIndex)
+        if checked:
+            stackIndex = PayTypes.atIndex(payType)
+            self._stacks.setCurrentIndex(stackIndex)
 
-        setattr(self._model, "pay_option", payType)
+            setattr(self._model, "pay_option", payType)
 
-        debug(self._model, dict(zip(["pay_option"], [payType])))
+            debug(self._model, dict(zip(["pay_option"], [payType])))
 
     def isModified(self) -> bool:
         return (

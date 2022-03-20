@@ -37,8 +37,7 @@ class JobForm(Form, LoggerMixin):
         websiteInput = TextInput("Website")
         websiteInput.setBinding(model, "website")
         websiteInput.setPlaceholderText("www.job-application.com")
-        websiteInput.setPrefix("http://")
-        websiteInput.setSuffix(".com")
+        websiteInput.setPrefix("www")
 
         professionInput = SelectBox("Profession")
         professionInput.setModel(ProfessionListModel(professionInput))
@@ -56,8 +55,6 @@ class JobForm(Form, LoggerMixin):
 
         closingDateInput = DateTimeInput("Closing Date")
         closingDateInput.setBinding(model, "closing_date")
-
-        # address_id
 
         self.addRow(titleInput)
         self.addRow(closingDateInput)

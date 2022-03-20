@@ -2,7 +2,8 @@ from typing import Any, Optional
 from app.gui.components.form.inputs.Input import Input
 from PySide6.QtWidgets import QLineEdit, QLabel
 from PySide6.QtCore import Slot, QPoint, Qt
-from PySide6.QtGui import QResizeEvent
+from PySide6.QtGui import QResizeEvent, QPaintEvent
+from app.constants import Constants
 
 
 class TextInput(Input[QLineEdit]):
@@ -19,6 +20,8 @@ class TextInput(Input[QLineEdit]):
 
         if label:
             self.setLabel(label)
+
+        self._input.resizeEvent = self.resizeEvent
 
     def setBinding(
         self,
@@ -40,10 +43,21 @@ class TextInput(Input[QLineEdit]):
 
     @Slot(str)
     def _onTextChanged(self):
+        self._removePreSuffixes()
+
         self.updateBoundObject(self._boundObject, self._input.text())
 
     def isModified(self) -> bool:
         return self._input.displayText() != self._initialPropertyValue
+
+    def _removePreSuffixes(self):
+        # If the prefix was entered, remove it
+        if self._prefix is not None and self._input.text().startswith(self._prefix):
+            self._input.setText(self._input.text().replace(self._prefix, ""))
+
+        # If the suffix was entered, remove it
+        if self._suffix is not None and self._input.text().endswith(self._suffix):
+            self._input.setText(self._input.text().replace(self._suffix, ""))
 
     def setPrefix(self, prefix: str):
         self._prefix = prefix
@@ -55,6 +69,9 @@ class TextInput(Input[QLineEdit]):
             "background-color: #e9ecef; border-right:1px solid #ababab"
         )
 
+        self._removePreSuffixes()
+        self._prefixLabel.show()
+
     def updatePrefix(self):
         if self._prefix is None:
             return
@@ -62,20 +79,19 @@ class TextInput(Input[QLineEdit]):
         inputFont = self._input.font()
         self._prefixLabel.setFont(inputFont)
 
-        inputMargins = self._input.contentsMargins()
-
-        prefixLabelPos = self._input.pos()
-        prefixLabelPos.setX(prefixLabelPos.x() + 1)
-        prefixLabelPos.setY(prefixLabelPos.y() + 1)
-
         height = self._input.sizeHint().height() - 2
-        width = max(self._prefixLabel.sizeHint().width() + 8, height)
+        width = max(
+            self._prefixLabel.sizeHint().width() + (Constants.WIDGET_SPACING * 2),
+            height,
+        )
+
+        prefixPos = self._input.pos()
+        prefixPos.setX(prefixPos.x() + 1)
+        prefixPos.setY(prefixPos.y() + 1)
+
         self._prefixLabel.setMaximumHeight(height)
         self._prefixLabel.setMaximumWidth(width)
-        self._prefixLabel.move(prefixLabelPos)
-
-        inputMargins.setLeft(width + 2)
-        self._input.setTextMargins(inputMargins)
+        self._prefixLabel.move(prefixPos)
 
     def setSuffix(self, suffix: str):
         self._suffix = suffix
@@ -86,6 +102,9 @@ class TextInput(Input[QLineEdit]):
             "background-color: #e9ecef; border-left:1px solid #ababab"
         )
 
+        self._removePreSuffixes()
+        self._suffixLabel.show()
+
     def updateSuffix(self):
         if self._suffix is None:
             return
@@ -93,24 +112,34 @@ class TextInput(Input[QLineEdit]):
         inputFont = self._input.font()
         self._suffixLabel.setFont(inputFont)
 
-        inputMargins = self._input.contentsMargins()
-
         height = self._input.sizeHint().height() - 2
-        width = max(self._suffixLabel.sizeHint().width() + 8, height)
+        width = max(
+            self._suffixLabel.sizeHint().width() + (Constants.WIDGET_SPACING * 2),
+            height,
+        )
+
+        suffixPos = self._input.pos()
+        suffixPos.setX(suffixPos.x() + self._input.width() - width - 1)
+        suffixPos.setY(suffixPos.y() + 1)
+
         self._suffixLabel.setMaximumHeight(height)
         self._suffixLabel.setMaximumWidth(width)
+        self._suffixLabel.move(suffixPos)
 
-        suffixLabelPos = self._input.pos()
-        suffixLabelPos.setX(suffixLabelPos.x() + self._input.width() - width - 1)
-        suffixLabelPos.setY(suffixLabelPos.y() + 1)
-
-        self._suffixLabel.move(suffixLabelPos)
-
-        inputMargins.setRight(width + 2)
-        self._input.setTextMargins(inputMargins)
-
-    def resizeEvent(self, event: QResizeEvent) -> None:
+    def paintEvent(self, painter: QPaintEvent) -> None:
         self.updatePrefix()
         self.updateSuffix()
 
-        return super().resizeEvent(event)
+        inputMargins = self._input.contentsMargins()
+        if self._prefix is not None:
+            inputMargins.setLeft(
+                self._prefixLabel.maximumWidth() + Constants.WIDGET_SPACING
+            )
+
+        if self._suffix is not None:
+            inputMargins.setRight(
+                self._suffixLabel.maximumWidth() + Constants.WIDGET_SPACING
+            )
+        self._input.setTextMargins(inputMargins)
+
+        return super().paintEvent(painter)

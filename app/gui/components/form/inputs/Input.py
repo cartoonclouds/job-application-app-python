@@ -143,7 +143,7 @@ class Input(Generic[T], QWidget, ObjectMixin):
         else:
             raise Exception("Bound object or property not set")
 
-        # debug(updateObject, dict(zip([updateProperty], [value])))
+        debug(updateObject, dict(zip([updateProperty], [value])))
 
         setattr(updateObject, updateProperty, value)
 

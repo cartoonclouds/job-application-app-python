@@ -64,13 +64,14 @@ class Form(QFrame, ListMixin):
 
         self._layout = QFormLayout()
         self._layout.setAlignment(Qt.AlignTop)
-        self._layout.setSpacing(12)
+        self._layout.setSpacing(Constants.WIDGET_SPACING * 2)
 
         self.title = QLabel(self._title, self)
+        # TODO Set horizontal size policy to fill
         self.title.setMinimumWidth(self.width())
         self.title.setContentsMargins(Constants.WIDGET_MARGINS)
         self.title.setStyleSheet(
-            "background-color: #ababab; border-right:1px solid #333"
+            "background-color: #ababab; border:1px solid #999; border-width: 1px 1px 0 1px;"
         )
         self.title.show()
 

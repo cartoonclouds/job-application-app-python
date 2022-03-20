@@ -39,7 +39,7 @@ class JobApplicationTab(Tab):
 
         self.setObjectName("Tab:JobApplication")
         self.setContentsMargins(
-            Constants.WIDGET_SPACING * 2, 0, Constants.WIDGET_SPACING * 2, 0
+            Constants.WIDGET_SPACING, 0, Constants.WIDGET_SPACING, 0
         )
 
         # Setup frames
@@ -65,31 +65,9 @@ class JobApplicationTab(Tab):
         layout.addWidget(header)
         layout.addWidget(splitter)
 
-    def _setupLeftFrame(self):
-        layout = QVBoxLayout()
-        layout.setContentsMargins(0, 0, Constants.WIDGET_SPACING * 3, 0)
-        layout.setSpacing(20)
-        frame = QFrame()
-        frame.setLayout(layout)
-
-        frame.setMinimumWidth(650)
-        frame.setMaximumWidth(650)
-
-        jobForm = JobForm(self.model.job)
-        companyForm = CompanyForm(self.model.company)
-
-        jobForm.modified.connect(self._formModified)
-        companyForm.modified.connect(self._formModified)
-        # -------------------------- #
-
-        layout.addWidget(jobForm)
-        layout.addWidget(companyForm)
-
-        return frame
-
     def _setupHeader(self):
         layout = QHBoxLayout()
-        layout.setContentsMargins(Constants.ZERO_MARGINS)
+        layout.setContentsMargins(Constants.WIDGET_MARGINS)
         layout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
         frame = QFrame()
@@ -131,20 +109,52 @@ class JobApplicationTab(Tab):
 
         return frame
 
+    def _setupLeftFrame(self):
+        layout = QVBoxLayout()
+        layout.setContentsMargins(Constants.ZERO_MARGINS)   
+        frame = QFrame()
+        frame.setLayout(layout)
+
+        frame.setMinimumWidth(650)
+        frame.setMaximumWidth(650)
+
+        jobForm = JobForm(self.model.job)
+        companyForm = CompanyForm(self.model.company)
+
+        jobForm.modified.connect(self._formModified)
+        companyForm.modified.connect(self._formModified)
+        # -------------------------- #
+
+        layout.addWidget(jobForm)
+        layout.addWidget(companyForm)
+
+        return frame
+
     def _setupRightFrame(self):
         layout = QVBoxLayout()
-        layout.setContentsMargins(Constants.WIDGET_SPACING * 3, 0, 0, 0)
+        layout.setContentsMargins(Constants.ZERO_MARGINS)
         frame = QFrame()
+        frame.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)
         frame.setLayout(layout)
 
         datatableModel = ActionDatatableModel()
         datatable = Datatable(datatableModel)
 
-        layout.addWidget(datatable)
-        layout.addWidget(QLabel("Right Hand Side File Dropzone"))
+        dropzone = QLabel("Right Hand Side File Dropzone")
+
+        splitter = Splitter(Qt.Vertical)
+        splitter.addWidget(datatable)
+        splitter.addWidget(dropzone)
+
+        layout.addWidget(splitter)
+
+        # datatable.setStyleSheet("border:3px solid green")
+        # dropzone.setStyleSheet("border:1px solid blue")
+        # frame.setStyleSheet("border:1px solid red")
 
         return frame
 
+    @Slot(str)
     def _updateJobApplicationTitle(self, text: str):
         setattr(self.model, "title", text)
 
@@ -152,5 +162,7 @@ class JobApplicationTab(Tab):
 
     @Slot(bool, Form)
     def _formModified(self, modified: bool, form: Form):
-        window: QMainWindow = GUIUtilities.findMainWindow()
-        window.setWindowModified(modified)
+        window = GUIUtilities.findMainWindow()
+
+        if isinstance(window, QMainWindow):
+            window.setWindowModified(modified)
