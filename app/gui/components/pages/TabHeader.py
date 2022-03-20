@@ -22,7 +22,7 @@ from app.gui.components.EditableLabel.EditableLabel import EditableLabel
 from app.constants import Constants
 
 
-class Header(QWidget):
+class TabHeader(QWidget):
     textChanged = Signal(str)
 
     def __init__(
@@ -47,6 +47,10 @@ class Header(QWidget):
 
         layout.addWidget(self.label)
         self.setLayout(layout)
+        
+    def setText(self, text: str):
+        self._text = text
+        self.label.setText(text)
 
     def createLabel(self, text: str):
         if self._editable:

@@ -1,41 +1,17 @@
-# Standard Library
-from functools import partial
-import sys
-
 # Framework imports
-from PySide6.QtCore import (
-    QModelIndex,
-    QPersistentModelIndex,
-    QSortFilterProxyModel,
-    Slot,
-    QMargins,
-)
-from PySide6.QtGui import QMouseEvent, QPalette
-from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QVBoxLayout, QHBoxLayout, QFrame, QMessageBox
-from PySide6.QtSql import (
-    QSqlDatabase,
-    QSqlDriver,
-    QSqlRelationalTableModel,
-    QSqlRelation,
-    QSqlTableModel,
-)
+from PySide6.QtCore import Slot
+from PySide6.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout
 
 # Application imports
 from app.gui.components.datatable.Datatable import Datatable
-from app.gui.components.datatable.JobApplicationDatatableItemDelegate import (
-    JobApplicationDatatableItemDelegate,
-)
-from app.gui.components.models.JobApplicationDatatableModel import (
-    JobApplicationDatatableModel,
-)
-from app.gui.components.pages.Header import Header
+from app.gui.components.datatable.JobApplicationDatatableItemDelegate import JobApplicationDatatableItemDelegate
+from app.gui.components.models.JobApplicationDatatableModel import JobApplicationDatatableModel
 from app.gui.components.pages.JobApplicationTab import JobApplicationTab
+from app.gui.components.pages.TabHeader import TabHeader
 from app.gui.components.statistics.StatisticGroup import StatisticGroup
 from app.gui.components.tabs.Tab import Tab
-from app.gui.services.TabService import TabService
+from app.gui.services.TabService import TabServiceProvider
 from app.models.JobApplication import JobApplication
-from app.constants import Constants
 from app.utils.IconUtility import IconUtility
 
 
@@ -45,11 +21,11 @@ class SummaryTab(Tab):
 
         self.setObjectName("Tab:Summary")
         self.mainLayout = QVBoxLayout(self)
-        # *([10] * 4)
-        self.setContentsMargins(Constants.WIDGET_SPACING * 2, 0, 10, 0)
 
-        # Header
-        header = Header("Applications Summary", IconUtility.getFileIconAsPixmap("gear"))
+        # Setup header
+        header = TabHeader(
+            "Applications Summary", IconUtility.getFileIconAsPixmap("gear")
+        )
 
         # Setup stats
         self.statisticsSection = StatisticGroup()
@@ -66,20 +42,18 @@ class SummaryTab(Tab):
     def _setupTable(self):
         frame = QFrame()
         frame.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)
-        frame.setStyleSheet(
-            """
-            QFrame {
-                background-color: #FFF
-            }
-        """
-        )
+        # frame.setStyleSheet(
+        #     """
+        #     QFrame {
+        #         background-color: #FFF
+        #     }
+        # """
+        # )
 
         layout = QHBoxLayout(frame)
-        layout.setContentsMargins(*([20] * 4))
 
         datatableModel = JobApplicationDatatableModel()
         datatable = Datatable(datatableModel, JobApplicationDatatableItemDelegate())
-
 
         # proxyModel = CustomSortModel()
         # proxyModel.setSourceModel(dataTableModel)
@@ -102,7 +76,7 @@ class SummaryTab(Tab):
 
     @Slot(JobApplication)
     def openTab(self, model: JobApplication):
-        TabService.addTab(
+        TabServiceProvider.addTab(
             JobApplicationTab(
                 f"{model.title}, {model.company.name} (ID {model.id})",
                 model=model,
@@ -111,9 +85,9 @@ class SummaryTab(Tab):
         )
 
     def openEmptyTab(self):
-        TabService.addTab(
+        TabServiceProvider.addTab(
             JobApplicationTab(
-                f"New Application {TabService.tabCount() + 1}",
+                f"New Application {TabServiceProvider.tabCount() + 1}",
                 icon=IconUtility.getFileIconAsPixmap("blue-folder-32"),
             )
         )

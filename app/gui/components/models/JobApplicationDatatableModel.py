@@ -1,13 +1,14 @@
+# Standard Library
 import datetime
+from typing import Any, Mapping, Sequence
 
-from typing import Mapping, Any, Sequence
-from app.gui.components.datatable.DatatableModel import DatatableModel, ModelData
-from app.models.JobApplication import JobApplication
+# Framework imports
 from PySide6.QtCore import QModelIndex, QPersistentModelIndex, Qt
 
+# Application imports
+from app.gui.components.datatable.DatatableModel import DatatableModel, ModelData
+from app.models.JobApplication import JobApplication
 from app.repositories.JobApplicationRepository import JobApplicationRepository
-
-# https://doc.qt.io/qtforpython/PySide6/QtWidgets/QTableWidgetItem.html
 
 
 class JobApplicationDatatableModel(DatatableModel[JobApplication]):

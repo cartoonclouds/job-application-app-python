@@ -59,13 +59,14 @@ class EditableLabel(QtWidgets.QWidget):
         self.label.setStyleSheet("border-bottom: 3px dotted grey;")  # TODO Not working!
 
         self.icon = QtWidgets.QLabel()
+        self.icon.setContentsMargins(Constants.WIDGET_SPACING + 1, 0, 0, 0)
 
         self.lineEdit = QtWidgets.QLineEdit(self)
         self.lineEdit.setStyleSheet("border: none;")
         self.lineEdit.setSizePolicy(
             QtWidgets.QSizePolicy.Expanding, self.lineEdit.sizePolicy().verticalPolicy()
         )
-        self.lineEdit.editingFinished.connect(lambda: self.modified.emit(True))
+        self.lineEdit.editingFinished.connect(lambda: self.modified.emit(self.isModified()))
 
         icon = kwargs.get("icon")
 

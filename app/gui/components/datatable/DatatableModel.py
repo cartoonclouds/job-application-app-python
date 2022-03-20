@@ -27,6 +27,7 @@ class DatatableModel(Generic[M], QAbstractTableModel):
 
     URL: https://doc.qt.io/qtforpython/PySide6/QtCore/QAbstractTableModel.html
          https://doc.qt.io/qtforpython/PySide6/QtCore/QAbstractItemModel.html
+         https://doc.qt.io/qtforpython/PySide6/QtWidgets/QTableWidgetItem.html
 
     Raises:
         ValueError

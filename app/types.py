@@ -21,6 +21,7 @@ from PySide6.QtWidgets import (
 from typing import TypeVar, Generic
 
 
+
 # Mypy is a static type checker for Python 3
 # https://mypy.readthedocs.io/en/stable/introduction.html
 # https://mypy.readthedocs.io/en/stable/cheat_sheet_py3.html
@@ -42,6 +43,8 @@ from typing import TypeVar, Generic
 # M_co = TypeVar("M_co", bound=Models.Model, covariant=True)
 
 # DM = TypeVar("DM", JobApplicationDatatableModel, ActionDatatableModel)
+
+
 TModel = JobApplication | Profession | Job | Action | Company
 
 

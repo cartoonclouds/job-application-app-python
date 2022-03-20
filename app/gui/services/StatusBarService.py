@@ -1,23 +1,31 @@
-
-
+from typing import Type
+from typing_extensions import Self
 from PySide6.QtWidgets import QMainWindow, QStatusBar
+from pendulum import Pendulum
 
 
 class StatusBarServiceProvider:
     statusBar: QStatusBar
 
-    def init(self, window: QMainWindow) -> None:
-        self.statusBar: QStatusBar = window.statusBar()
+    @classmethod
+    def init(cls, window: QMainWindow) -> Type["StatusBarServiceProvider"]:
+        cls.statusBar = window.statusBar()
 
         # Adding a temporary message
-        self.statusBar.showMessage("Status Bar service initiated")
+        cls.statusBar.showMessage("Status Bar service initiated")
 
         # Adding a permanent message
-        # self.wcLabel = QLabel(f"100 Words")
-        # statusbar.addPermanentWidget(self.wcLabel)
+        # cls.wcLabel = QLabel(f"100 Words")
+        # statusbar.addPermanentWidget(cls.wcLabel)
 
-    def showMessage(self, message: str):
-        self.statusBar.showMessage(message)
+        return cls
 
+    @classmethod
+    def message(cls, message: str, withTimeStamp: bool = True):
+        message = (
+            Pendulum.now().to_time_string() + " " + message
+            if withTimeStamp
+            else message
+        )
 
-StatusBarService = StatusBarServiceProvider()
+        cls.statusBar.showMessage(message)

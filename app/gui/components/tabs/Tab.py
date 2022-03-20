@@ -20,7 +20,7 @@ class Tab(QWidget):
         super().__init__()
         self.setObjectName("Tab")
 
-        self.model = model
+        self.model: Optional[M] = model
 
         self._tooltip = tooltip
         self._whatsThis = whatsThis

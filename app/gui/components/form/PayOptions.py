@@ -47,7 +47,6 @@ class PayOptions(QWidget):
         self._stacks.setCurrentIndex(PayTypes.atIndex(initialOption))
 
         self._label = Input.createLabel(label, self)
-        # self._label.setStyleSheet("border: 2px solid red;")
 
         optionsLayout = QVBoxLayout()
         optionsLayout.setContentsMargins(0, Constants.WIDGET_SPACING / 2, 0, 0)
@@ -58,6 +57,7 @@ class PayOptions(QWidget):
         optionsLayout.addWidget(optionsStack)
         optionsLayout.addWidget(stackWidget)
 
+        # self._label.setStyleSheet("border: 2px solid red;")
         # optionsFrame.setStyleSheet("border: 2px solid red;")
         # optionsStack.setStyleSheet("border: 2px solid green;")
         # stackWidget.setStyleSheet("border: 2px solid blue;")

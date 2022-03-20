@@ -2,6 +2,7 @@ import collections
 from typing import Mapping, MutableMapping, Sequence
 from typing_extensions import Self
 from orator import orm
+from app.gui.services.StatusBarService import StatusBarServiceProvider
 
 from app.models.JobApplication import JobApplication
 from app.repositories.Repository import Repository
@@ -18,22 +19,19 @@ from app.utils.CollectionUtility import CollectionUtility
 
 
 class _JobApplicationRepository(Repository[JobApplication]):
-    """A repository which helps dealing with Job Applications.
-
-    Attributes:
-        table_columns (list[str]): A list of table columns
-
-    Methods:
-        loadAll(): Loads all Job Applications from the database and returns the repository instance.
-    """
+    """A repository which helps dealing with Job Applications."""
 
     @classmethod
-    def loadAll(cls) -> Self:
+    def loadAll(cls) -> Repository[JobApplication]:
+        # StatusBarServiceProvider.message("Loading Job Applications ...")
+
         jobApplications: orm.collection.Collection = JobApplication.all()
 
         keyedJobApplications = CollectionUtility.keyBy("id", jobApplications)
 
-        return _JobApplicationRepository(dict(keyedJobApplications))
+        # StatusBarServiceProvider.message("Loading Job Applications ... Done!")
+
+        return _JobApplicationRepository(dict(keyedJobApplications))  # type: ignore
 
 
 JobApplicationRepository = _JobApplicationRepository.loadAll()

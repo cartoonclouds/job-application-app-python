@@ -9,20 +9,18 @@ from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox
 
 # Third party imports
 import qtawesome as qta
+from app.gui.components.pages.JobApplicationTab import JobApplicationTab
 
 # Application imports
-from app.gui.components.pages.JobApplicationTab import JobApplicationTab
 from app.gui.components.pages.SummaryTab import SummaryTab
 from app.gui.components.tabs.TabBar import TabBar
-from app.gui.services.StatusBarService import StatusBarService
-from app.gui.services.TabService import TabService
-from app.models.JobApplication import JobApplication
+from app.gui.services.StatusBarService import StatusBarServiceProvider
+from app.gui.services.TabService import TabServiceProvider
 from app.constants import Constants
+from app.repositories.JobApplicationRepository import JobApplicationRepository
 from app.utils.IconUtility import IconUtility
 
 
-# https://www.pythonguis.com/tutorials/pyside6-widgets/
-# https://stackoverflow.com/questions/61394268/difference-between-subclassing-qmainwindow-and-qapplication
 class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -41,40 +39,27 @@ class MainWindow(QMainWindow):
         self.menubar = self.setupMenubar()
 
         # Setup statusbar
-        StatusBarService.init(self)
+        StatusBarServiceProvider.init(self)
 
         # Setup initial tabs
         self.setupTabs()
-        self.setCentralWidget(TabService.tabs)
-        self.setContentsMargins(1, 1, 1, 1)
+        self.setCentralWidget(TabServiceProvider.tabs)
 
         # TODO Utility function to create JAA/empty tab, given JAA ID/random
-        testJaa = JobApplication.find(1)
-
-        TabService.addTab(
-            JobApplicationTab(
-                f"{testJaa.title}, {testJaa.company.name} (ID {testJaa.id})",
-                model=testJaa,
-                icon=IconUtility.getFileIconAsPixmap("blue-folder-32"),
-            )
+        testJaa = JobApplicationRepository.getAtIndex(1)
+        testJaaTab = JobApplicationTab(
+            f"{testJaa.title}, {testJaa.company.name} (ID {testJaa.id})",
+            model=testJaa,
+            icon=IconUtility.getFileIconAsPixmap("blue-folder-32"),
         )
-
-        # TabService.addTab(
-        #     JobApplicationTab(
-        #         f"New Application {TabService.tabCount() + 1}",
-        #         icon=IconUtility.getFileIconAsPixmap("blue-folder-32"),
-        #     )
-        # )
+        TabServiceProvider.openTab(testJaaTab)
 
         self.show()
 
-    # def resizeEvent(self, event: QResizeEvent) -> None:
-    # return super(MainWindow, self).resizeEvent(event)
-
     def setupTabs(self):
-        TabService.initTabs(TabBar())
+        TabServiceProvider.init(TabBar())
 
-        TabService.addTab(
+        TabServiceProvider.addTab(
             SummaryTab(
                 "&Summary",
                 tooltip="Summary tab with stats",
@@ -150,6 +135,9 @@ class App:
         app = QApplication(sys.argv)
         # app.setStyle("Plastique")
         # https://stackoverflow.com/questions/63442415/changing-font-size-of-all-qlabel-objects-pyqt5
+
+        # https://www.pythonguis.com/tutorials/pyside6-widgets/
+        # https://stackoverflow.com/questions/61394268/difference-between-subclassing-qmainwindow-and-qapplication
         # custom_font = QFont()
         # custom_font.setWeight(18);
         # QApplication.setFont(custom_font, "QLabel")

@@ -2,6 +2,8 @@ from typing import Any
 from app.gui.components.form.inputs.Input import Input
 from PySide6.QtWidgets import QDateTimeEdit, QDateEdit
 from PySide6.QtCore import Slot, QDateTime, QDate, Qt
+import datetime
+from pendulum import Pendulum
 
 from app.constants import Constants
 
@@ -15,7 +17,6 @@ class DateTimeInput(Input[QDateTimeEdit]):
 
         self._isModified: bool = False
         self._input.setCalendarPopup(True)
-        self._input.dateTimeChanged.connect(lambda: self.modified.emit(True))
         # self._input.setDate(QDateTime.currentDateTime().date())
         self._input.setDisplayFormat(Constants.DATE_FORMAT)
         # setMinimumDateTime (dt: QDateTime)
@@ -33,15 +34,24 @@ class DateTimeInput(Input[QDateTimeEdit]):
         self._boundProperty = property
         self._updateProperty = updateProperty
 
-        self._input.setDateTime(getattr(self._boundObject, self._boundProperty))
+        self._initialPropertyValue = getattr(self._boundObject, self._boundProperty)
+
+        self._input.setDateTime(self._initialPropertyValue)
 
         self._input.dateTimeChanged.connect(self._onDateTimeChanged)
+        self._input.dateTimeChanged.connect(
+            lambda: self.modified.emit(self.isModified())
+        )
 
     @Slot(str)
     def _onDateTimeChanged(self, datetime: QDateTime):
+        assert self._boundObject is not None
         self.updateBoundObject(self._boundObject, datetime.toPython())
 
-        self._isModified = True
-
     def isModified(self) -> bool:
-        return self._isModified
+        initialDt = Pendulum.instance(self._initialPropertyValue)
+        inputDt = Pendulum.instance(self._input.dateTime().toPython())
+
+        return (
+            initialDt.to_formatted_date_string() == inputDt.to_formatted_date_string()
+        )

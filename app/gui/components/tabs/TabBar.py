@@ -12,7 +12,7 @@ from PySide6.QtWidgets import QApplication, QTabBar, QTabWidget, QWidget
 
 # Application imports
 from app.gui.components.tabs.Tab import Tab
-from app.gui.services.TabService import TabService
+from app.gui.services.TabService import TabServiceProvider
 
 
 class TabBar(QTabBar):
@@ -30,7 +30,7 @@ class TabBar(QTabBar):
         self.setDocumentMode(True)
         self.setMovable(True)
 
-        self.tabCloseRequested.connect(TabService.closeTab)
+        self.tabCloseRequested.connect(TabServiceProvider.closeTab)
 
         self.installEventFilter(self)
 
@@ -65,7 +65,7 @@ class TabBar(QTabBar):
             event: QMouseEvent = event
 
             if event.button() == Qt.MouseButton.MiddleButton:
-                TabService.closeTab(event.pos())
+                TabServiceProvider.closeTab(event.pos())
 
             # Get mouse click horizontal position.
             xclick = event.pos().x()

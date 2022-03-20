@@ -1,11 +1,11 @@
-from collections import UserDict
-from typing import Generic, Mapping, MutableMapping, Sequence
-from typing_extensions import Self
+from typing import Any, Sequence
+from app.gui.services.StatusBarService import StatusBarServiceProvider
 from app.models.Model import Model
 from app.types import M
 
+from pendulum import Pendulum
+
 # ChainMap(class) Self
-# See https://mypy.readthedocs.io/en/stable/common_issues.html#variables-vs-type-aliases
 
 
 class Repository(dict[str, M]):
@@ -19,7 +19,7 @@ class Repository(dict[str, M]):
             super().__init__(data)
 
     @classmethod
-    def loadAll(cls) -> Self:
+    def loadAll(cls) -> Any:
         """Loads all models from the database.
 
         NOTE: This will clear any models already present!
@@ -29,7 +29,6 @@ class Repository(dict[str, M]):
         """
         pass
 
-    @classmethod
     def count(self) -> int:
         """Returns the number of loaded Job Applications
 
@@ -38,32 +37,51 @@ class Repository(dict[str, M]):
         """
         return len(self)
 
-    def getAtIndex(self, index: int) -> Model | bool:
-        """Gets the Job Application at index. If there's nothing at index, False is returned.
+    def values(self) -> Sequence[M]:  # type: ignore
+        """Returns values only of keyed dictionary.
 
         Returns:
-            (JobApplication | bool): A Job Application
+            Sequence[M]
         """
-        modelList = list(self.items())
+        return list(super().values())
+
+    def getAtIndex(self, index: int) -> M | bool:
+        """Gets the model at index. If there's nothing at index, False is returned.
+
+        Returns:
+            Model | bool: A model
+        """
+        modelList = self.values()
 
         try:
-            model: Model = modelList[index][1]
+            model: M = modelList[index]
         except:
             return False
 
         return model
 
-    def getColumns(self):
-        model: Model | bool = self.getAtIndex(0)
+    def getColumns(self) -> list[str]:
+        """Returns an array of column names for the model of this repository.
 
-        if isinstance(model, Model):
-            return model.getTableColumns()
-
-    def saveChanges(self):
+        Returns:
+            list[str]: The list of columns
         """
-        Saves all changes made to the database
-        """
-        pass
+        model: M | bool = self.getAtIndex(0)
 
-    def values(self) -> Sequence[M]:
-        return list(super().values())
+        return model.getTableColumns() if isinstance(model, Model) else []
+
+    def saveAll(self):
+        """
+        Saves all changes made to the model instances
+
+        TODO Put onto a separate thread
+        """
+        modifiedModels = [model for model in self.values()]
+
+        if len(modifiedModels) > 0:
+            for model in modifiedModels:
+                model.push()  # type: ignore
+
+            StatusBarServiceProvider.message(
+                "Last Saved " + str(Pendulum.now().to_time_string()), False
+            )

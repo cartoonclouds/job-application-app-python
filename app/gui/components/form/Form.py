@@ -9,6 +9,7 @@ from PySide6.QtWidgets import (
     QFormLayout,
     QGroupBox,
     QHBoxLayout,
+    QSizePolicy,
 )
 
 # Application imports
@@ -54,24 +55,22 @@ class Form(QFrame, ListMixin):
         self.setObjectName("Form")
         self.setContentsMargins(0, Constants.WIDGET_SPACING * 5, 0, 0)
         self.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)
-        self.setStyleSheet(
-            """
-            QFrame {
-                background-color: #FFF
-            }
-        """
-        )
+        # self.setStyleSheet(
+        #     """
+        #     QFrame {
+        #         background-color: #FFF
+        #     }
+        # """
+        # )
 
         self._layout = QFormLayout()
         self._layout.setAlignment(Qt.AlignTop)
-        self._layout.setSpacing(Constants.WIDGET_SPACING * 2)
+        # self._layout.setSpacing(Constants.WIDGET_SPACING * 2)
 
         self.title = QLabel(self._title, self)
-        # TODO Set horizontal size policy to fill
-        self.title.setMinimumWidth(self.width())
         self.title.setContentsMargins(Constants.WIDGET_MARGINS)
         self.title.setStyleSheet(
-            "background-color: #ababab; border:1px solid #999; border-width: 1px 1px 0 1px;"
+            "background-color: #fff; border:1px solid #999; border-width: 1px 1px 0 1px;"
         )
         self.title.show()
 
@@ -110,8 +109,7 @@ class Form(QFrame, ListMixin):
                 self._addWidget(layout, field)
                 hLayout.addLayout(layout)
 
-            # Only set the first column's input's margin left to align all left most labels
-            fields[0].getInput().setContentsMargins(Constants.WIDGET_SPACING, 0, 0, 0)
+            # Set columns > 1 label right aligned
             fields[1].getLabel().setAlignment(Qt.AlignRight | Qt.AlignVCenter)
 
             self._layout.addRow(row)

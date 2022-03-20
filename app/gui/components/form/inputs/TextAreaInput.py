@@ -11,8 +11,6 @@ class TextAreaInput(Input[QPlainTextEdit]):
         super(TextAreaInput, self).__init__(QPlainTextEdit())
         self.setObjectName("Input:TextAreaInput:" + str(label))
 
-        self._input.textChanged.connect(lambda: self.modified.emit(True))
-        
         if label:
             self.setLabel(label)
 
@@ -29,9 +27,11 @@ class TextAreaInput(Input[QPlainTextEdit]):
         self._input.document().setModified(False)
 
         self._input.textChanged.connect(self._onTextChanged)
+        self._input.textChanged.connect(lambda: self.modified.emit(self.isModified()))
 
     @Slot(str)
     def _onTextChanged(self):
+        assert self._boundObject is not None
         self.updateBoundObject(self._boundObject, self._input.document().toPlainText())
 
     def isModified(self) -> bool:

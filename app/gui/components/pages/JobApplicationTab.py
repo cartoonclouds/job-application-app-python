@@ -10,7 +10,7 @@ from app.gui.components.form.inputs.TextInput import TextInput
 from app.gui.components.form.inputs.ToggleButtonSquare import ToggleButtonSquare
 from app.gui.components.models.ActionDatatableModel import ActionDatatableModel
 
-from app.gui.components.pages.Header import Header
+from app.gui.components.pages.TabHeader import TabHeader
 from app.gui.components.tabs.Tab import Tab
 from PySide6.QtWidgets import (
     QVBoxLayout,
@@ -25,9 +25,11 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt, QSize, Slot
 from PySide6.QtGui import QPaintEvent, QFontMetrics
 from app.constants import Constants
+from app.models.JobApplication import JobApplication
 from app.utils.GUIUtilities import GUIUtilities
 
 from app.utils.IconUtility import IconUtility
+from app.repositories.JobApplicationRepository import JobApplicationRepository
 
 # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QTabWidget.html
 # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QTabBar.html
@@ -38,14 +40,10 @@ class JobApplicationTab(Tab):
         super().__init__(label=label, **kwargs)
 
         self.setObjectName("Tab:JobApplication")
-        self.setContentsMargins(
-            Constants.WIDGET_SPACING, 0, Constants.WIDGET_SPACING, 0
-        )
 
         # Setup frames
         header = self._setupHeader()
         leftFrame = self._setupLeftFrame()
-
         rightFrame = self._setupRightFrame()
 
         # Setup Layout
@@ -67,14 +65,14 @@ class JobApplicationTab(Tab):
 
     def _setupHeader(self):
         layout = QHBoxLayout()
-        layout.setContentsMargins(Constants.WIDGET_MARGINS)
+        layout.setContentsMargins(Constants.ZERO_MARGINS)
         layout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
         frame = QFrame()
         frame.setLayout(layout)
         frame.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)
 
-        header = Header(
+        header = TabHeader(
             f"Job Application - {self.model.title}",
             IconUtility.getFileIconAsPixmap("gear"),
             True,
@@ -86,10 +84,12 @@ class JobApplicationTab(Tab):
         textSize: QSize = fontMetrics.size(0, header.label.text())
         layoutMargins = layout.contentsMargins()
         frame.setMaximumHeight(
-            textSize.height() + layoutMargins.top() + layoutMargins.bottom()
+            textSize.height() + layoutMargins.top() + layoutMargins.bottom() + 2
         )
 
         saveButton = QPushButton("Save")
+        saveButton.clicked.connect(self.model.push)
+        # TODO Refresh model/clear "modified"
 
         # Toggle buttons
         pinButton = ToggleButtonSquare("Pinned", "Pin")
@@ -111,7 +111,7 @@ class JobApplicationTab(Tab):
 
     def _setupLeftFrame(self):
         layout = QVBoxLayout()
-        layout.setContentsMargins(Constants.ZERO_MARGINS)   
+        layout.setContentsMargins(Constants.ZERO_MARGINS)
         frame = QFrame()
         frame.setLayout(layout)
 
@@ -132,7 +132,6 @@ class JobApplicationTab(Tab):
 
     def _setupRightFrame(self):
         layout = QVBoxLayout()
-        layout.setContentsMargins(Constants.ZERO_MARGINS)
         frame = QFrame()
         frame.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)
         frame.setLayout(layout)

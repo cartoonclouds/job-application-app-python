@@ -73,11 +73,6 @@ class Input(Generic[T], QWidget, ObjectMixin):
     @no_type_check
     def dataModel(self) -> WidgetModel:
         return self._input.model()
-        # if hasattr(self._input, "model") and isinstance(
-        #     self._input.model(), QAbstractListModel
-        # ):
-        #     return cast(QAbstractListModel, self._input.model())
-        # else:
 
     def getInput(self) -> T:
         return self._input
@@ -132,7 +127,7 @@ class Input(Generic[T], QWidget, ObjectMixin):
             "_boundUpdateObject"
         )
 
-    def updateBoundObject(self, updateObject: Profession, value: Any):
+    def updateBoundObject(self, updateObject: TModel, value: Any):
         value = value if value != None else ""
 
         if self.hasBoundUpdateProperty():

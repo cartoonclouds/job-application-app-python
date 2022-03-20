@@ -20,7 +20,6 @@ class CreateAddressesTable(Migration):
             table.text("state").nullable()
             table.integer("postcode").nullable()
             table.text("country").nullable()
-            table.boolean("is_user").default(False)
 
             table.timestamps()
 

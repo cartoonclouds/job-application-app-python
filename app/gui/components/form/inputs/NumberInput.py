@@ -14,8 +14,6 @@ class NumberInput(Input[QDoubleSpinBox]):
 
         self._prefix: Optional[str] = None
         self._suffix: Optional[str] = None
-        self._input.valueChanged.connect(lambda: self.modified.emit(self.isModified()))
-
         if label:
             self.setLabel(label)
 
@@ -36,9 +34,11 @@ class NumberInput(Input[QDoubleSpinBox]):
         self._input.setValue(self._initialPropertyValue)
 
         self._input.valueChanged.connect(self._onValueChanged)
+        self._input.valueChanged.connect(lambda: self.modified.emit(self.isModified()))
 
     @Slot(str)
     def _onValueChanged(self):
+        assert self._boundObject is not None
         self.updateBoundObject(self._boundObject, self._input.value())
 
     def isModified(self) -> bool:

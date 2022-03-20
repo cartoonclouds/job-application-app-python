@@ -31,7 +31,7 @@ class Datatable(QTableView):
 
     # Signal(Model)
     openModel = Signal(Model)
-    openModeWithEvent = Signal(Model, QMouseEvent)
+    openModelWithEvent = Signal(Model, QMouseEvent)
 
     # QMouseEvent
 
@@ -53,19 +53,19 @@ class Datatable(QTableView):
         # self.setSortingEnabled(True)
 
         # https://doc.qt.io/qtforpython/overviews/stylesheet-examples.html#customizing-qtabwidget-and-qtabbar
-        self.setStyleSheet(
-            """
-            QTableView {
-                border: none;
-            }
-            QHeaderView::section {
-                border: none;
-                padding: 12px
-            }
-            QTableView::item {
-            }
-        """
-        )
+        # self.setStyleSheet(
+        #     """
+        #     QTableView {
+        #         border: none;
+        #     }
+        #     QHeaderView::section {
+        #         border: none;
+        #         padding: 12px
+        #     }
+        #     QTableView::item {
+        #     }
+        # """
+        # )
 
         self.setModel(datatableModel)
         datatableModel.dataUpdated.connect(self.resizeEvent())
@@ -93,7 +93,7 @@ class Datatable(QTableView):
 
             if rowModel:
                 self.openModel.emit(rowModel)
-                self.openModeWithEvent.emit(rowModel, event)
+                self.openModelWithEvent.emit(rowModel, event)
 
         return super().mouseDoubleClickEvent(event)
 
@@ -154,7 +154,7 @@ class Datatable(QTableView):
         for index, column in enumerate(fitByContents):
             if not hasattr(datatableModel.columns, column):
                 continue
-            
+
             index = datatableModel.columns.index(column)
 
             self.resizeColumnToContents(index)

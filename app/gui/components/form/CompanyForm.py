@@ -45,6 +45,26 @@ class CompanyForm(Form):
         websiteInput.setPrefix("www")
 
         # address
+        addressLine1Input = TextInput("Address 1")
+        addressLine1Input.setBinding(self._model.address, "address_line_1")
+
+        addressLine2Input = TextInput("Address 2")
+        addressLine2Input.setBinding(self._model.address, "address_line_2")
+
+        suburbInput = TextInput("Suburb")
+        suburbInput.setBinding(self._model.address, "suburb")
+        
+        cityInput = TextInput("City")
+        cityInput.setBinding(self._model.address, "city")
+        
+        stateInput = TextInput("State")
+        stateInput.setBinding(self._model.address, "state")
+        
+        postcodeInput = TextInput("Postcode")
+        postcodeInput.setBinding(self._model.address, "postcode")
+        postcodeInput.setInputMask("9999")
+
+        # Country - pyside provides country list
 
         commentsInput = TextAreaInput("Comments")
         commentsInput.setBinding(self._model, "comments")

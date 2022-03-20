@@ -19,7 +19,6 @@ class SelectBox(Input[QComboBox]):
         self.setObjectName("Input:SelectBox:" + str(label))
 
         self._input.setInsertPolicy(QComboBox.InsertAtTop)
-        self._input.currentIndexChanged.connect(lambda: self.modified.emit(True))
 
         if label:
             self.setLabel(label)
@@ -49,15 +48,19 @@ class SelectBox(Input[QComboBox]):
         propertyValue = getattr(self._boundObject, self._boundProperty)
         self._initialPropertyIndex = self._input.findText(propertyValue)
 
-        # TODO listen on self._boundObject for save eveny
-
         self._input.setCurrentText(propertyValue)
         self._input.setCurrentIndex(self._initialPropertyIndex)
 
         self._input.currentIndexChanged.connect(self._onSelectionChanged)
+        self._input.currentIndexChanged.connect(
+            lambda: self.modified.emit(self.isModified())
+        )
 
     @Slot(int)
     def _onSelectionChanged(self, index: int):
+        assert self._boundObject is not None
+        assert self._updateProperty is not None
+
         if self.hasModel():
             indexModel = self.dataModel.getAt(index)
 

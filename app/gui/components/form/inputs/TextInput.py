@@ -14,14 +14,9 @@ class TextInput(Input[QLineEdit]):
 
         self._prefix: Optional[str] = None
         self._suffix: Optional[str] = None
-        self._input.editingFinished.connect(
-            lambda: self.modified.emit(self.isModified())
-        )
 
         if label:
             self.setLabel(label)
-
-        self._input.resizeEvent = self.resizeEvent
 
     def setBinding(
         self,
@@ -40,11 +35,15 @@ class TextInput(Input[QLineEdit]):
         self._input.setText(self._initialPropertyValue)
 
         self._input.editingFinished.connect(self._onTextChanged)
+        self._input.editingFinished.connect(
+            lambda: self.modified.emit(self.isModified())
+        )
 
     @Slot(str)
     def _onTextChanged(self):
         self._removePreSuffixes()
 
+        assert self._boundObject is not None
         self.updateBoundObject(self._boundObject, self._input.text())
 
     def isModified(self) -> bool:
