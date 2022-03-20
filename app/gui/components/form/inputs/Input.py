@@ -35,6 +35,7 @@ class Input(Generic[T], QWidget, ObjectMixin):
         self.setObjectName("Input")
 
         self._layout = QHBoxLayout()
+        self._layout.setAlignment(Qt.AlignTop)
         self._layout.setContentsMargins(Constants.ZERO_MARGINS)
         self._layout.setSpacing(Constants.WIDGET_SPACING)
 
