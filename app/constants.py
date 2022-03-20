@@ -1,13 +1,8 @@
 import typing
 from PySide6.QtCore import QMargins
 
-from app.repositories.JobApplicationRepository import JobApplicationRepository
 
-
-class Storage:
-    jobApplications = JobApplicationRepository()
-    jobApplications.loadAll()
-
+class Constants:
     WINDOW_WIDTH: typing.Final = 1500
     WINDOW_HEIGHT: typing.Final = 800
 

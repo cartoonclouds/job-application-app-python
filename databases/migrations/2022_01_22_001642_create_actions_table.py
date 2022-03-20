@@ -13,6 +13,7 @@ class CreateActionsTable(Migration):
             table.increments('id')
             table.text('title').nullable()
             table.boolean('requires_followup').default(False)
+            table.boolean('awaiting_response').default(False)
             table.boolean('pinned').default(False)
             table.text('contact_method').nullable()
 

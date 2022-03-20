@@ -3,7 +3,7 @@ from app.gui.components.form.inputs.Input import Input
 from PySide6.QtWidgets import QDateTimeEdit, QDateEdit
 from PySide6.QtCore import Slot, QDateTime, QDate, Qt
 
-from app.storage import Storage
+from app.constants import Constants
 
 
 class DateTimeInput(Input[QDateTimeEdit]):
@@ -17,7 +17,7 @@ class DateTimeInput(Input[QDateTimeEdit]):
         self._input.setCalendarPopup(True)
         self._input.dateTimeChanged.connect(lambda: self.modified.emit(True))
         # self._input.setDate(QDateTime.currentDateTime().date())
-        self._input.setDisplayFormat(Storage.DATE_FORMAT)
+        self._input.setDisplayFormat(Constants.DATE_FORMAT)
         # setMinimumDateTime (dt: QDateTime)
 
         if label:

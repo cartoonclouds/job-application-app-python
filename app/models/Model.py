@@ -1,6 +1,6 @@
 # Standard Library
 from datetime import datetime
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Mapping, Sequence
 
 # Framework imports
 from PySide6.QtCore import QObject, Signal
@@ -8,6 +8,8 @@ from PySide6.QtCore import QObject, Signal
 # Third party imports
 import inflection
 from config.database import db
+from orator import orm, query
+from orator.orm import utils
 from orator.orm.model import Model as oratorModel
 
 
@@ -104,11 +106,17 @@ class Model(oratorModel):
             .count()
         )
 
-    # Scopes
+    @classmethod
+    def all(cls, columns: Sequence[str] | None = None) -> orm.collection.Collection:
+        return super().all(columns)
 
-    # @scope
-    # def starts_with(self, query, column, search) -> QueryBuilder:
-    #     return query.where(column, 'LIKE', '{}%'.format(search))
+    # Scopes
+    
+    # @utils.scope
+    # def starts_with(
+    #     cls, query: query.QueryBuilder, column: query.QueryBuilder | str, text: str
+    # ) -> query.QueryBuilder:
+    #     return query.where(column, "LIKE", "{}%".format(text))
 
     # @scope
     # def like(self, query, column, search) -> QueryBuilder:

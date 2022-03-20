@@ -18,7 +18,7 @@ from PySide6.QtWidgets import QCompleter, QLabel, QVBoxLayout, QWidget, QHBoxLay
 # Application imports
 from app.gui.components.models.ProfessionListModel import ProfessionListModel
 from app.models.Profession import Profession
-from app.storage import Storage
+from app.constants import Constants
 from app.types import T, TModel
 from app.utils.mixins.ObjectMixin import ObjectMixin
 
@@ -35,8 +35,8 @@ class Input(Generic[T], QWidget, ObjectMixin):
         self.setObjectName("Input")
 
         self._layout = QHBoxLayout()
-        self._layout.setContentsMargins(Storage.ZERO_MARGINS)
-        self._layout.setSpacing(Storage.WIDGET_SPACING)
+        self._layout.setContentsMargins(Constants.ZERO_MARGINS)
+        self._layout.setSpacing(Constants.WIDGET_SPACING)
 
         self._input: T = component
         self._inputModel: Optional[WidgetModel] = None
@@ -152,7 +152,7 @@ class Input(Generic[T], QWidget, ObjectMixin):
         label = QLabel(text)
         label.setBuddy(input)
         labelFont = label.font()
-        labelFont.setPointSize(Storage.FORM_LABEL_SIZE)
+        labelFont.setPointSize(Constants.FORM_LABEL_SIZE)
         # labelFont.setCapitalization(QFont.SmallCaps)
         label.setFont(labelFont)
 

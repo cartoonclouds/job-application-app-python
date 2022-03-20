@@ -24,7 +24,7 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt, QSize, Slot
 from PySide6.QtGui import QPaintEvent, QFontMetrics
-from app.storage import Storage
+from app.constants import Constants
 from app.utils.GUIUtilities import GUIUtilities
 
 from app.utils.IconUtility import IconUtility
@@ -39,7 +39,7 @@ class JobApplicationTab(Tab):
 
         self.setObjectName("Tab:JobApplication")
         self.setContentsMargins(
-            Storage.WIDGET_SPACING * 2, 0, Storage.WIDGET_SPACING * 2, 0
+            Constants.WIDGET_SPACING * 2, 0, Constants.WIDGET_SPACING * 2, 0
         )
 
         # Setup frames
@@ -67,7 +67,7 @@ class JobApplicationTab(Tab):
 
     def _setupLeftFrame(self):
         layout = QVBoxLayout()
-        layout.setContentsMargins(0, 0, Storage.WIDGET_SPACING * 3, 0)
+        layout.setContentsMargins(0, 0, Constants.WIDGET_SPACING * 3, 0)
         layout.setSpacing(20)
         frame = QFrame()
         frame.setLayout(layout)
@@ -89,7 +89,7 @@ class JobApplicationTab(Tab):
 
     def _setupHeader(self):
         layout = QHBoxLayout()
-        layout.setContentsMargins(Storage.ZERO_MARGINS)
+        layout.setContentsMargins(Constants.ZERO_MARGINS)
         layout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
         frame = QFrame()
@@ -133,7 +133,7 @@ class JobApplicationTab(Tab):
 
     def _setupRightFrame(self):
         layout = QVBoxLayout()
-        layout.setContentsMargins(Storage.WIDGET_SPACING * 3, 0, 0, 0)
+        layout.setContentsMargins(Constants.WIDGET_SPACING * 3, 0, 0, 0)
         frame = QFrame()
         frame.setLayout(layout)
 

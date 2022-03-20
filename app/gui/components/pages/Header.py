@@ -19,7 +19,7 @@ from PySide6.QtWidgets import (
 
 # Application imports
 from app.gui.components.EditableLabel.EditableLabel import EditableLabel
-from app.storage import Storage
+from app.constants import Constants
 
 
 class Header(QWidget):
@@ -37,7 +37,7 @@ class Header(QWidget):
 
         layout = QHBoxLayout(self)
         layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
-        layout.setContentsMargins(Storage.ZERO_MARGINS)
+        layout.setContentsMargins(Constants.ZERO_MARGINS)
 
         self.label = self.createLabel(text)
 

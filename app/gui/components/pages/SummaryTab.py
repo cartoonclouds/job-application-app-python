@@ -35,7 +35,7 @@ from app.gui.components.statistics.StatisticGroup import StatisticGroup
 from app.gui.components.tabs.Tab import Tab
 from app.gui.services.TabService import TabService
 from app.models.JobApplication import JobApplication
-from app.storage import Storage
+from app.constants import Constants
 from app.utils.IconUtility import IconUtility
 
 
@@ -46,7 +46,7 @@ class SummaryTab(Tab):
         self.setObjectName("Tab:Summary")
         self.mainLayout = QVBoxLayout(self)
         # *([10] * 4)
-        self.setContentsMargins(Storage.WIDGET_SPACING * 2, 0, 10, 0)
+        self.setContentsMargins(Constants.WIDGET_SPACING * 2, 0, 10, 0)
 
         # Header
         header = Header("Applications Summary", IconUtility.getFileIconAsPixmap("gear"))

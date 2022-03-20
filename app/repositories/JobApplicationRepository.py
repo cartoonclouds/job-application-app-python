@@ -1,5 +1,7 @@
 import collections
-import typing
+from typing import Mapping, MutableMapping, Sequence
+from typing_extensions import Self
+from orator import orm
 
 from app.models.JobApplication import JobApplication
 from app.repositories.Repository import Repository
@@ -15,45 +17,23 @@ from app.utils.CollectionUtility import CollectionUtility
 # https://github.com/sdispater/backpack
 
 
-class JobApplicationRepository(
-    collections.UserDict[str | int, JobApplication], Repository
-):
+class _JobApplicationRepository(Repository[JobApplication]):
     """A repository which helps dealing with Job Applications.
 
     Attributes:
         table_columns (list[str]): A list of table columns
 
     Methods:
-        loadAll(): Loads all Job Applications from the database.
+        loadAll(): Loads all Job Applications from the database and returns the repository instance.
     """
 
-    def __init__(
-        self,
-        d: typing.MutableMapping[str | int, JobApplication]
-        | typing.Iterable[JobApplication]
-        | None = None,
-    ) -> None:
-        """Constructs the job application repository.
-
-        Args:
-            d (typing.MutableMapping[str | int, JobApplication] | typing.Iterable[JobApplication], optional): [description]. Defaults to None.
-        """
-        if not isinstance(d, dict) and d is not None:
-            d = CollectionUtility.keyBy("id", d)
-
-        super().__init__(d)
-
-    def loadAll(self) -> bool:
-        try:
-            jobApplications: JobApplication = JobApplication.get()
-        except:
-            return False
+    @classmethod
+    def loadAll(cls) -> Self:
+        jobApplications: orm.collection.Collection = JobApplication.all()
 
         keyedJobApplications = CollectionUtility.keyBy("id", jobApplications)
 
-        self.data = dict(keyedJobApplications)
+        return _JobApplicationRepository(dict(keyedJobApplications))
 
-        return True
 
-    def values(self) -> typing.ValuesView[JobApplication]:
-        return super().values()
+JobApplicationRepository = _JobApplicationRepository.loadAll()

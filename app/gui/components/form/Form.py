@@ -20,7 +20,7 @@ from app.gui.components.form.inputs.TextAreaInput import TextAreaInput
 from app.gui.components.form.inputs.TextInput import TextInput
 from app.gui.components.form.inputs.ToggleButtonSquare import ToggleButtonSquare
 from PySide6.QtGui import QPalette, QColor, QPaintEvent
-from app.storage import Storage
+from app.constants import Constants
 
 from app.types import TModel
 from app.utils.mixins.ListMixin import ListMixin
@@ -52,7 +52,7 @@ class Form(QFrame, ListMixin):
         self._title = title
         self._inputs: Sequence[TInput] = []
         self.setObjectName("Form")
-        self.setContentsMargins(0, Storage.WIDGET_SPACING * 5, 0, 0)
+        self.setContentsMargins(0, Constants.WIDGET_SPACING * 5, 0, 0)
         self.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)
         self.setStyleSheet(
             """
@@ -68,7 +68,7 @@ class Form(QFrame, ListMixin):
 
         self.title = QLabel(self._title, self)
         self.title.setMinimumWidth(self.width())
-        self.title.setContentsMargins(Storage.WIDGET_MARGINS)
+        self.title.setContentsMargins(Constants.WIDGET_MARGINS)
         self.title.setStyleSheet(
             "background-color: #ababab; border-right:1px solid #333"
         )
@@ -96,7 +96,7 @@ class Form(QFrame, ListMixin):
             self._addWidget(self._layout, field)
         else:
             hLayout = QHBoxLayout()
-            hLayout.setContentsMargins(Storage.ZERO_MARGINS)
+            hLayout.setContentsMargins(Constants.ZERO_MARGINS)
 
             row = QWidget()
             row.setLayout(hLayout)
@@ -110,7 +110,7 @@ class Form(QFrame, ListMixin):
                 hLayout.addLayout(layout)
 
             # Only set the first column's input's margin left to align all left most labels
-            fields[0].getInput().setContentsMargins(Storage.WIDGET_SPACING, 0, 0, 0)
+            fields[0].getInput().setContentsMargins(Constants.WIDGET_SPACING, 0, 0, 0)
             fields[1].getLabel().setAlignment(Qt.AlignRight | Qt.AlignVCenter)
 
             self._layout.addRow(row)

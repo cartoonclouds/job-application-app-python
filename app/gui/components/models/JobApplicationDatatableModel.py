@@ -5,6 +5,8 @@ from app.gui.components.datatable.DatatableModel import DatatableModel, ModelDat
 from app.models.JobApplication import JobApplication
 from PySide6.QtCore import QModelIndex, QPersistentModelIndex, Qt
 
+from app.repositories.JobApplicationRepository import JobApplicationRepository
+
 # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QTableWidgetItem.html
 
 
@@ -35,7 +37,7 @@ class JobApplicationDatatableModel(DatatableModel[JobApplication]):
             )
         )
 
-        data: Sequence[JobApplication] = list(JobApplication.all())
+        data: Sequence[JobApplication] = JobApplicationRepository.values()
 
         super().__init__(data, columnHeaders)
 
@@ -57,7 +59,7 @@ class JobApplicationDatatableModel(DatatableModel[JobApplication]):
             # case Qt.WhatsThisRole:
 
     def _handleDisplayRole(self, modelData: ModelData) -> Any:
-        assert isinstance(modelData.model, JobApplication) 
+        assert isinstance(modelData.model, JobApplication)
         model: JobApplication = modelData.model
 
         # Perform per-type checks and render accordingly.

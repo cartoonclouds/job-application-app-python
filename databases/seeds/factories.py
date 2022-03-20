@@ -8,33 +8,9 @@ from app.models.Person import Person
 from app.models.Profession import Profession
 from app.models.Address import Address
 from app.models.Action import Action
+from app.utils.EnumUtility import ContactMethod, EmploymentType, PayUnits
 
 factory = Factory()
-
-EMPLOYMENT_TYPES = (
-    "Full-time",
-    "Part-time",
-    "Casual",
-    "Fixed Term",
-    "Shiftworker",
-    "Daily/Weekly Hire",
-    "Probation",
-    "Apprentice/Trainee",
-    "Outworker",
-)
-CONTACT_METHODS = (
-    "Phone call",
-    "Received phone call",
-    "E-mail",
-    "Recruiter",
-    "In-person",
-    "Company website",
-    "Employment website",
-    "Letter",
-    "Online forum",
-)
-RATE_UNITS = ("minute", "hour", "day")
-
 
 @factory.define(Profession)
 def profession_factory(faker) -> dict[str, typing.Any]:
@@ -91,8 +67,8 @@ def job_factory(faker) -> dict[str, typing.Any]:
         "closing_date": faker.future_datetime(),
         "salary": faker.random_int(),
         "rate": faker.random_int(),
-        "rate_unit": faker.random_element(elements=RATE_UNITS),
-        "employment_type": faker.random_element(elements=EMPLOYMENT_TYPES),
+        "rate_unit": faker.random_element(elements=PayUnits.AS_LIST()),
+        "employment_type": faker.random_element(elements=EmploymentType.AS_LIST()),
         "profession_id": factory(Profession).create().id,
         "address_id": factory(Address).create().id,
         "job_application_id": factory(JobApplication).create().id,
@@ -107,8 +83,9 @@ def actions_factory(faker) -> dict[str, typing.Any]:
     return {
         "title": faker.sentence(),
         "requires_followup": faker.boolean(),
+        "awaiting_response": faker.boolean(),
         "pinned": faker.boolean(),
-        "contact_method": faker.random_element(elements=CONTACT_METHODS),
+        "contact_method": faker.random_element(elements=ContactMethod.AS_LIST()),
         "person_id": factory(Person).create().id,
         # Can be either Action or Job
         # 'actionable_id': actionable.get_key(),

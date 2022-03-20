@@ -3,7 +3,7 @@ from tkinter import E
 import typing
 from PySide6 import QtCore, QtGui, QtWidgets
 
-from app.storage import Storage
+from app.constants import Constants
 
 
 class KeyPressHandler(QtCore.QObject):
@@ -49,7 +49,7 @@ class EditableLabel(QtWidgets.QWidget):
         self.keyPressHandler = KeyPressHandler(self)
 
         self.mainLayout = QtWidgets.QHBoxLayout(self)
-        self.mainLayout.setContentsMargins(Storage.ZERO_MARGINS)
+        self.mainLayout.setContentsMargins(Constants.ZERO_MARGINS)
         self.mainLayout.setObjectName("EditableLabel")
 
         self.label = QtWidgets.QLabel(self)

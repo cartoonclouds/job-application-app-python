@@ -1,5 +1,6 @@
 from enum import Enum, unique
 from typing import Sequence
+from typing_extensions import Self
 
 # https://docs.python.org/3.11/howto/enum.html
 
@@ -13,12 +14,12 @@ class BaseEnum(str, Enum):
         return cls.ORDER().index(type)
 
     # TODO Generics?
-    @staticmethod
-    def ORDER() -> Sequence[str]:
+    @classmethod
+    def ORDER(cls) -> Sequence[Self]:
         pass
 
-    @staticmethod
-    def AS_LIST() -> Sequence[str]:
+    @classmethod
+    def AS_LIST(cls) -> Sequence[str]:
         pass
 
     def __str__(self) -> str:
@@ -30,13 +31,13 @@ class PayTypes(BaseEnum):
     SALARY = "salary"
     RATE = "rate"
 
-    @staticmethod
-    def ORDER() -> Sequence["PayTypes"]:
-        return [PayTypes.SALARY, PayTypes.RATE]
+    @classmethod
+    def ORDER(cls) -> Sequence[Self]:
+        return [cls.SALARY, cls.RATE]
 
-    @staticmethod
-    def AS_LIST() -> Sequence[str]:
-        return [str(unit.value) for unit in PayTypes.ORDER()]
+    @classmethod
+    def AS_LIST(cls) -> Sequence[str]:
+        return [str(unit.value) for unit in cls.ORDER()]
 
 
 @unique
@@ -45,13 +46,13 @@ class PayUnits(BaseEnum):
     HOUR = "hour"
     DAY = "day"
 
-    @staticmethod
-    def ORDER():
-        return [PayUnits.MINUTE, PayUnits.HOUR, PayUnits.DAY]
+    @classmethod
+    def ORDER(cls) -> Sequence[Self]:
+        return [cls.MINUTE, cls.HOUR, cls.DAY]
 
-    @staticmethod
-    def AS_LIST() -> Sequence[str]:
-        return [str(unit.value) for unit in PayUnits.ORDER()]
+    @classmethod
+    def AS_LIST(cls) -> Sequence[str]:
+        return [str(unit.value) for unit in cls.ORDER()]
 
 
 @unique
@@ -66,20 +67,51 @@ class EmploymentType(BaseEnum):
     APPRENTICE_TRAINEE = "Apprentice/Trainee"
     OUTWORKER = "Outworker"
 
-    @staticmethod
-    def ORDER():
+    @classmethod
+    def ORDER(cls) -> Sequence[Self]:
         return [
-            EmploymentType.FULL_TIME,
-            EmploymentType.PART_TIME,
-            EmploymentType.CASUAL,
-            EmploymentType.FIXED_TERM,
-            EmploymentType.SHIFT_WORKER,
-            EmploymentType.DAILY_WEEKLY_HIRE,
-            EmploymentType.PROBATION,
-            EmploymentType.APPRENTICE_TRAINEE,
-            EmploymentType.OUTWORKER,
+            cls.FULL_TIME,
+            cls.PART_TIME,
+            cls.CASUAL,
+            cls.FIXED_TERM,
+            cls.SHIFT_WORKER,
+            cls.DAILY_WEEKLY_HIRE,
+            cls.PROBATION,
+            cls.APPRENTICE_TRAINEE,
+            cls.OUTWORKER,
         ]
 
-    @staticmethod
-    def AS_LIST() -> Sequence[str]:
-        return [str(unit.value) for unit in EmploymentType.ORDER()]
+    @classmethod
+    def AS_LIST(cls) -> Sequence[str]:
+        return [str(unit.value) for unit in cls.ORDER()]
+
+
+@unique
+class ContactMethod(BaseEnum):
+    PHONE_CALL = "Phone call"
+    RECEIVED_PHONE_CALL = "Received phone call"
+    EMAIL = "E-mail"
+    RECRUITER = "Recruiter"
+    IN_PERSON = "In-person"
+    COMPANY_WEBSITE = "Company website"
+    EMPLOYMENT_WEBSITE = "Employment website"
+    LETTER = "Letter"
+    ONLINE_FORUM = "Online forum"
+
+    @classmethod
+    def ORDER(cls) -> Sequence[Self]:
+        return [
+            cls.PHONE_CALL,
+            cls.RECEIVED_PHONE_CALL,
+            cls.EMAIL,
+            cls.RECRUITER,
+            cls.IN_PERSON,
+            cls.COMPANY_WEBSITE,
+            cls.EMPLOYMENT_WEBSITE,
+            cls.LETTER,
+            cls.ONLINE_FORUM,
+        ]
+
+    @classmethod
+    def AS_LIST(cls) -> Sequence[str]:
+        return [str(unit.value) for unit in cls.ORDER()]

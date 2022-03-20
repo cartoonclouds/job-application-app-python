@@ -38,7 +38,7 @@ class JobForm(Form, LoggerMixin):
         websiteInput.setBinding(model, "website")
         websiteInput.setPlaceholderText("www.job-application.com")
         websiteInput.setPrefix("http://")
-        # websiteInput.setSuffix(".com")
+        websiteInput.setSuffix(".com")
 
         professionInput = SelectBox("Profession")
         professionInput.setModel(ProfessionListModel(professionInput))
@@ -66,4 +66,3 @@ class JobForm(Form, LoggerMixin):
         self.addRow(payOptionsInput)
         self.addRow(websiteInput)
         self.addRow(commentsInput)
-

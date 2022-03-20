@@ -21,7 +21,7 @@ from app.gui.components.form.inputs.Input import Input
 from app.gui.components.form.inputs.SelectBox import SelectBox
 from app.gui.components.form.inputs.TextInput import TextInput
 from app.models.Job import Job
-from app.storage import Storage
+from app.constants import Constants
 from app.utils.EnumUtility import PayTypes, PayUnits
 
 
@@ -38,20 +38,18 @@ class PayOptions(QWidget):
         self.setObjectName("Input:PayOptions:" + label)
 
         layout = QHBoxLayout()
-        layout.setContentsMargins(Storage.ZERO_MARGINS)
-        layout.setSpacing(Storage.WIDGET_SPACING)
+        layout.setContentsMargins(Constants.ZERO_MARGINS)
+        layout.setSpacing(Constants.WIDGET_SPACING)
 
         stackWidget = self._setupStacks()
         self._stacks: QStackedLayout = stackWidget.layout()
         self._stacks.setCurrentIndex(PayTypes.atIndex(initialOption))
 
-        debug("initialOption " + str(PayTypes.atIndex(initialOption)))
-
         self._label = Input.createLabel(label, self)
         # self._label.setStyleSheet("border: 2px solid red;")
 
         optionsLayout = QVBoxLayout()
-        optionsLayout.setContentsMargins(0, Storage.WIDGET_SPACING / 2, 0, 0)
+        optionsLayout.setContentsMargins(0, Constants.WIDGET_SPACING / 2, 0, 0)
         optionsStack = self._setupOptions()
         optionsFrame = QWidget()
         optionsFrame.setLayout(optionsLayout)
@@ -77,7 +75,7 @@ class PayOptions(QWidget):
 
     def _setupOptions(self):
         layout = QHBoxLayout()
-        layout.setContentsMargins(Storage.ZERO_MARGINS)
+        layout.setContentsMargins(Constants.ZERO_MARGINS)
         frame = QWidget()
         frame.setLayout(layout)
 
@@ -118,11 +116,11 @@ class PayOptions(QWidget):
 
     def _setupRate(self):
         layout = QHBoxLayout()
-        layout.setContentsMargins(Storage.ZERO_MARGINS)
+        layout.setContentsMargins(Constants.ZERO_MARGINS)
         rateWidget = QWidget()
         rateWidget.setLayout(layout)
 
-        input = TextInput("Rate")  # double('salary', 8)
+        input = TextInput("Rate")
         input.setBinding(self._model, "rate")
         input.setPrefix("$")
         input.setInputMask("##.##")
@@ -151,14 +149,14 @@ class PayOptions(QWidget):
 
     def _setupSalary(self):
         layout = QHBoxLayout()
-        layout.setContentsMargins(Storage.ZERO_MARGINS)
+        layout.setContentsMargins(Constants.ZERO_MARGINS)
         salaryWidget = QWidget()
         salaryWidget.setLayout(layout)
 
-        salaryInput = TextInput()  # double('salary', 8)
+        salaryInput = TextInput()
         salaryInput.setBinding(self._model, "salary")
         salaryInput.setPrefix("$")
-        # salaryInput.setSuffix("per year")
+        salaryInput.setSuffix("per year")
         salaryInput.setInputMask("##.##")
         salaryInput.setPlaceholderText("$##.##")
 
