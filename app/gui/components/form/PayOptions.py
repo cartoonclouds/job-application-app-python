@@ -2,27 +2,16 @@
 from functools import partial
 
 # Framework imports
-from PySide6.QtCore import QMargins, Qt, Signal
-from PySide6.QtGui import QFont
-from PySide6.QtWidgets import (
-    QFrame,
-    QHBoxLayout,
-    QLabel,
-    QPushButton,
-    QRadioButton,
-    QSplitter,
-    QStackedLayout,
-    QVBoxLayout,
-    QWidget,
-)
-from app.gui.components.form.inputs.Input import Input
-from app.gui.components.form.inputs.NumberInput import NumberInput
+from PySide6.QtCore import Qt, Signal
+from PySide6.QtWidgets import QHBoxLayout, QLabel, QRadioButton, QStackedLayout, QVBoxLayout, QWidget
 
 # Application imports
+from app.constants import Constants
+from app.gui.components.form.inputs.Input import Input
+from app.gui.components.form.inputs.NumberInput import NumberInput
 from app.gui.components.form.inputs.SelectBox import SelectBox
 from app.gui.components.form.inputs.TextInput import TextInput
 from app.models.Job import Job
-from app.constants import Constants
 from app.utils.EnumUtility import PayTypes, PayUnits
 
 

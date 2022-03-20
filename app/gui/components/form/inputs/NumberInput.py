@@ -1,9 +1,12 @@
+# Standard Library
 from typing import Any, Optional
+
+# Framework imports
+from PySide6.QtCore import Slot
+from PySide6.QtWidgets import QDoubleSpinBox
+
+# Application imports
 from app.gui.components.form.inputs.Input import Input
-from PySide6.QtWidgets import QDoubleSpinBox, QLabel
-from PySide6.QtCore import Slot, QPoint, Qt
-from PySide6.QtGui import QResizeEvent, QPaintEvent
-from app.constants import Constants
 
 
 class NumberInput(Input[QDoubleSpinBox]):

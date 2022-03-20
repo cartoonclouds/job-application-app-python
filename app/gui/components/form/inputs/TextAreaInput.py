@@ -1,9 +1,13 @@
-from functools import partial
-from app.gui.components.form.inputs.Input import Input
-from PySide6.QtWidgets import QPlainTextEdit
-from PySide6.QtCore import Slot, QMargins
-from PySide6.QtGui import QTextDocument, QFontMetrics
+# Standard Library
 from typing import Any
+
+# Framework imports
+from PySide6.QtCore import QMargins, Slot
+from PySide6.QtGui import QFontMetrics, QTextDocument
+from PySide6.QtWidgets import QPlainTextEdit
+
+# Application imports
+from app.gui.components.form.inputs.Input import Input
 
 
 class TextAreaInput(Input[QPlainTextEdit]):

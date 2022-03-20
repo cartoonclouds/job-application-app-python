@@ -1,13 +1,12 @@
-from typing import Any, Sequence, cast
+# Standard Library
+from typing import Any, Sequence
 
-from parted import Alignment
-from app.gui.components.form.inputs.Input import Input
+# Framework imports
+from PySide6.QtCore import QAbstractListModel, Qt, Slot
 from PySide6.QtWidgets import QComboBox
-from PySide6.QtCore import (
-    QAbstractListModel,
-    Qt,
-    Slot,
-)
+
+# Application imports
+from app.gui.components.form.inputs.Input import Input
 
 
 class SelectBox(Input[QComboBox]):

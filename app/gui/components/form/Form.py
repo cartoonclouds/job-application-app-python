@@ -1,28 +1,20 @@
+# Standard Library
+from typing import Sequence, TypeVar
+
 # Framework imports
-from typing import Any, List, Sequence, TypeVar
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtWidgets import (
-    QFrame,
-    QGridLayout,
-    QLabel,
-    QWidget,
-    QFormLayout,
-    QGroupBox,
-    QHBoxLayout,
-    QSizePolicy,
-)
+from PySide6.QtGui import QPaintEvent
+from PySide6.QtWidgets import QFormLayout, QFrame, QHBoxLayout, QLabel, QWidget
 
 # Application imports
+from app.constants import Constants
 from app.gui.components.EditableLabel.EditableLabel import EditableLabel
-from app.gui.components.form.PayOptions import PayOptions
 from app.gui.components.form.inputs.DateTimeInput import DateTimeInput
 from app.gui.components.form.inputs.SelectBox import SelectBox
 from app.gui.components.form.inputs.TextAreaInput import TextAreaInput
 from app.gui.components.form.inputs.TextInput import TextInput
 from app.gui.components.form.inputs.ToggleButtonSquare import ToggleButtonSquare
-from PySide6.QtGui import QPalette, QColor, QPaintEvent
-from app.constants import Constants
-
+from app.gui.components.form.PayOptions import PayOptions
 from app.types import TModel
 from app.utils.mixins.ListMixin import ListMixin
 
@@ -101,16 +93,18 @@ class Form(QFrame, ListMixin):
             row = QWidget()
             row.setLayout(hLayout)
 
-            for field in fields:
+            for index, field in enumerate(fields):
                 if not isinstance(field, QWidget):
                     continue
 
                 layout = QFormLayout()
+                layout.setContentsMargins(Constants.ZERO_MARGINS)
                 self._addWidget(layout, field)
                 hLayout.addLayout(layout)
 
-            # Set columns > 1 label right aligned
-            fields[1].getLabel().setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+                # Set columns > 1 label right aligned
+                if index > 0:
+                    field.getLabel().setAlignment(Qt.AlignRight | Qt.AlignVCenter)
 
             self._layout.addRow(row)
 

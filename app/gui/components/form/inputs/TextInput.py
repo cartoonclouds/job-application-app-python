@@ -1,9 +1,14 @@
+# Standard Library
 from typing import Any, Optional
-from app.gui.components.form.inputs.Input import Input
-from PySide6.QtWidgets import QLineEdit, QLabel
-from PySide6.QtCore import Slot, QPoint, Qt
-from PySide6.QtGui import QResizeEvent, QPaintEvent
+
+# Framework imports
+from PySide6.QtCore import Qt, Slot
+from PySide6.QtGui import QPaintEvent
+from PySide6.QtWidgets import QLabel, QLineEdit
+
+# Application imports
 from app.constants import Constants
+from app.gui.components.form.inputs.Input import Input
 
 
 class TextInput(Input[QLineEdit]):

@@ -1,24 +1,13 @@
 # Standard Library
-from enum import Enum, auto, unique
-from typing import Any, Generic, Optional, TypeAlias, no_type_check, overload
+from typing import Any, Generic, Optional, TypeAlias, no_type_check
 
 # Framework imports
-from PySide6.QtCore import (
-    QAbstractItemModel,
-    QAbstractListModel,
-    QAbstractTableModel,
-    QRegularExpression,
-    Qt,
-    QMargins,
-    Signal,
-)
-from PySide6.QtGui import QFont, QRegularExpressionValidator
-from PySide6.QtWidgets import QCompleter, QLabel, QVBoxLayout, QWidget, QHBoxLayout
+from PySide6.QtCore import QAbstractItemModel, QAbstractListModel, QAbstractTableModel, QMargins, Qt, Signal
+from PySide6.QtWidgets import QCompleter, QHBoxLayout, QLabel, QWidget
 
 # Application imports
-from app.gui.components.models.ProfessionListModel import ProfessionListModel
-from app.models.Profession import Profession
 from app.constants import Constants
+from app.gui.components.models.ProfessionListModel import ProfessionListModel
 from app.types import T, TModel
 from app.utils.mixins.ObjectMixin import ObjectMixin
 

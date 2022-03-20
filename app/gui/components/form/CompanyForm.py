@@ -1,10 +1,11 @@
+# Framework imports
+from PySide6.QtWidgets import QCompleter
+
+# Application imports
 from app.gui.components.form.Form import Form
-from app.gui.components.form.inputs.DateTimeInput import DateTimeInput
-from app.gui.components.form.inputs.SelectBox import SelectBox
 from app.gui.components.form.inputs.TextAreaInput import TextAreaInput
 from app.gui.components.form.inputs.TextInput import TextInput
 from app.models.Company import Company
-from PySide6.QtWidgets import QCompleter
 
 
 class CompanyForm(Form):
@@ -53,13 +54,13 @@ class CompanyForm(Form):
 
         suburbInput = TextInput("Suburb")
         suburbInput.setBinding(self._model.address, "suburb")
-        
+
         cityInput = TextInput("City")
         cityInput.setBinding(self._model.address, "city")
-        
+
         stateInput = TextInput("State")
         stateInput.setBinding(self._model.address, "state")
-        
+
         postcodeInput = TextInput("Postcode")
         postcodeInput.setBinding(self._model.address, "postcode")
         postcodeInput.setInputMask("9999")
@@ -73,6 +74,10 @@ class CompanyForm(Form):
 
         self.addRow(titleInput)
         self.addRow(phoneInput, mobileInput)
+        self.addRow(addressLine1Input)
+        self.addRow(addressLine2Input)
+        self.addRow(suburbInput, cityInput)
+        self.addRow(stateInput, postcodeInput)
         self.addRow(websiteInput)
         self.addRow(commentsInput)
         # -------------------------- #
