@@ -19,7 +19,7 @@ from PySide6.QtWidgets import (
 
 # Application imports
 from app.gui.components.EditableLabel.EditableLabel import EditableLabel
-from app.constants import Constants
+from app.Constants import WIDGET_SPACING, WIDGET_MARGINS, ZERO_MARGINS
 
 
 class TabHeader(QWidget):
@@ -37,7 +37,7 @@ class TabHeader(QWidget):
 
         layout = QHBoxLayout(self)
         layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
-        layout.setContentsMargins(Constants.ZERO_MARGINS)
+        layout.setContentsMargins(ZERO_MARGINS)
 
         self.label = self.createLabel(text)
 

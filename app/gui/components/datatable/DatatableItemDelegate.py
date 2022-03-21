@@ -8,8 +8,6 @@ from app.gui.components.models.JobApplicationDatatableModel import (
     JobApplicationDatatableModel,
 )
 
-from app.types import M
-
 
 class DatatableItemDelegate(QStyledItemDelegate):
     # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QStyledItemDelegate.html

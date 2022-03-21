@@ -45,7 +45,7 @@ class TestJobApplicationRepository:
 
         jobApplicationRepository.clear()
 
-        ret = jobApplicationRepository.loadAll()
+        ret = jobApplicationRepository.all()
 
         assert ret == True
         assert (

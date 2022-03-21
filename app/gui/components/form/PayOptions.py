@@ -3,10 +3,17 @@ from functools import partial
 
 # Framework imports
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtWidgets import QHBoxLayout, QLabel, QRadioButton, QStackedLayout, QVBoxLayout, QWidget
+from PySide6.QtWidgets import (
+    QHBoxLayout,
+    QLabel,
+    QRadioButton,
+    QStackedLayout,
+    QVBoxLayout,
+    QWidget,
+)
 
 # Application imports
-from app.constants import Constants
+from app.Constants import WIDGET_SPACING, ZERO_MARGINS
 from app.gui.components.form.inputs.Input import Input
 from app.gui.components.form.inputs.NumberInput import NumberInput
 from app.gui.components.form.inputs.SelectBox import SelectBox
@@ -28,8 +35,8 @@ class PayOptions(QWidget):
         self.setObjectName("Input:PayOptions:" + label)
 
         layout = QHBoxLayout()
-        layout.setContentsMargins(Constants.ZERO_MARGINS)
-        layout.setSpacing(Constants.WIDGET_SPACING)
+        layout.setContentsMargins(ZERO_MARGINS)
+        layout.setSpacing(WIDGET_SPACING)
 
         stackWidget = self._setupStacks()
         self._stacks: QStackedLayout = stackWidget.layout()
@@ -38,7 +45,7 @@ class PayOptions(QWidget):
         self._label = Input.createLabel(label, self)
 
         optionsLayout = QVBoxLayout()
-        optionsLayout.setContentsMargins(0, Constants.WIDGET_SPACING / 2, 0, 0)
+        optionsLayout.setContentsMargins(0, WIDGET_SPACING / 2, 0, 0)
         optionsStack = self._setupOptions()
         optionsFrame = QWidget()
         optionsFrame.setLayout(optionsLayout)
@@ -65,7 +72,7 @@ class PayOptions(QWidget):
 
     def _setupOptions(self):
         layout = QHBoxLayout()
-        layout.setContentsMargins(Constants.ZERO_MARGINS)
+        layout.setContentsMargins(ZERO_MARGINS)
         frame = QWidget()
         frame.setLayout(layout)
 
@@ -106,7 +113,7 @@ class PayOptions(QWidget):
 
     def _setupRate(self):
         layout = QHBoxLayout()
-        layout.setContentsMargins(Constants.ZERO_MARGINS)
+        layout.setContentsMargins(ZERO_MARGINS)
         rateWidget = QWidget()
         rateWidget.setLayout(layout)
 
@@ -139,7 +146,7 @@ class PayOptions(QWidget):
 
     def _setupSalary(self):
         # layout = QHBoxLayout()
-        # layout.setContentsMargins(Constants.ZERO_MARGINS)
+        # layout.setContentsMargins(ZERO_MARGINS)
         # salaryWidget = QWidget()
         # salaryWidget.setLayout(layout)
 

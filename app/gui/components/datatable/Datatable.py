@@ -1,7 +1,7 @@
-from typing import Generic, Optional
+from typing import Optional
 from PySide6.QtGui import QResizeEvent, QMouseEvent, QContextMenuEvent, QAction, QCursor
 from PySide6.QtWidgets import QAbstractItemView, QTableView, QMenu, QStyledItemDelegate
-from PySide6.QtCore import Signal, Qt, QModelIndex, QPersistentModelIndex, QPoint
+from PySide6.QtCore import Signal, Qt, QModelIndex, QPersistentModelIndex
 from app.config.App import Sizing
 
 from app.gui.components.models.ActionDatatableModel import ActionDatatableModel
@@ -66,6 +66,7 @@ class Datatable(QTableView):
         #     }
         # """
         # )
+        # SET STYLESHEET
 
         self.setModel(datatableModel)
         datatableModel.dataUpdated.connect(self.resizeEvent())

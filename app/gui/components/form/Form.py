@@ -7,7 +7,7 @@ from PySide6.QtGui import QPaintEvent
 from PySide6.QtWidgets import QFormLayout, QFrame, QHBoxLayout, QLabel, QWidget
 
 # Application imports
-from app.constants import Constants
+from app.Constants import WIDGET_SPACING, WIDGET_MARGINS, ZERO_MARGINS
 from app.gui.components.EditableLabel.EditableLabel import EditableLabel
 from app.gui.components.form.inputs.DateTimeInput import DateTimeInput
 from app.gui.components.form.inputs.SelectBox import SelectBox
@@ -45,7 +45,7 @@ class Form(QFrame, ListMixin):
         self._title = title
         self._inputs: Sequence[TInput] = []
         self.setObjectName("Form")
-        self.setContentsMargins(0, Constants.WIDGET_SPACING * 5, 0, 0)
+        self.setContentsMargins(0, WIDGET_SPACING * 5, 0, 0)
         self.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)
         # self.setStyleSheet(
         #     """
@@ -57,10 +57,10 @@ class Form(QFrame, ListMixin):
 
         self._layout = QFormLayout()
         self._layout.setAlignment(Qt.AlignTop)
-        # self._layout.setSpacing(Constants.WIDGET_SPACING * 2)
+        # self._layout.setSpacing(WIDGET_SPACING * 2)
 
         self.title = QLabel(self._title, self)
-        self.title.setContentsMargins(Constants.WIDGET_MARGINS)
+        self.title.setContentsMargins(WIDGET_MARGINS)
         self.title.setStyleSheet(
             "background-color: #fff; border:1px solid #999; border-width: 1px 1px 0 1px;"
         )
@@ -88,7 +88,7 @@ class Form(QFrame, ListMixin):
             self._addWidget(self._layout, field)
         else:
             hLayout = QHBoxLayout()
-            hLayout.setContentsMargins(Constants.ZERO_MARGINS)
+            hLayout.setContentsMargins(ZERO_MARGINS)
 
             row = QWidget()
             row.setLayout(hLayout)
@@ -98,7 +98,7 @@ class Form(QFrame, ListMixin):
                     continue
 
                 layout = QFormLayout()
-                layout.setContentsMargins(Constants.ZERO_MARGINS)
+                layout.setContentsMargins(ZERO_MARGINS)
                 self._addWidget(layout, field)
                 hLayout.addLayout(layout)
 

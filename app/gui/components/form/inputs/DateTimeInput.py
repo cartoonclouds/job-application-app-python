@@ -9,7 +9,7 @@ from PySide6.QtWidgets import QDateTimeEdit
 from pendulum import Pendulum
 
 # Application imports
-from app.constants import Constants
+from app.Constants import DATE_FORMAT_1
 from app.gui.components.form.inputs.Input import Input
 
 
@@ -26,7 +26,7 @@ class DateTimeInput(Input[QDateTimeEdit]):
         self._isModified: bool = False
         self._input.setCalendarPopup(True)
         # self._input.setDate(QDateTime.currentDateTime().date())
-        self._input.setDisplayFormat(Constants.DATE_FORMAT)
+        self._input.setDisplayFormat(DATE_FORMAT_1)
         # setMinimumDateTime (dt: QDateTime)
 
         if label:

@@ -1,4 +1,5 @@
 # Standard Library
+from copy import copy, deepcopy
 import datetime
 from typing import Any, Mapping, Sequence
 
@@ -38,7 +39,8 @@ class JobApplicationDatatableModel(DatatableModel[JobApplication]):
             )
         )
 
-        data: Sequence[JobApplication] = JobApplicationRepository.values()
+        jobApplicationRepo = JobApplicationRepository()
+        data: Sequence[JobApplication] = jobApplicationRepo.values()
 
         super().__init__(data, columnHeaders)
 

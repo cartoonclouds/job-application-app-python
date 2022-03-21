@@ -7,7 +7,7 @@ from PySide6.QtGui import QPaintEvent
 from PySide6.QtWidgets import QLabel, QLineEdit
 
 # Application imports
-from app.constants import Constants
+from app.Constants import WIDGET_SPACING, WIDGET_MARGINS, ZERO_MARGINS
 from app.gui.components.form.inputs.Input import Input
 
 
@@ -85,7 +85,7 @@ class TextInput(Input[QLineEdit]):
 
         height = self._input.sizeHint().height() - 2
         width = max(
-            self._prefixLabel.sizeHint().width() + (Constants.WIDGET_SPACING * 2),
+            self._prefixLabel.sizeHint().width() + (WIDGET_SPACING * 2),
             height,
         )
 
@@ -118,7 +118,7 @@ class TextInput(Input[QLineEdit]):
 
         height = self._input.sizeHint().height() - 2
         width = max(
-            self._suffixLabel.sizeHint().width() + (Constants.WIDGET_SPACING * 2),
+            self._suffixLabel.sizeHint().width() + (WIDGET_SPACING * 2),
             height,
         )
 
@@ -136,14 +136,10 @@ class TextInput(Input[QLineEdit]):
 
         inputMargins = self._input.contentsMargins()
         if self._prefix is not None:
-            inputMargins.setLeft(
-                self._prefixLabel.maximumWidth() + Constants.WIDGET_SPACING
-            )
+            inputMargins.setLeft(self._prefixLabel.maximumWidth() + WIDGET_SPACING)
 
         if self._suffix is not None:
-            inputMargins.setRight(
-                self._suffixLabel.maximumWidth() + Constants.WIDGET_SPACING
-            )
+            inputMargins.setRight(self._suffixLabel.maximumWidth() + WIDGET_SPACING)
         self._input.setTextMargins(inputMargins)
 
         return super().paintEvent(painter)

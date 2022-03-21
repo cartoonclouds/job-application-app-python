@@ -2,15 +2,12 @@ from typing import Optional
 from PySide6.QtWidgets import QWidget, QTabWidget
 from PySide6.QtGui import QIcon, QPixmap
 
-from app.types import M
-
 
 class Tab(QWidget):
     # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QTabWidget.html
     def __init__(
         self,
         label: str,
-        model: Optional[M] = None,
         tooltip: str | None = None,
         whatsThis: str | None = None,
         icon: Optional[QIcon | QPixmap] = None,
@@ -19,8 +16,6 @@ class Tab(QWidget):
     ) -> None:
         super().__init__()
         self.setObjectName("Tab")
-
-        self.model: Optional[M] = model
 
         self._tooltip = tooltip
         self._whatsThis = whatsThis

@@ -7,6 +7,7 @@ from app.gui.components.form.CompanyForm import CompanyForm
 from app.gui.components.form.Form import Form
 from app.gui.components.form.JobForm import JobForm
 from app.gui.components.form.inputs.TextInput import TextInput
+from app.gui.components.form.inputs.ToggleButton import ToggleButton
 from app.gui.components.form.inputs.ToggleButtonSquare import ToggleButtonSquare
 from app.gui.components.models.ActionDatatableModel import ActionDatatableModel
 
@@ -24,22 +25,22 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt, QSize, Slot
 from PySide6.QtGui import QPaintEvent, QFontMetrics
-from app.constants import Constants
+from app.Constants import WIDGET_SPACING, WIDGET_MARGINS, ZERO_MARGINS
 from app.models.JobApplication import JobApplication
-from app.utils.GUIUtilities import GUIUtilities
+from app.utils.ui_functions import UIFunctions
 
 from app.utils.IconUtility import IconUtility
-from app.repositories.JobApplicationRepository import JobApplicationRepository
 
 # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QTabWidget.html
 # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QTabBar.html
 
 
 class JobApplicationTab(Tab):
-    def __init__(self, label: str, **kwargs: Any) -> None:
+    def __init__(self, label: str, model: JobApplication, **kwargs: Any) -> None:
         super().__init__(label=label, **kwargs)
 
         self.setObjectName("Tab:JobApplication")
+        self.model = model
 
         # Setup frames
         header = self._setupHeader()
@@ -65,7 +66,7 @@ class JobApplicationTab(Tab):
 
     def _setupHeader(self):
         layout = QHBoxLayout()
-        layout.setContentsMargins(Constants.ZERO_MARGINS)
+        layout.setContentsMargins(ZERO_MARGINS)
         layout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
         frame = QFrame()
@@ -92,7 +93,7 @@ class JobApplicationTab(Tab):
         # TODO Refresh model/clear "modified"
 
         # Toggle buttons
-        pinButton = ToggleButtonSquare("Pinned", "Pin")
+        pinButton = ToggleButton("Pinned", "Pin")
         pinButton.setBinding(self.model, "pinned")
 
         requiredFollowupButton = ToggleButtonSquare(
@@ -111,15 +112,28 @@ class JobApplicationTab(Tab):
 
     def _setupLeftFrame(self):
         layout = QVBoxLayout()
-        layout.setContentsMargins(Constants.ZERO_MARGINS)
+        layout.setContentsMargins(ZERO_MARGINS)
         frame = QFrame()
         frame.setLayout(layout)
 
         frame.setMinimumWidth(650)
         frame.setMaximumWidth(650)
 
+        self.model
+
         jobForm = JobForm(self.model.job)
         companyForm = CompanyForm(self.model.company)
+
+        metaObject = companyForm.metaObject()
+        properties = [
+            metaObject.property(i).name()
+            for i in range(metaObject.propertyOffset(), metaObject.propertyCount())
+        ]
+        methods = [
+            metaObject.method(i).signature()
+            for i in range(metaObject.methodOffset(), metaObject.methodCount())
+        ]
+        debug(metaObject.methodCount())
 
         jobForm.modified.connect(self._formModified)
         companyForm.modified.connect(self._formModified)
@@ -161,7 +175,7 @@ class JobApplicationTab(Tab):
 
     @Slot(bool, Form)
     def _formModified(self, modified: bool, form: Form):
-        window = GUIUtilities.findMainWindow()
+        window = UIFunctions.findMainWindow()
 
         if isinstance(window, QMainWindow):
             window.setWindowModified(modified)

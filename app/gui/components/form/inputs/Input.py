@@ -2,11 +2,18 @@
 from typing import Any, Generic, Optional, TypeAlias, no_type_check
 
 # Framework imports
-from PySide6.QtCore import QAbstractItemModel, QAbstractListModel, QAbstractTableModel, QMargins, Qt, Signal
+from PySide6.QtCore import (
+    QAbstractItemModel,
+    QAbstractListModel,
+    QAbstractTableModel,
+    QMargins,
+    Qt,
+    Signal,
+)
 from PySide6.QtWidgets import QCompleter, QHBoxLayout, QLabel, QWidget
 
 # Application imports
-from app.constants import Constants
+from app.Constants import WIDGET_SPACING, WIDGET_MARGINS, ZERO_MARGINS
 from app.gui.components.models.ProfessionListModel import ProfessionListModel
 from app.types import T, TModel
 from app.utils.mixins.ObjectMixin import ObjectMixin
@@ -25,8 +32,8 @@ class Input(Generic[T], QWidget, ObjectMixin):
 
         self._layout = QHBoxLayout()
         self._layout.setAlignment(Qt.AlignTop)
-        self._layout.setContentsMargins(Constants.ZERO_MARGINS)
-        self._layout.setSpacing(Constants.WIDGET_SPACING)
+        self._layout.setContentsMargins(ZERO_MARGINS)
+        self._layout.setSpacing(WIDGET_SPACING)
 
         self._input: T = component
         self._inputModel: Optional[WidgetModel] = None
@@ -137,7 +144,7 @@ class Input(Generic[T], QWidget, ObjectMixin):
         label = QLabel(text)
         label.setBuddy(input)
         labelFont = label.font()
-        labelFont.setPointSize(Constants.FORM_LABEL_SIZE)
+        # labelFont.setPointSize(FORM_LABEL_SIZE)
         # labelFont.setCapitalization(QFont.SmallCaps)
         label.setFont(labelFont)
 

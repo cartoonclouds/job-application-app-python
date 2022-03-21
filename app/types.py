@@ -17,6 +17,7 @@ from PySide6.QtWidgets import (
     QPushButton,
     QDateTimeEdit,
     QDoubleSpinBox,
+    QCheckBox
 )
 from typing import TypeVar, Generic
 
@@ -58,6 +59,7 @@ T = TypeVar(
     QDateTimeEdit,
     QPushButton,
     QDoubleSpinBox,
+    QCheckBox
 )
 
 # You can use a ClassVar[t] annotation to explicitly declare that a particular attribute should not be set on instances:

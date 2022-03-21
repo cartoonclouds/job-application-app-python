@@ -4,8 +4,12 @@ from PySide6.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout
 
 # Application imports
 from app.gui.components.datatable.Datatable import Datatable
-from app.gui.components.datatable.JobApplicationDatatableItemDelegate import JobApplicationDatatableItemDelegate
-from app.gui.components.models.JobApplicationDatatableModel import JobApplicationDatatableModel
+from app.gui.components.datatable.JobApplicationDatatableItemDelegate import (
+    JobApplicationDatatableItemDelegate,
+)
+from app.gui.components.models.JobApplicationDatatableModel import (
+    JobApplicationDatatableModel,
+)
 from app.gui.components.pages.JobApplicationTab import JobApplicationTab
 from app.gui.components.pages.TabHeader import TabHeader
 from app.gui.components.statistics.StatisticGroup import StatisticGroup
@@ -79,7 +83,7 @@ class SummaryTab(Tab):
         TabServiceProvider.addTab(
             JobApplicationTab(
                 f"{model.title}, {model.company.name} (ID {model.id})",
-                model=model,
+                model,
                 icon=IconUtility.getFileIconAsPixmap("blue-folder-32"),
             )
         )
@@ -88,6 +92,7 @@ class SummaryTab(Tab):
         TabServiceProvider.addTab(
             JobApplicationTab(
                 f"New Application {TabServiceProvider.tabCount() + 1}",
+                JobApplication(),
                 icon=IconUtility.getFileIconAsPixmap("blue-folder-32"),
             )
         )

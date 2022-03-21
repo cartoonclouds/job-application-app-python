@@ -2,21 +2,24 @@ from typing import Any, Sequence
 from app.gui.services.StatusBarService import StatusBarServiceProvider
 from app.models.Model import Model
 from app.types import M
+from app.utils.Metaclasses.Singleton import Singleton
 
 from pendulum import Pendulum
 
 # ChainMap(class) Self
 
+# instead of M
+# T = TypeVar("T", bound=Model)
 
-class Repository(dict[str, M]):
-    def __init__(self, data: dict[str, M] | None = None) -> None:
+
+class DBRepository(dict[str, M], metaclass=Singleton):
+    def __init__(self, data: dict[str, M]) -> None:
         """Constructs the job application repository.
 
         Args:
-           data dict[str, M] | None: [description]. Defaults to None.
+           data dict[str, M]: [description].
         """
-        if data is not None:
-            super().__init__(data)
+        super().__init__(data)
 
     @classmethod
     def loadAll(cls) -> Any:

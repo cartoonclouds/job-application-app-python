@@ -3,24 +3,34 @@ from PySide6.QtWidgets import QTabBar, QTabWidget
 from PySide6.QtCore import QPoint
 
 from app.gui.components.tabs.Tab import Tab
+from app.utils.Metaclasses.Singleton import Singleton
 
 
-class _TabServiceProvider:
+class TabServiceProvider(metaclass=Singleton):
     """
     URL: https://doc.qt.io/qtforpython/PySide6/QtWidgets/QTabWidget.html
     """
 
-    tabs: QTabWidget
+    _tabs: QTabWidget
 
-    def init(self, tabBar: QTabBar):
-        self.tabs = QTabWidget()
+    @classmethod
+    def init(cls, tabBar: QTabBar):
+        cls._tabs = QTabWidget()
 
-        self.tabs.setTabBar(tabBar)
+        cls._tabs.setTabBar(tabBar)
 
-    def tabBar(self):
-        return self.tabs.tabBar()
+    @classmethod
+    @property
+    def tabs(cls):
+        return cls._tabs if hasattr(cls, "_tabs") else None
 
-    def findTab(self, tab: Tab | int | QPoint) -> None | Tab:
+    @classmethod
+    @property
+    def tabBar(cls):
+        return cls.tabs.tabBar()
+
+    @classmethod
+    def findTab(cls, tab: Tab | int | QPoint) -> None | Tab:
         """Searches for a tab either by another tab instance, the index or a cursor point.
 
         Args:
@@ -30,17 +40,18 @@ class _TabServiceProvider:
             None | Tab: The tab is returned if found, None otherwise
         """
         if isinstance(tab, Tab):
-            tabIndex = self.tabs.indexOf(tab)
+            tabIndex = cls.tabs.indexOf(tab)
         elif isinstance(tab, QPoint):
-            tabIndex = self.tabBar().tabAt(tab)
+            tabIndex = cls.tabBar.tabAt(tab)
         elif isinstance(tab, int):  # type: ignore
             tabIndex = tab
 
-        _tab = self.tabs.widget(tabIndex)
+        _tab = cls.tabs.widget(tabIndex)
 
         return _tab if isinstance(_tab, Tab) else None
 
-    def openTab(self, tab: Tab | int | QPoint):
+    @classmethod
+    def openTab(cls, tab: Tab | int | QPoint):
         """Opens a tab located by passing the tab instance, the index or a cursor point.
 
         If a tab instance is passed then it will be added to the group and set active.
@@ -51,16 +62,17 @@ class _TabServiceProvider:
         Raises:
             Exception: If the tab cannot be found and a tab instance isn't passed an exception is thrown
         """
-        _tab = tab if isinstance(tab, Tab) else self.findTab(tab)
+        _tab = tab if isinstance(tab, Tab) else cls.findTab(tab)
 
         if isinstance(_tab, Tab):
-            self.addTab(_tab)
+            cls.addTab(_tab)
         else:
             raise Exception(
                 f"Unable to find or add tab to window. Error with tab {tab}"
             )
 
-    def addTab(self, tab: Tab, focus: bool = True) -> Tab:
+    @classmethod
+    def addTab(cls, tab: Tab, focus: bool = True) -> Tab:
         """Adds a tab instance to the group of tabs.
 
         If an existing tab is passed it won't be added to prevent duplicate instances.
@@ -72,20 +84,20 @@ class _TabServiceProvider:
         Returns:
             Tab: The newly added tab instance
         """
-        isExistingTab = self.findTab(tab)
+        isExistingTab = cls.findTab(tab)
 
         if isExistingTab is None:
             # Add tab
             if isinstance(tab.icon, QIcon | QPixmap):
-                tabIndex = self.tabs.addTab(tab, tab.icon, tab.label)
+                tabIndex = cls.tabs.addTab(tab, tab.icon, tab.label)
             else:
-                tabIndex = self.tabs.addTab(tab, tab.label)
+                tabIndex = cls.tabs.addTab(tab, tab.label)
 
             # Remove the close button
             if not tab.closable:
-                self.tabs.tabBar().setTabButton(tabIndex, QTabBar.RightSide, None)  # type: ignore
+                cls.tabBar.setTabButton(tabIndex, QTabBar.RightSide, None)  # type: ignore
 
-            tab.setParent(self.tabs)
+            tab.setParent(cls.tabs)
 
         # Switch to new tab
         if focus:
@@ -93,7 +105,8 @@ class _TabServiceProvider:
 
         return tab
 
-    def closeTab(self, tab: Tab | int | QPoint):
+    @classmethod
+    def closeTab(cls, tab: Tab | int | QPoint):
         """Closes a particular tab either by a tab instance, the index or a cursor point.
 
         Args:
@@ -102,7 +115,7 @@ class _TabServiceProvider:
         Raises:
             Exception: If the tab is not found an exception is thrown
         """
-        closingTab = self.findTab(tab)
+        closingTab = cls.findTab(tab)
 
         if not isinstance(closingTab, Tab):
             raise Exception(f"Unable to close tab. Tab not found.")
@@ -110,17 +123,15 @@ class _TabServiceProvider:
         if not closingTab.closable:
             return
 
-        tabIndex = self.tabs.indexOf(closingTab)
+        tabIndex = cls.tabs.indexOf(closingTab)
 
-        self.tabs.removeTab(tabIndex)
+        cls.tabs.removeTab(tabIndex)
 
-    def tabCount(self) -> int:
+    @classmethod
+    def tabCount(cls) -> int:
         """Returns the count of the number of tabs.
 
         Returns:
             int: The number of tabs in the group
         """
-        return self.tabs.count()
-
-
-TabServiceProvider = _TabServiceProvider()
+        return cls.tabs.count()
