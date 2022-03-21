@@ -44,9 +44,6 @@ class NumberInput(Input[QDoubleSpinBox]):
         assert self._boundObject is not None
         self.updateBoundObject(self._boundObject, self._input.value())
 
-    def isModified(self) -> bool:
-        return self._input.value() != self._initialPropertyValue
-
     def setMinimum(self, val: float):
         self._input.setMinimum(val)
 

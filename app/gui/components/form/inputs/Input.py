@@ -17,6 +17,7 @@ from app.Constants import WIDGET_SPACING, WIDGET_MARGINS, ZERO_MARGINS
 from app.gui.components.models.ProfessionListModel import ProfessionListModel
 from app.types import T, TModel
 from app.utils.mixins.ObjectMixin import ObjectMixin
+import pendulum
 
 WidgetModel: TypeAlias = (
     ProfessionListModel | QAbstractItemModel | QAbstractListModel | QAbstractTableModel
@@ -104,7 +105,8 @@ class Input(Generic[T], QWidget, ObjectMixin):
         # self.qle.editingFinished.connect(self.onEditingFinished)
 
     def isModified(self) -> bool:
-        return NotImplementedError
+        assert self._boundObject is not None
+        return self._boundObject.is_dirty()
 
     def setBinding(
         self,

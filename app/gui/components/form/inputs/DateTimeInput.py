@@ -55,11 +55,3 @@ class DateTimeInput(Input[QDateTimeEdit]):
     def _onDateTimeChanged(self, datetime: QDateTime):
         assert self._boundObject is not None
         self.updateBoundObject(self._boundObject, datetime.toPython())
-
-    def isModified(self) -> bool:
-        initialDt = Pendulum.instance(self._initialPropertyValue)
-        inputDt = Pendulum.instance(self._input.dateTime().toPython())
-
-        return (
-            initialDt.to_formatted_date_string() == inputDt.to_formatted_date_string()
-        )

@@ -69,6 +69,3 @@ class SelectBox(Input[QComboBox]):
             )
         else:
             self.updateBoundObject(self._boundObject, self._input.itemText(index))
-
-    def isModified(self) -> bool:
-        return self._input.currentIndex() != self._initialPropertyIndex

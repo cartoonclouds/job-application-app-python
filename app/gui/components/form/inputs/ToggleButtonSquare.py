@@ -55,9 +55,6 @@ class ToggleButtonSquare(Input[QPushButton]):
         self._input.clicked.connect(self._onButtonToggled)
         self._input.clicked.connect(lambda: self.modified.emit(self.isModified()))
 
-    def isModified(self) -> bool:
-        return self._input.isChecked() == self._initialPropertyValue
-
     def _hasUpdatingText(self) -> bool:
         return self._uncheckedText is not None
 

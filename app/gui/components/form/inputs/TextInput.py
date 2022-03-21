@@ -9,6 +9,7 @@ from PySide6.QtWidgets import QLabel, QLineEdit
 # Application imports
 from app.Constants import WIDGET_SPACING, WIDGET_MARGINS, ZERO_MARGINS
 from app.gui.components.form.inputs.Input import Input
+import pendulum
 
 
 class TextInput(Input[QLineEdit]):
@@ -40,6 +41,9 @@ class TextInput(Input[QLineEdit]):
         self._input.setText(self._initialPropertyValue)
 
         self._input.editingFinished.connect(self._onTextChanged)
+        # self._boundObject.modifiedEvent.connect(
+        #     lambda: self.modified.emit(self.isModified())
+        # )
         self._input.editingFinished.connect(
             lambda: self.modified.emit(self.isModified())
         )
@@ -50,9 +54,6 @@ class TextInput(Input[QLineEdit]):
 
         assert self._boundObject is not None
         self.updateBoundObject(self._boundObject, self._input.text())
-
-    def isModified(self) -> bool:
-        return self._input.displayText() != self._initialPropertyValue
 
     def _removePreSuffixes(self):
         # If the prefix was entered, remove it

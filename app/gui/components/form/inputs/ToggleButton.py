@@ -48,10 +48,6 @@ class ToggleButton(Input[QCheckBox]):
         self._input.stateChanged.connect(lambda: self.modified.emit(self.isModified()))
 
     @Slot(bool)
-    def isModified(self) -> bool:
-        return self._input.isChecked() == self._initialPropertyValue
-
-    @Slot(bool)
     def _onButtonToggled(self, value: bool):
         assert self._boundObject is not None
         self.updateBoundObject(self._boundObject, value)

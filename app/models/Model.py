@@ -30,6 +30,7 @@ class Model(oratorModel):
         deleted = Signal(oratorModel)
         # restoring = Signal(oratorModel)
         # restored = Signal(oratorModel)
+        modified = Signal(oratorModel)
 
     _modelCommunicator = _ModelCommunicator()
 
@@ -43,6 +44,12 @@ class Model(oratorModel):
     deletedEvent = _modelCommunicator.deleted
     # restoringEvent = _modelCommunicator.restoring
     # restoredEvent = _modelCommunicator.restored
+    modifiedEvent = _modelCommunicator.modified
+
+    # def __setattr__(self, key, value):
+    #     Model.modifiedEvent.emit(self)  # type: ignore
+
+    #     return super().__setattr__(key, value)
 
     # Class variables are accessed with the instance.variable or class_name.variable syntaxes.
 
@@ -111,7 +118,7 @@ class Model(oratorModel):
         return super().all(columns)
 
     # Scopes
-    
+
     # @utils.scope
     # def starts_with(
     #     cls, query: schema.query.QueryBuilder, column: query.QueryBuilder | str, text: str

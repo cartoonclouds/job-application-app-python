@@ -90,9 +90,6 @@ class EditableLabel(QtWidgets.QWidget):
         self.mainLayout.addWidget(self.label)
         self.mainLayout.addWidget(self.lineEdit)
 
-    def isModified(self) -> bool:
-        return self.lineEdit.isModified()
-
     def setFont(self, font: QtGui.QFont | str | typing.Sequence[str]) -> None:
         self.lineEdit.setFont(font)
         self.label.setFont(font)

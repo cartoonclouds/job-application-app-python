@@ -38,9 +38,6 @@ class TextAreaInput(Input[QPlainTextEdit]):
         assert self._boundObject is not None
         self.updateBoundObject(self._boundObject, self._input.document().toPlainText())
 
-    def isModified(self) -> bool:
-        return self._input.document().isModified()
-
     def setHeight(self, rows: int):
         document: QTextDocument = self._input.document()
         fontMetrics: QFontMetrics = self._input.fontMetrics()
