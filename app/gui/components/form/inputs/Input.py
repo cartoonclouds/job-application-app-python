@@ -1,48 +1,66 @@
 # Standard Library
-from typing import Any, Generic, Optional, TypeAlias, no_type_check
+from typing import Any, Generic
 
 # Framework imports
-from PySide6.QtCore import (
-    QAbstractItemModel,
-    QAbstractListModel,
-    QAbstractTableModel,
-    QMargins,
-    Qt,
-    Signal,
-)
+from PySide6.QtCore import QMargins, Qt, Signal
 from PySide6.QtWidgets import QCompleter, QHBoxLayout, QLabel, QWidget
 
-# Application imports
-from app.Constants import WIDGET_SPACING, WIDGET_MARGINS, ZERO_MARGINS
-from app.gui.components.models.ProfessionListModel import ProfessionListModel
-from app.types import T, TModel
-from app.utils.mixins.ObjectMixin import ObjectMixin
-import pendulum
+# Third party imports
+from inflection import parameterize
 
-WidgetModel: TypeAlias = (
-    ProfessionListModel | QAbstractItemModel | QAbstractListModel | QAbstractTableModel
-)
+# Application imports
+from app.constants import WIDGET_SPACING, ZERO_MARGINS
+from app.models.Model import Model
+from app.typings.types import T
+from app.utils.mixins.ObjectMixin import ObjectMixin
+from app.utils.object_functions import formatObjectName
+
+# QInputWidget = TypeVar(
+#     "QInputWidget",
+#     QComboBox,
+#     QPlainTextEdit,
+#     QLineEdit,
+#     QDateTimeEdit,
+#     QPushButton,
+#     QDoubleSpinBox,
+#     QCheckBox,
+# )
+
+# T = built-in component type
+# _boundObject / M = database model type
+# component = custom component type
+
 
 # https://stackoverflow.com/questions/4821104/dynamic-instantiation-from-string-name-of-a-class-in-dynamically-imported-module
 class Input(Generic[T], QWidget, ObjectMixin):
     modified = Signal(bool)
 
-    def __init__(self, component: T):
+    # make ABC
+    # in constrcutor pass in boundObject[M] and boundProperty[str]
+    # overload constrcutor pass in boundObject[M] and boundProperty[str] with (updateObject?) updateProperty
+
+    def __init__(self, component: T, objectName: str):
         super(Input, self).__init__()
-        self.setObjectName("Input")
+        self.setObjectName(
+            formatObjectName(
+                __class__.__name__,
+                type(self).__name__,
+                type(component).__name__,
+                parameterize(objectName or "", "_").lower(),
+            )
+        )
 
         self._layout = QHBoxLayout()
         self._layout.setAlignment(Qt.AlignTop)
         self._layout.setContentsMargins(ZERO_MARGINS)
         self._layout.setSpacing(WIDGET_SPACING)
 
-        self._input: T = component
-        self._inputModel: Optional[WidgetModel] = None
-        self._boundObject: Optional[TModel] = None
-        self._boundProperty: Optional[str] = None
-        self._updateProperty: Optional[str] = None
+        self._input = component
+        self._boundObject: Model | None = None
+        self._boundProperty: str | None = None
+        self._updateProperty: str | None = None
 
-        self._label = Input.createLabel("", self._input)
+        self._label = self.createLabel("")
         self._label.setParent(self)
         self._label.hide()
 
@@ -59,19 +77,7 @@ class Input(Generic[T], QWidget, ObjectMixin):
     def setContentsMargins(self, margins: QMargins) -> None:
         return self._layout.setContentsMargins(margins)
 
-    def hasModel(self) -> bool:
-        return isinstance(self._inputModel, WidgetModel)
-
-    def setModel(self, model: WidgetModel):
-        self._inputModel = model
-        self._input.setModel(model)
-
-    @property
-    @no_type_check
-    def dataModel(self) -> WidgetModel:
-        return self._input.model()
-
-    def getInput(self) -> T:
+    def getInput(self):
         return self._input
 
     def setLabel(self, label: str):
@@ -105,27 +111,30 @@ class Input(Generic[T], QWidget, ObjectMixin):
         # self.qle.editingFinished.connect(self.onEditingFinished)
 
     def isModified(self) -> bool:
-        assert self._boundObject is not None
-        return self._boundObject.is_dirty()
+        return False
+        # assert self._boundObject is not None
+        # return self._boundObject.is_dirty()
 
     def setBinding(
         self,
-        object: Any,
+        object: Model,
         property: str,
         updateProperty: str | None = None,
     ) -> None:
         raise NotImplementedError
 
-    def setUpdateBinding(self, object: Any, property: str):
+    def setUpdateBinding(self, object: Model, property: str):
         self._boundUpdateObject = object
         self._boundUpdateProperty = property
 
+    # Type guard here?
     def hasBoundUpdateProperty(self) -> bool:
         return self.attrexists("_boundUpdateProperty") and self.attrexists(
             "_boundUpdateObject"
         )
 
-    def updateBoundObject(self, updateObject: TModel, value: Any):
+    def updateBoundObject(self, updateObject: Model, value: Any):
+        assert self._boundObject is not None
         value = value if value != None else ""
 
         if self.hasBoundUpdateProperty():
@@ -141,10 +150,9 @@ class Input(Generic[T], QWidget, ObjectMixin):
 
         setattr(updateObject, updateProperty, value)
 
-    @classmethod
-    def createLabel(cls, text: str, input: T | QWidget) -> QLabel:
+    def createLabel(self, text: str) -> QLabel:
         label = QLabel(text)
-        label.setBuddy(input)
+        label.setBuddy(self)
         labelFont = label.font()
         # labelFont.setPointSize(FORM_LABEL_SIZE)
         # labelFont.setCapitalization(QFont.SmallCaps)

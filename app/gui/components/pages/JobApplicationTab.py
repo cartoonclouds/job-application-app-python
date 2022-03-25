@@ -25,7 +25,7 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt, QSize, Slot
 from PySide6.QtGui import QPaintEvent, QFontMetrics
-from app.Constants import WIDGET_SPACING, WIDGET_MARGINS, ZERO_MARGINS
+from app.constants import WIDGET_SPACING, WIDGET_MARGINS, ZERO_MARGINS
 from app.models.JobApplication import JobApplication
 from app.utils.ui_functions import UIFunctions
 
@@ -39,7 +39,6 @@ class JobApplicationTab(Tab):
     def __init__(self, label: str, model: JobApplication, **kwargs: Any) -> None:
         super().__init__(label=label, **kwargs)
 
-        self.setObjectName("Tab:JobApplication")
         self.model = model
 
         # Setup frames

@@ -2,7 +2,7 @@
 import json
 import os
 
-from app.Constants import SETTINGS_FILE_PATH
+from app.constants import SETTINGS_FILE_PATH
 from app.utils.Metaclasses.Singleton import Singleton
 
 # APP SETTINGS

@@ -1,5 +1,6 @@
 import threading
 import time
+from typing import Any
 
 
 def debounce(wait):
@@ -8,7 +9,7 @@ def debounce(wait):
     have elapsed since the last time it was invoked."""
 
     def decorator(fn):
-        def debounced(*args, **kwargs):
+        def debounced(*args: Any, **kwargs: Any):
             def call_it():
                 debounced._timer = None
                 debounced._last_call = time.time()

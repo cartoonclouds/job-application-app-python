@@ -1,29 +1,35 @@
 # Standard Library
-from typing import Any, Sequence
+from typing import Sequence
 
 # Framework imports
-from PySide6.QtCore import QAbstractListModel, Qt, Slot
+from PySide6.QtCore import Qt, Slot
 from PySide6.QtWidgets import QComboBox
 
 # Application imports
 from app.gui.components.form.inputs.Input import Input
 
+# from app.gui.components.models.ListModel import ListModel TODO Type dataModel
+from app.models.Model import Model
+from app.typings.types import M
+
 
 class SelectBox(Input[QComboBox]):
     # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QComboBox.html
     def __init__(
-        self, label: str | None = None, model: QAbstractListModel | None = None
+        self,
+        label: str | None = None,
+        dataModel=None,
     ):
-        super(SelectBox, self).__init__(QComboBox())
-        self.setObjectName("Input:SelectBox:" + str(label))
+        super(SelectBox, self).__init__(QComboBox(), str(label or ""))
 
+        self._inputModel = None
         self._input.setInsertPolicy(QComboBox.InsertAtTop)
 
         if label:
             self.setLabel(label)
 
-        if model:
-            self.setModel(model)
+        if dataModel:
+            self.setModel(dataModel)
 
     def addItems(self, texts: Sequence[str]):
         self._input.addItems(texts)
@@ -36,7 +42,7 @@ class SelectBox(Input[QComboBox]):
 
     def setBinding(
         self,
-        object: Any,
+        object: Model,
         property: str,
         updateProperty: str | None = None,
     ) -> None:
@@ -58,10 +64,11 @@ class SelectBox(Input[QComboBox]):
     @Slot(int)
     def _onSelectionChanged(self, index: int):
         assert self._boundObject is not None
-        assert self._updateProperty is not None
 
         if self.hasModel():
-            indexModel = self.dataModel.getAt(index)
+            assert self._updateProperty is not None
+
+            indexModel = self._inputModel.getAt(index)
 
             self.updateBoundObject(
                 indexModel,
@@ -69,3 +76,10 @@ class SelectBox(Input[QComboBox]):
             )
         else:
             self.updateBoundObject(self._boundObject, self._input.itemText(index))
+
+    def hasModel(self) -> bool:
+        return self._inputModel is not None
+
+    def setModel(self, model):
+        self._inputModel = model
+        self._input.setModel(model)

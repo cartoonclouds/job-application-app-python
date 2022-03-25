@@ -1,6 +1,6 @@
 # Metaclass typing
 # https://stackoverflow.com/questions/66339371/generic-class-variable-in-python-with-metaclass-and-concrete-base-class
-
+from typing import Any
 
 class Singleton(type):
     """A metaclass to transform the attached instance into a singleton
@@ -13,7 +13,7 @@ class Singleton(type):
         super(Singleton, cls).__init__(name, bases, dict)
         cls.instance = None
 
-    def __call__(cls, *args, **kwargs):
+    def __call__(cls, *args: Any, **kwargs: Any):
         if cls.instance is None:
             cls.instance = super(Singleton, cls).__call__(*args, **kwargs)
         return cls.instance

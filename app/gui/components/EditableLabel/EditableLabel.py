@@ -1,9 +1,10 @@
 #!/usr/bin/env python
-from tkinter import E
 import typing
 from PySide6 import QtCore, QtGui, QtWidgets
 
-from app.Constants import ZERO_MARGINS, WIDGET_SPACING
+from app.constants import ZERO_MARGINS, WIDGET_SPACING
+from app.utils.object_functions import formatObjectName
+from inflection import parameterize
 
 
 class KeyPressHandler(QtCore.QObject):
@@ -40,8 +41,18 @@ class EditableLabel(QtWidgets.QWidget):
 
     # TODO Add dotted line beneath to signify editable
 
-    def __init__(self, text: str, parent: QtWidgets.QWidget | None = None, **kwargs):
+    def __init__(
+        self, text: str, parent: QtWidgets.QWidget | None = None, **kwargs: typing.Any
+    ):
         QtWidgets.QWidget.__init__(self, parent=parent)
+
+        self.setObjectName(
+            formatObjectName(
+                "Form",
+                __class__.__name__,
+                parameterize(text or "", "_").lower(),
+            )
+        )
 
         self._editing: bool = False
 
@@ -50,7 +61,6 @@ class EditableLabel(QtWidgets.QWidget):
 
         self.mainLayout = QtWidgets.QHBoxLayout(self)
         self.mainLayout.setContentsMargins(ZERO_MARGINS)
-        self.mainLayout.setObjectName("EditableLabel")
 
         self.label = QtWidgets.QLabel(self)
         self.label.setSizePolicy(
@@ -89,6 +99,9 @@ class EditableLabel(QtWidgets.QWidget):
         self.mainLayout.addWidget(self.icon)
         self.mainLayout.addWidget(self.label)
         self.mainLayout.addWidget(self.lineEdit)
+
+    def isModified(self) -> bool:
+        return self.lineEdit.isModified()
 
     def setFont(self, font: QtGui.QFont | str | typing.Sequence[str]) -> None:
         self.lineEdit.setFont(font)

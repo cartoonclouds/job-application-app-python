@@ -1,15 +1,21 @@
+# Standard Library
 import datetime
+from typing import Any, Mapping, Sequence
 
-from typing import Mapping, Any, Sequence
-from app.gui.components.datatable.DatatableModel import DatatableModel, ModelData
-from app.models.Action import Action
+# Framework imports
 from PySide6.QtCore import QModelIndex, QPersistentModelIndex, Qt
 
-# https://doc.qt.io/qtforpython/PySide6/QtWidgets/QTableWidgetItem.html
+# Application imports
+from app.gui.components.datatable.DatatableModel import DatatableModel, ModelData
+from app.models.Action import Action
+from app.repositories.ActionRepository import ActionRepository
 
 
 class ActionDatatableModel(DatatableModel[Action]):
-    """A datatable model for Actions."""
+    """A datatable model for Actions.
+
+    URL: https://doc.qt.io/qtforpython/PySide6/QtWidgets/QTableWidgetItem.html
+    """
 
     def __init__(self) -> None:
         columnHeaders: Mapping[str, str] = dict(
@@ -25,7 +31,8 @@ class ActionDatatableModel(DatatableModel[Action]):
             )
         )
 
-        data: Sequence[Action] = list(Action.all())
+        actionRepo = ActionRepository()
+        data: Sequence[Action] = actionRepo.values()
 
         super().__init__(data, columnHeaders)
 
@@ -62,12 +69,6 @@ class ActionDatatableModel(DatatableModel[Action]):
 
         if type(modelData.value) == bool:
             return
-
-        # if modelData.column == "job":
-        #     return model.job.displayLabel()
-
-        # if modelData.column == "company":
-        #     return model.company.displayLabel()
 
         return modelData.value
 

@@ -1,24 +1,19 @@
 # Standard Library
 from dataclasses import dataclass
-from typing import Any, Generic, Mapping, Optional, Sequence
+from typing import Any, Generic, Mapping, Sequence
 
 # Framework imports
-from PySide6.QtCore import (
-    QAbstractTableModel,
-    QModelIndex,
-    QPersistentModelIndex,
-    Qt,
-    Signal,
-)
+from PySide6.QtCore import QAbstractTableModel, QModelIndex, QPersistentModelIndex, Qt, Signal
 
 # Application imports
-from app.types import M, TModel
+from app.models.Model import Model
+from app.typings.types import M
 
 
 @dataclass(frozen=True)
 class ModelData:
     column: str
-    model: TModel
+    model: Model
     value: Any
 
 
@@ -37,11 +32,11 @@ class DatatableModel(Generic[M], QAbstractTableModel):
 
     dataUpdated = Signal()
 
-    def __init__(self, data: Sequence[M], columnHeaders: Mapping[str, str]) -> None:
+    def __init__(self, data: list[M], columnHeaders: Mapping[str, str]) -> None:
         super().__init__()
 
         # Set instance variables
-        self._data: Sequence[M] = data
+        self._data: list[M] = data
 
         self.setHeaders(list(columnHeaders.values()))
         self.setColumns(list(columnHeaders.keys()))
@@ -67,7 +62,7 @@ class DatatableModel(Generic[M], QAbstractTableModel):
                 return self._headers[section]
 
     def rowCount(
-        self, parent: Optional[QModelIndex | QPersistentModelIndex] = None
+        self, parent: QModelIndex | QPersistentModelIndex | None = None
     ) -> int:
         """
         Return the row count.
@@ -75,7 +70,7 @@ class DatatableModel(Generic[M], QAbstractTableModel):
         return len(self._data)
 
     def columnCount(
-        self, parent: Optional[QModelIndex | QPersistentModelIndex] = None
+        self, parent: QModelIndex | QPersistentModelIndex | None = None
     ) -> int:
         """
         Return the column count.
@@ -94,7 +89,7 @@ class DatatableModel(Generic[M], QAbstractTableModel):
     #         case Qt.SizeHintRole:
 
     def modelAtIndex(self, index: QModelIndex | QPersistentModelIndex) -> M:
-        """Finds the data Model of row at the given index.
+        """Finds the Model of row at the given index.
 
         Args:
             index (QModelIndex)

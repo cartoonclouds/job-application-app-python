@@ -9,11 +9,8 @@ from app.models.Company import Company
 
 
 class CompanyForm(Form):
-    myName = "Chris"
-
     def __init__(self, model: Company) -> None:
         super(CompanyForm, self).__init__("CompanyInfo", model, "Company Information")
-        self.setObjectName("Form:Company")
 
         # -------------------------- #
         # -- insert form elements -- #
@@ -89,4 +86,4 @@ class CompanyForm(Form):
 
     @property
     def testFunc(self):
-        return "CHris"
+        return "Chris"

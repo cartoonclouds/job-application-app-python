@@ -3,6 +3,9 @@ from PySide6.QtWidgets import QApplication, QMainWindow, QMenuBar
 from PySide6.QtGui import QAction, QKeySequence
 from PySide6.QtCore import QKeyCombination
 
+from app.utils.object_functions import formatObjectName
+from inflection import parameterize
+
 # from main import MainWindow
 
 
@@ -30,7 +33,12 @@ class UIFunctions:
     ):
         action = QAction(name, menubar)
 
-        action.setObjectName("Action::" + name)
+        action.setObjectName(
+            formatObjectName(
+                "Action",
+                parameterize(name or "", "_").lower(),
+            )
+        )
         action.setToolTip(tooltip)
         action.setStatusTip(statusTip)
         action.setShortcut(shortcut)

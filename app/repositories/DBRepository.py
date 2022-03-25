@@ -1,15 +1,25 @@
+# Standard Library
 from typing import Any, Sequence
-from app.gui.services.StatusBarService import StatusBarServiceProvider
-from app.models.Model import Model
-from app.types import M
-from app.utils.Metaclasses.Singleton import Singleton
 
-from pendulum import Pendulum
+# Third party imports
+import pendulum
+
+# Application imports
+from app.gui.services.StatusBarService import StatusBarServiceProvider
+from app.typings.types import M
+from app.utils.Metaclasses.Singleton import Singleton
 
 # ChainMap(class) Self
 
-# instead of M
-# T = TypeVar("T", bound=Model)
+
+# https://docs.python.org/3/library/collections.html#collections.UserDict
+# https://stackoverflow.com/questions/7148419/subclass-dict-userdict-dict-or-abc
+# https://stackoverflow.com/questions/61112684/how-to-subclass-a-dictionary-so-it-supports-generic-type-hints
+
+# https://github.com/google/styleguide/blob/gh-pages/pyguide.md#38-comments-and-docstrings
+
+
+# https://github.com/sdispater/backpack
 
 
 class DBRepository(dict[str, M], metaclass=Singleton):
@@ -17,7 +27,7 @@ class DBRepository(dict[str, M], metaclass=Singleton):
         """Constructs the job application repository.
 
         Args:
-           data dict[str, M]: [description].
+           data dict[str, types.M]: [description].
         """
         super().__init__(data)
 
@@ -44,7 +54,7 @@ class DBRepository(dict[str, M], metaclass=Singleton):
         """Returns values only of keyed dictionary.
 
         Returns:
-            Sequence[M]
+            Sequencetypes.[M]
         """
         return list(super().values())
 
@@ -57,7 +67,7 @@ class DBRepository(dict[str, M], metaclass=Singleton):
         modelList = self.values()
 
         try:
-            model: M = modelList[index]
+            model = modelList[index]
         except:
             return False
 
@@ -69,9 +79,12 @@ class DBRepository(dict[str, M], metaclass=Singleton):
         Returns:
             list[str]: The list of columns
         """
-        model: M | bool = self.getAtIndex(0)
+        model = self.getAtIndex(0)
 
-        return model.getTableColumns() if isinstance(model, Model) else []
+        if not isinstance(model, bool):
+            return model.getTableColumns()
+
+        return []
 
     def saveAll(self):
         """
@@ -86,5 +99,5 @@ class DBRepository(dict[str, M], metaclass=Singleton):
                 model.push()  # type: ignore
 
             StatusBarServiceProvider.message(
-                "Last Saved " + str(Pendulum.now().to_time_string()), False
+                "Last Saved " + str(pendulum.Pendulum.now().to_time_string()), False
             )

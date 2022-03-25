@@ -1,5 +1,6 @@
+from typing import Any
 class CallByStringMixin:
-    def callfunc(self, func: str, *args) -> Any:
+    def callfunc(self, func: str, *args: Any) -> Any:
         """Allows to a class function by passing the name of the function as a string.
 
         Args:

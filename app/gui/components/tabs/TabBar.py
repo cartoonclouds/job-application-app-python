@@ -9,10 +9,13 @@ from PySide6.QtCore import (
 )
 from PySide6.QtGui import QMouseEvent
 from PySide6.QtWidgets import QApplication, QTabBar, QTabWidget, QWidget
+from typing import Any
+
 
 # Application imports
 from app.gui.components.tabs.Tab import Tab
 from app.gui.services.TabService import TabServiceProvider
+from app.utils.object_functions import formatObjectName
 
 
 class TabBar(QTabBar):
@@ -22,10 +25,9 @@ class TabBar(QTabBar):
         https://doc.qt.io/qtforpython/PySide6/QtWidgets/QTabBar.html
     """
 
-    def __init__(self, *args, **kargs) -> None:
-        super(TabBar, self).__init__(*args, **kargs)
-        
-        self.setObjectName("TabBar")
+    def __init__(self) -> None:
+        super(TabBar, self).__init__()
+        self.setObjectName(formatObjectName(__class__.__name__))
         self.setTabsClosable(True)
         self.setDocumentMode(True)
         self.setMovable(True)

@@ -1,43 +1,35 @@
-# Standard Library
-from typing import Any, Optional
-
 # Framework imports
-from PySide6.QtCore import Slot, QPoint, Qt
+from PySide6.QtCore import Qt, Slot
 from PySide6.QtWidgets import QPushButton
-
-# from app.gui.components.Tooltip.Tooltip import ToolTip
-# from app.gui.components.Tooltip.TooltipMixin import TooltipMixin
 
 # Application imports
 from app.gui.components.form.inputs.Input import Input
+from app.models.Model import Model
 
 
 class ToggleButtonSquare(Input[QPushButton]):
     _checkedStyles = "background-color: lightblue"
     _uncheckedStyles = "background-color: lightgrey"
 
-    def __init__(self, text: str, uncheckedText: Optional[str] = None):
-        super(ToggleButtonSquare, self).__init__(QPushButton())
-        self.setObjectName("Input:ToggleButtonSquare:" + str(text))
+    def __init__(self, checkedText: str, uncheckedText: str | None = None):
+        super(ToggleButtonSquare, self).__init__(QPushButton(), checkedText)
 
-        self._checkedText = text
-        self._uncheckedText = uncheckedText
+        self._checkedText: str = checkedText
+        self._uncheckedText: str = checkedText
 
+        if uncheckedText is not None:
+            self._uncheckedText = uncheckedText
+            
         self._input.setCheckable(True)
         self._input.setCursor(Qt.PointingHandCursor)
-        self._input.setText(text)
+        self._input.setText(checkedText)
         self._input.setStyleSheet(ToggleButtonSquare._uncheckedStyles)
 
-        # TOOLTIP
-        # self._tooltip_text = "Some tooltip text will go here!"
-        # self._tooltip = ToolTip(
-        #     self.nativeParentWidget(), self._tooltip_text, "#36373d", "#8a95aa"
-        # )
-        # self._tooltip.hide()
+        # TOOLTIP "#36373d", "#8a95aa"
 
     def setBinding(
         self,
-        object: Any,
+        object: Model,
         property: str,
         updateProperty: str | None = None,
     ):
@@ -45,11 +37,7 @@ class ToggleButtonSquare(Input[QPushButton]):
         self._boundProperty = property
         self._updateProperty = updateProperty
 
-        self._initialPropertyValue = bool(
-            getattr(self._boundObject, self._boundProperty)
-        )
-
-        self._input.setChecked(self._initialPropertyValue)
+        self._input.setChecked(bool(getattr(self._boundObject, self._boundProperty)))
         self._updateButton()
 
         self._input.clicked.connect(self._onButtonToggled)

@@ -1,5 +1,3 @@
-# Standard Library
-from typing import Any
 
 # Framework imports
 from PySide6.QtCore import QMargins, Slot
@@ -8,19 +6,19 @@ from PySide6.QtWidgets import QPlainTextEdit
 
 # Application imports
 from app.gui.components.form.inputs.Input import Input
+from app.models.Model import Model
 
 
 class TextAreaInput(Input[QPlainTextEdit]):
     def __init__(self, label: str | None = None):
-        super(TextAreaInput, self).__init__(QPlainTextEdit())
-        self.setObjectName("Input:TextAreaInput:" + str(label))
+        super(TextAreaInput, self).__init__(QPlainTextEdit(), str(label))
 
-        if label:
+        if label is not None:
             self.setLabel(label)
 
     def setBinding(
         self,
-        object: Any,
+        object: Model,
         property: str,
         updateProperty: str | None = None,
     ):

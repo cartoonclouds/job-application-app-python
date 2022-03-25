@@ -1,32 +1,28 @@
-# Standard Library
-from typing import Any, Optional
-
 # Framework imports
 from PySide6.QtCore import Qt, Slot
 from PySide6.QtGui import QPaintEvent
 from PySide6.QtWidgets import QLabel, QLineEdit
 
 # Application imports
-from app.Constants import WIDGET_SPACING, WIDGET_MARGINS, ZERO_MARGINS
+from app.constants import WIDGET_SPACING
 from app.gui.components.form.inputs.Input import Input
-import pendulum
+from app.models.Model import Model
 
 
 class TextInput(Input[QLineEdit]):
     # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QLineEdit.html
     def __init__(self, label: str | None = None):
-        super(TextInput, self).__init__(QLineEdit())
-        self.setObjectName("Input:TextInput:" + str(label))
+        super(TextInput, self).__init__(QLineEdit(), label or "")
 
-        self._prefix: Optional[str] = None
-        self._suffix: Optional[str] = None
+        self._prefix: str | None = None
+        self._suffix: str | None = None
 
-        if label:
+        if label is not None:
             self.setLabel(label)
 
     def setBinding(
         self,
-        object: Any,
+        object: Model,
         property: str,
         updateProperty: str | None = None,
     ):
@@ -34,17 +30,13 @@ class TextInput(Input[QLineEdit]):
         self._boundProperty = property
         self._updateProperty = updateProperty
 
-        self._initialPropertyValue = str(
-            getattr(self._boundObject, self._boundProperty)
-        )
+        self._input.setText(str(getattr(self._boundObject, self._boundProperty)))
 
-        self._input.setText(self._initialPropertyValue)
-
-        self._input.editingFinished.connect(self._onTextChanged)
+        self._input.textEdited.connect(self._onTextChanged)
         # self._boundObject.modifiedEvent.connect(
         #     lambda: self.modified.emit(self.isModified())
         # )
-        self._input.editingFinished.connect(
+        self._input.textEdited.connect(
             lambda: self.modified.emit(self.isModified())
         )
 

@@ -7,15 +7,6 @@ from app.models.JobApplication import JobApplication
 from app.repositories.DBRepository import DBRepository
 from app.utils.CollectionUtility import CollectionUtility
 
-# https://docs.python.org/3/library/collections.html#collections.UserDict
-# https://stackoverflow.com/questions/7148419/subclass-dict-userdict-dict-or-abc
-# https://stackoverflow.com/questions/61112684/how-to-subclass-a-dictionary-so-it-supports-generic-type-hints
-
-# https://github.com/google/styleguide/blob/gh-pages/pyguide.md#38-comments-and-docstrings
-
-
-# https://github.com/sdispater/backpack
-
 
 class JobApplicationRepository(DBRepository[JobApplication]):
     """A repository which helps dealing with Job Applications."""

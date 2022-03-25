@@ -1,18 +1,24 @@
-from typing import Any, Sequence, TypeVar, Generic
-from PySide6.QtCore import QAbstractListModel, Qt, QModelIndex, QPersistentModelIndex
+# Standard Library
+from typing import Any, Generic, Sequence
 
-from app.types import M
+# Framework imports
+from PySide6.QtCore import QAbstractListModel, QModelIndex, QPersistentModelIndex, Qt
+
+# Application imports
+from app.gui.components.form.inputs.SelectBox import SelectBox
+from app.typings.types import M
 
 
 class ListModel(Generic[M], QAbstractListModel):
-    def __init__(self, parentWidget, data: Sequence[M], *args, **kwargs):
+    def __init__(
+        self, parentWidget: SelectBox, data: Sequence[M], *args: Any, **kwargs: Any
+    ):
         super(ListModel, self).__init__(*args, **kwargs)
 
         self._data: Sequence[M] = data
+        self._parentWidget: SelectBox = parentWidget
 
-        self.setParentList(parentWidget)
-
-    def setParentList(self, parentWidget):
+    def setParentList(self, parentWidget: SelectBox):
         self._parentWidget = parentWidget
 
     def rowCount(

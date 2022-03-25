@@ -1,19 +1,22 @@
-# Standard Library
-from typing import Any, Optional
-
 # Framework imports
-from PySide6.QtCore import Slot, QPoint, Qt, QPropertyAnimation, QRect, QEasingCurve
+from PySide6.QtCore import QEasingCurve, QPoint, QPropertyAnimation, QRect, Qt, Slot
+from PySide6.QtGui import QColor, QFont, QPainter, QPaintEvent
 from PySide6.QtWidgets import QCheckBox
-from PySide6.QtGui import QPaintEvent, QPainter, QFont, QColor
 
 # Application imports
 from app.gui.components.form.inputs.Input import Input
+from app.models.Model import Model
 
 
 class ToggleButton(Input[QCheckBox]):
-    def __init__(self, text: str, uncheckedText: Optional[str] = None):
-        super(ToggleButton, self).__init__(QCheckBox())
-        self.setObjectName("Input:ToggleButton:" + str(text))
+    def __init__(self, checkedText: str, uncheckedText: str | None = None):
+        super(ToggleButton, self).__init__(QCheckBox(), checkedText)
+
+        self._checkedText: str = checkedText
+        self._uncheckedText: str = checkedText
+
+        if uncheckedText is not None:
+            self._uncheckedText = uncheckedText
 
         self._input.setCheckable(True)
         self._input.setCursor(Qt.PointingHandCursor)
@@ -29,7 +32,7 @@ class ToggleButton(Input[QCheckBox]):
 
     def setBinding(
         self,
-        object: Any,
+        object: Model,
         property: str,
         updateProperty: str | None = None,
     ):
@@ -37,11 +40,7 @@ class ToggleButton(Input[QCheckBox]):
         self._boundProperty = property
         self._updateProperty = updateProperty
 
-        self._initialPropertyValue = bool(
-            getattr(self._boundObject, self._boundProperty)
-        )
-
-        self._input.setChecked(self._initialPropertyValue)
+        self._input.setChecked(bool(getattr(self._boundObject, self._boundProperty)))
 
         self._input.stateChanged.connect(self.setup_animation)
         self._input.stateChanged.connect(self._onButtonToggled)

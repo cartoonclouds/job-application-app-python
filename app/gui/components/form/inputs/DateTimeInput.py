@@ -1,16 +1,11 @@
-# Standard Library
-from typing import Any
-
 # Framework imports
 from PySide6.QtCore import QDateTime, Slot
 from PySide6.QtWidgets import QDateTimeEdit
 
-# Third party imports
-from pendulum import Pendulum
-
 # Application imports
-from app.Constants import DATE_FORMAT_1
+from app.constants import DATE_FORMAT_1
 from app.gui.components.form.inputs.Input import Input
+from app.models.Model import Model
 
 
 class DateTimeInput(Input[QDateTimeEdit]):
@@ -20,21 +15,17 @@ class DateTimeInput(Input[QDateTimeEdit]):
     """
 
     def __init__(self, label: str | None = None):
-        super(DateTimeInput, self).__init__(QDateTimeEdit())
-        self.setObjectName("Input:DateTimeInput:" + str(label))
+        super(DateTimeInput, self).__init__(QDateTimeEdit(), str(label))
 
-        self._isModified: bool = False
         self._input.setCalendarPopup(True)
-        # self._input.setDate(QDateTime.currentDateTime().date())
         self._input.setDisplayFormat(DATE_FORMAT_1)
-        # setMinimumDateTime (dt: QDateTime)
 
-        if label:
+        if label is not None:
             self.setLabel(label)
 
     def setBinding(
         self,
-        object: Any,
+        object: Model,
         property: str,
         updateProperty: str | None = None,
     ):
@@ -42,9 +33,13 @@ class DateTimeInput(Input[QDateTimeEdit]):
         self._boundProperty = property
         self._updateProperty = updateProperty
 
-        self._initialPropertyValue = getattr(self._boundObject, self._boundProperty)
+        initialDateTime = getattr(
+            self._boundObject,
+            self._boundProperty,
+            QDateTime.currentDateTime().date(),
+        )
 
-        self._input.setDateTime(self._initialPropertyValue)
+        self._input.setDateTime(initialDateTime)
 
         self._input.dateTimeChanged.connect(self._onDateTimeChanged)
         self._input.dateTimeChanged.connect(

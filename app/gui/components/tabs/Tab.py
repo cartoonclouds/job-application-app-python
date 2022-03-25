@@ -2,6 +2,9 @@ from typing import Optional
 from PySide6.QtWidgets import QWidget, QTabWidget
 from PySide6.QtGui import QIcon, QPixmap
 
+from app.utils.object_functions import formatObjectName
+from inflection import parameterize
+
 
 class Tab(QWidget):
     # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QTabWidget.html
@@ -15,7 +18,13 @@ class Tab(QWidget):
         movable: bool = True,
     ) -> None:
         super().__init__()
-        self.setObjectName("Tab")
+        self.setObjectName(
+            formatObjectName(
+                __class__.__name__,
+                type(self).__name__,
+                parameterize(label or "", "_").lower(),
+            )
+        )
 
         self._tooltip = tooltip
         self._whatsThis = whatsThis

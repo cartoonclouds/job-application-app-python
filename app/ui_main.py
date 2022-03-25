@@ -26,15 +26,15 @@ from app.gui.components.tabs.TabBar import TabBar
 from app.gui.services.SettingsService import SettingsServiceProvider
 from app.gui.services.StatusBarService import StatusBarServiceProvider
 from app.gui.services.TabService import TabServiceProvider
-from app.Constants import WINDOW_WIDTH, WINDOW_HEIGHT
+from app.constants import WINDOW_WIDTH, WINDOW_HEIGHT
 from app.utils.IconUtility import IconUtility
+from app.utils.object_functions import formatObjectName
 from app.utils.ui_functions import UIFunctions
 
 
 class UI_MainWindow:
     def __init__(self, window: QMainWindow):
-        window = window
-        window.setObjectName("MainWindow")
+        window.setObjectName(formatObjectName(__class__.__name__))
 
         # LOAD SETTINGS
         # ///////////////////////////////////////////////////////////////

@@ -1,18 +1,13 @@
-from typing import Optional
-from PySide6.QtGui import QResizeEvent, QMouseEvent, QContextMenuEvent, QAction, QCursor
-from PySide6.QtWidgets import QAbstractItemView, QTableView, QMenu, QStyledItemDelegate
-from PySide6.QtCore import Signal, Qt, QModelIndex, QPersistentModelIndex
+# Framework imports
+from PySide6.QtCore import QModelIndex, QPersistentModelIndex, Qt, Signal
+from PySide6.QtGui import QAction, QContextMenuEvent, QCursor, QMouseEvent, QResizeEvent
+from PySide6.QtWidgets import QAbstractItemView, QMenu, QStyledItemDelegate, QTableView
+
+# Application imports
 from app.config.App import Sizing
-
-from app.gui.components.models.ActionDatatableModel import ActionDatatableModel
-from app.gui.components.models.JobApplicationDatatableModel import (
-    JobApplicationDatatableModel,
-)
-
+from app.gui.components.datatable.DatatableModel import DatatableModel
 from app.models.Model import Model
-from app.types import TModel
-
-DTModel = ActionDatatableModel | JobApplicationDatatableModel
+from app.typings.types import M, Models
 
 
 class Datatable(QTableView):
@@ -37,8 +32,8 @@ class Datatable(QTableView):
 
     def __init__(
         self,
-        datatableModel: DTModel,
-        datatableItemDelegate: Optional[QStyledItemDelegate] = None,
+        datatableModel: DatatableModel[Models],
+        datatableItemDelegate: QStyledItemDelegate | None = None,
     ) -> None:
         super().__init__()
 
@@ -69,24 +64,25 @@ class Datatable(QTableView):
         # SET STYLESHEET
 
         self.setModel(datatableModel)
+
         datatableModel.dataUpdated.connect(self.resizeEvent())
 
         if datatableItemDelegate is not None:
             self.setItemDelegate(datatableItemDelegate)
             datatableItemDelegate.setParent(self)
 
-    def _getModelAtSelection(self) -> Model:
+    def model(self) -> DatatableModel[Models]:
+        return super().model()
+
+    def _getModelAtSelection(self):
         index = self.selectionModel().currentIndex()
 
         return self._getModelAtIndex(index)
 
-    def _getModelAtIndex(self, index: QModelIndex | QPersistentModelIndex) -> TModel:
-        datatableModel: DTModel = self.model()
+    def _getModelAtIndex(self, index: QModelIndex | QPersistentModelIndex):
+        datatableModel = self.model()
 
         return datatableModel.modelAtIndex(index)
-
-    def model(self) -> DTModel:
-        return super().model()  # type: ignore
 
     def mouseDoubleClickEvent(self, event: QMouseEvent) -> None:
         if event.button() == Qt.LeftButton:
@@ -110,7 +106,7 @@ class Datatable(QTableView):
         if not index.isValid():
             return
 
-        rowModel: TModel = self._getModelAtIndex(index)
+        rowModel = self._getModelAtIndex(index)
 
         self.contextMenu = QMenu(self)
 
@@ -135,7 +131,7 @@ class Datatable(QTableView):
 
         # return super().contextMenuEvent(arg__1)
 
-    def resizeEvent(self, event: Optional[QResizeEvent] = None) -> None:
+    def resizeEvent(self, event: QResizeEvent | None = None) -> None:
         """Resizes columns one of three ways:
         1. Width - sets the width to be a specific number
         2. Column to contents - the width will be that of the column with the largest content

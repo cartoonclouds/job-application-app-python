@@ -1,3 +1,6 @@
+# Standard Library
+from typing import Any
+
 # Framework imports
 from PySide6.QtCore import Slot
 from PySide6.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout
@@ -20,10 +23,9 @@ from app.utils.IconUtility import IconUtility
 
 
 class SummaryTab(Tab):
-    def __init__(self, label: str, **kwargs) -> None:
+    def __init__(self, label: str, **kwargs: Any) -> None:
         super().__init__(label=label, **kwargs)
 
-        self.setObjectName("Tab:Summary")
         self.mainLayout = QVBoxLayout(self)
 
         # Setup header

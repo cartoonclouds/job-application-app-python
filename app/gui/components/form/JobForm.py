@@ -1,7 +1,5 @@
-# Standard Library
-import logging
-
 # Application imports
+from app.enums import EmploymentType
 from app.gui.components.form.Form import Form
 from app.gui.components.form.inputs.DateTimeInput import DateTimeInput
 from app.gui.components.form.inputs.SelectBox import SelectBox
@@ -10,7 +8,6 @@ from app.gui.components.form.inputs.TextInput import TextInput
 from app.gui.components.form.PayOptions import PayOptions
 from app.gui.components.models.ProfessionListModel import ProfessionListModel
 from app.models.Job import Job
-from app.utils.EnumUtility import EmploymentType
 from app.utils.mixins.Logger import LoggerMixin
 
 # https://docs.python.org/3/library/datetime.html#strftime-and-strptime-format-codes
@@ -19,7 +16,6 @@ from app.utils.mixins.Logger import LoggerMixin
 class JobForm(Form, LoggerMixin):
     def __init__(self, model: Job) -> None:
         super(JobForm, self).__init__("JobInfo", model, "Job Information")
-        self.setObjectName("Form:Job")
 
         # -------------------------- #
         # -- insert form elements -- #
@@ -29,7 +25,7 @@ class JobForm(Form, LoggerMixin):
         titleInput.setPlaceholderText("Job title")
 
         employmentTypeInput = SelectBox("Employment Type")
-        employmentTypeInput.addItems(EmploymentType.AS_LIST())
+        employmentTypeInput.addItems(EmploymentType.VALUES())
         employmentTypeInput.setEditable(True)
         employmentTypeInput.setBinding(model, "employment_type")
         employmentTypeInput.setPlaceholderText("Employment Type")

@@ -1,12 +1,11 @@
 # Framework imports
-from PySide6.QtCore import QObject, QRect
+from PySide6.QtCore import QRect
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QStyledItemDelegate, QStyleOptionViewItem
+
+# Application imports
 from app.gui.components.datatable.Datatable import Datatable
-from app.gui.components.datatable.DatatableModel import DatatableModel
-from app.gui.components.models.JobApplicationDatatableModel import (
-    JobApplicationDatatableModel,
-)
+from app.gui.components.models import JobApplicationDatatableModel
 
 
 class DatatableItemDelegate(QStyledItemDelegate):
@@ -20,7 +19,9 @@ class DatatableItemDelegate(QStyledItemDelegate):
         return self.parent()
 
     @property
-    def datatableModel(self) -> JobApplicationDatatableModel:
+    def datatableModel(
+        self,
+    ) -> JobApplicationDatatableModel.JobApplicationDatatableModel:
         return self.datatable.model()
 
     def setParent(self, parent: Datatable) -> None:

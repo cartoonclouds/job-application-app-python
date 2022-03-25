@@ -1,5 +1,5 @@
 # Standard Library
-from typing import Sequence, TypeVar
+from typing import TypeAlias
 
 # Framework imports
 from PySide6.QtCore import Qt, Signal
@@ -7,7 +7,7 @@ from PySide6.QtGui import QPaintEvent
 from PySide6.QtWidgets import QFormLayout, QFrame, QHBoxLayout, QLabel, QWidget
 
 # Application imports
-from app.Constants import WIDGET_SPACING, WIDGET_MARGINS, ZERO_MARGINS
+from app.constants import WIDGET_MARGINS, WIDGET_SPACING, ZERO_MARGINS
 from app.gui.components.EditableLabel.EditableLabel import EditableLabel
 from app.gui.components.form.inputs.DateTimeInput import DateTimeInput
 from app.gui.components.form.inputs.SelectBox import SelectBox
@@ -15,38 +15,42 @@ from app.gui.components.form.inputs.TextAreaInput import TextAreaInput
 from app.gui.components.form.inputs.TextInput import TextInput
 from app.gui.components.form.inputs.ToggleButtonSquare import ToggleButtonSquare
 from app.gui.components.form.PayOptions import PayOptions
-from app.types import TModel
-from app.utils.mixins.ListMixin import ListMixin
+from app.models.Model import Model
+from app.utils.object_functions import formatObjectName
 
-TInput = TypeVar(
-    "TInput",
-    EditableLabel,
-    DateTimeInput,
-    SelectBox,
-    TextAreaInput,
-    TextInput,
-    ToggleButtonSquare,
-    PayOptions,
-    QLabel,
+InputT: TypeAlias = (
+    EditableLabel
+    | DateTimeInput
+    | SelectBox
+    | TextAreaInput
+    | TextInput
+    | ToggleButtonSquare
+    | PayOptions
 )
 
+
+# Third party imports
+from inflection import parameterize
 
 # Validator https://docs.python-cerberus.org/en/stable/
 
 
-class Form(QFrame, ListMixin):
+class Form(QFrame):
     modified = Signal(bool, QFrame)
 
-    def __init__(self, name: str, model: TModel, title: str) -> None:
+    def __init__(self, name: str, model: Model, title: str) -> None:
         super(Form, self).__init__()
 
-        self._name = name
-        self._model = model
-        self._title = title
-        self._inputs: Sequence[TInput] = []
-        self.setObjectName("Form")
+        self.setObjectName(
+            formatObjectName(
+                __class__.__name__,
+                type(self).__name__,
+                parameterize(title or "", "_").lower(),
+            )
+        )
         self.setContentsMargins(0, WIDGET_SPACING * 5, 0, 0)
         self.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)
+
         # self.setStyleSheet(
         #     """
         #     QFrame {
@@ -54,6 +58,11 @@ class Form(QFrame, ListMixin):
         #     }
         # """
         # )
+
+        self._name = name
+        self._model = model
+        self._title = title
+        self._inputs: list[InputT] = []
 
         self._layout = QFormLayout()
         self._layout.setAlignment(Qt.AlignTop)
@@ -69,7 +78,7 @@ class Form(QFrame, ListMixin):
         self.setLayout(self._layout)
 
     # https://stackoverflow.com/questions/19211828/using-any-and-all-to-check-if-a-list-contains-one-set-of-values-or-another
-    def isModified(self):
+    def isModified(self) -> bool:
         """Determines if any input element in the form has been modified"""
         return len(self.modifiedWidgets()) > 0
 
@@ -77,11 +86,11 @@ class Form(QFrame, ListMixin):
         """Returns any element in the form that has been modified"""
         return [w for w in self.inputs() if w.isModified()]
 
-    def inputs(self) -> Sequence[TInput]:
+    def inputs(self) -> list[InputT]:
         """Returns all form input elements"""
         return self._inputs
 
-    def addRow(self, *fields: TInput | Sequence[TInput]):
+    def addRow(self, *fields: InputT | list[InputT]):
         if len(fields) == 1:
             field = fields[0]
 
@@ -108,7 +117,7 @@ class Form(QFrame, ListMixin):
 
             self._layout.addRow(row)
 
-    def _addWidget(self, layout: QFormLayout, field: TInput):
+    def _addWidget(self, layout: QFormLayout, field: InputT):
         if not isinstance(field, QWidget):
             return
 

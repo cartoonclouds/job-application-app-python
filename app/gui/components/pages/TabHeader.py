@@ -19,7 +19,9 @@ from PySide6.QtWidgets import (
 
 # Application imports
 from app.gui.components.EditableLabel.EditableLabel import EditableLabel
-from app.Constants import WIDGET_SPACING, WIDGET_MARGINS, ZERO_MARGINS
+from app.constants import WIDGET_SPACING, WIDGET_MARGINS, ZERO_MARGINS
+from app.utils.object_functions import formatObjectName
+from inflection import parameterize
 
 
 class TabHeader(QWidget):
@@ -29,11 +31,16 @@ class TabHeader(QWidget):
         self, text: str, icon: QPixmap | None = None, editable: bool = False
     ) -> None:
         super().__init__()
+        self.setObjectName(
+            formatObjectName(
+                __class__.__name__,
+                parameterize(text or "", "_").lower(),
+            )
+        )
 
         self._text = text
         self._editable = editable
         self._icon = icon
-        self.setObjectName("Header")
 
         layout = QHBoxLayout(self)
         layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
@@ -47,7 +54,7 @@ class TabHeader(QWidget):
 
         layout.addWidget(self.label)
         self.setLayout(layout)
-        
+
     def setText(self, text: str):
         self._text = text
         self.label.setText(text)
