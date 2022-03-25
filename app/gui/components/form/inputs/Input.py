@@ -111,9 +111,8 @@ class Input(Generic[T], QWidget, ObjectMixin):
         # self.qle.editingFinished.connect(self.onEditingFinished)
 
     def isModified(self) -> bool:
-        return False
-        # assert self._boundObject is not None
-        # return self._boundObject.is_dirty()
+        assert self._boundObject is not None
+        return self._boundObject.is_dirty()
 
     def setBinding(
         self,
@@ -149,6 +148,8 @@ class Input(Generic[T], QWidget, ObjectMixin):
         debug(updateObject, dict(zip([updateProperty], [value])))
 
         setattr(updateObject, updateProperty, value)
+        
+        self.modified.emit(self.isModified())
 
     def createLabel(self, text: str) -> QLabel:
         label = QLabel(text)

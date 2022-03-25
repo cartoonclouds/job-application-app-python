@@ -76,9 +76,6 @@ class EditableLabel(QtWidgets.QWidget):
         self.lineEdit.setSizePolicy(
             QtWidgets.QSizePolicy.Expanding, self.lineEdit.sizePolicy().verticalPolicy()
         )
-        self.lineEdit.editingFinished.connect(
-            lambda: self.modified.emit(self.isModified())
-        )
 
         icon = kwargs.get("icon")
 

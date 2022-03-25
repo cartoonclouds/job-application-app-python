@@ -31,10 +31,7 @@ class PayOptions(Input[QWidget]):
     ) -> None:
         self._model = model
         self._initialOption = initialOption
-
-        layout = QHBoxLayout()
-        layout.setContentsMargins(ZERO_MARGINS)
-        layout.setSpacing(WIDGET_SPACING)
+        self._emittingInputs: list[QWidget] = list()
 
         stackWidget = self._setupStacks()
         self._stacks = cast(QStackedLayout, stackWidget.layout())
@@ -54,12 +51,7 @@ class PayOptions(Input[QWidget]):
         # optionsStack.setStyleSheet("border: 2px solid green;")
         # stackWidget.setStyleSheet("border: 2px solid blue;")
 
-        # layout.addWidget(labelWidget)
-        layout.addWidget(optionsFrame)
-
-        self.setLayout(layout)
-
-        super(PayOptions, self).__init__(stackWidget, label or "")
+        super(PayOptions, self).__init__(optionsFrame, label or "")
 
         if label is not None:
             self.setLabel(label)
@@ -73,12 +65,10 @@ class PayOptions(Input[QWidget]):
         salaryOption = QRadioButton("Salary")
         salaryOption.setChecked(self._initialOption == PayTypes.SALARY)
         salaryOption.toggled.connect(partial(self._setOption, PayTypes.SALARY))
-        salaryOption.toggled.connect(lambda: self.modified.emit(self.isModified()))
 
         rateOption = QRadioButton("Rate")
         rateOption.setChecked(self._initialOption == PayTypes.RATE)
         rateOption.toggled.connect(partial(self._setOption, PayTypes.RATE))
-        rateOption.toggled.connect(lambda: self.modified.emit(self.isModified()))
 
         layout.addWidget(salaryOption)
         layout.addWidget(rateOption)
@@ -89,10 +79,12 @@ class PayOptions(Input[QWidget]):
         layout = QStackedLayout()
         frame = QWidget()
 
-        self.salaryInput = self._setupSalary()
-        rateWidget, self.rateInput, self.rateUnitInput = self._setupRate()
+        salaryInput = self._setupSalary()
+        rateWidget = self._setupRate()
 
-        layout.addWidget(self.salaryInput)
+        self._setupEmittingInputs()
+
+        layout.addWidget(salaryInput)
         layout.addWidget(rateWidget)
 
         frame.setLayout(layout)
@@ -110,7 +102,6 @@ class PayOptions(Input[QWidget]):
         # rateInput.setPrefix("$")
         rateInput.setDecimals(2)
         rateInput.setSingleStep(0.01)
-        rateInput.modified.connect(lambda: self.modified.emit(self.isModified()))
 
         label = QLabel("per")
         label.setAlignment(Qt.AlignBottom)
@@ -122,7 +113,6 @@ class PayOptions(Input[QWidget]):
         unitInput.setAlignment(Qt.AlignBottom)
         unitInput.addItems(PayUnits.VALUES())
         unitInput.setBinding(self._model, "rate_unit")
-        unitInput.modified.connect(lambda: self.modified.emit(self.isModified()))
 
         unitInputMargin = unitInput.contentsMargins()
         unitInputMargin.setBottom(0)  # TODO Make dynamic to text height
@@ -132,7 +122,10 @@ class PayOptions(Input[QWidget]):
         layout.addWidget(label)
         layout.addWidget(unitInput)
 
-        return rateWidget, rateInput, unitInput
+        self._emittingInputs.append(rateInput)
+        self._emittingInputs.append(unitInput)
+
+        return rateWidget
 
     def _setupSalary(self):
         salaryInput = TextInput()
@@ -142,7 +135,7 @@ class PayOptions(Input[QWidget]):
         salaryInput.setInputMask("##.##")
         salaryInput.setPlaceholderText("$##.##")
 
-        salaryInput.modified.connect(lambda: self.modified.emit(self.isModified()))
+        self._emittingInputs.append(salaryInput)
 
         return salaryInput
 
@@ -153,12 +146,19 @@ class PayOptions(Input[QWidget]):
 
             setattr(self._model, "pay_option", payType)
 
+            self.modified.emit(self.isModified())
+
             debug(self._model, dict(zip(["pay_option"], [payType])))
+
+    def _setupEmittingInputs(self):
+        # Required because form only emits 'modified' on attached components and this
+        # is PayOptions - not the inner components. Therefore inner components need to
+        # also make PayOptions emit.
+        for input in self._emittingInputs:
+            input.modified.connect(lambda: self.modified.emit(self.isModified()))
 
     def isModified(self) -> bool:
         return (
-            PayTypes.index(self._initialOption) != self._stacks.currentIndex()
-            or self.salaryInput.isModified()
-            or self.rateInput.isModified()
-            or self.rateUnitInput.isModified()
+            any([input.isModified() for input in self._emittingInputs])
+            or PayTypes.index(self._initialOption) != self._stacks.currentIndex()
         )

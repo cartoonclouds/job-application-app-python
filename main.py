@@ -143,7 +143,7 @@ if __name__ == "__main__":
     #     for i in range(metaObject.methodOffset(), metaObject.methodCount())
     # ]
     # debug(properties, methods)
-    
+
     sys.exit(app.exec())
 
 

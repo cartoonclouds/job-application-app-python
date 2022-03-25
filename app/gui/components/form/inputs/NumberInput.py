@@ -31,7 +31,6 @@ class NumberInput(Input[QDoubleSpinBox]):
         self._input.setValue(float(getattr(self._boundObject, self._boundProperty)))
 
         self._input.valueChanged.connect(self._onValueChanged)
-        self._input.valueChanged.connect(lambda: self.modified.emit(self.isModified()))
 
     @Slot(str)
     def _onValueChanged(self):

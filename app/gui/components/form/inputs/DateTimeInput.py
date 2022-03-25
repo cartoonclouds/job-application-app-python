@@ -42,9 +42,6 @@ class DateTimeInput(Input[QDateTimeEdit]):
         self._input.setDateTime(initialDateTime)
 
         self._input.dateTimeChanged.connect(self._onDateTimeChanged)
-        self._input.dateTimeChanged.connect(
-            lambda: self.modified.emit(self.isModified())
-        )
 
     @Slot(str)
     def _onDateTimeChanged(self, datetime: QDateTime):

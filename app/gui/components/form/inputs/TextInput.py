@@ -33,12 +33,6 @@ class TextInput(Input[QLineEdit]):
         self._input.setText(str(getattr(self._boundObject, self._boundProperty)))
 
         self._input.textEdited.connect(self._onTextChanged)
-        # self._boundObject.modifiedEvent.connect(
-        #     lambda: self.modified.emit(self.isModified())
-        # )
-        self._input.textEdited.connect(
-            lambda: self.modified.emit(self.isModified())
-        )
 
     @Slot(str)
     def _onTextChanged(self):

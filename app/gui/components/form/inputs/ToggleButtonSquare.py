@@ -19,7 +19,7 @@ class ToggleButtonSquare(Input[QPushButton]):
 
         if uncheckedText is not None:
             self._uncheckedText = uncheckedText
-            
+
         self._input.setCheckable(True)
         self._input.setCursor(Qt.PointingHandCursor)
         self._input.setText(checkedText)
@@ -41,7 +41,6 @@ class ToggleButtonSquare(Input[QPushButton]):
         self._updateButton()
 
         self._input.clicked.connect(self._onButtonToggled)
-        self._input.clicked.connect(lambda: self.modified.emit(self.isModified()))
 
     def _hasUpdatingText(self) -> bool:
         return self._uncheckedText is not None

@@ -44,7 +44,6 @@ class ToggleButton(Input[QCheckBox]):
 
         self._input.stateChanged.connect(self.setup_animation)
         self._input.stateChanged.connect(self._onButtonToggled)
-        self._input.stateChanged.connect(lambda: self.modified.emit(self.isModified()))
 
     @Slot(bool)
     def _onButtonToggled(self, value: bool):

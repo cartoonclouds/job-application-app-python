@@ -29,7 +29,6 @@ class TextAreaInput(Input[QPlainTextEdit]):
         self._input.document().setModified(False)
 
         self._input.textChanged.connect(self._onTextChanged)
-        self._input.textChanged.connect(lambda: self.modified.emit(self.isModified()))
 
     @Slot(str)
     def _onTextChanged(self):

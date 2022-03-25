@@ -57,9 +57,6 @@ class SelectBox(Input[QComboBox]):
         self._input.setCurrentIndex(self._initialPropertyIndex)
 
         self._input.currentIndexChanged.connect(self._onSelectionChanged)
-        self._input.currentIndexChanged.connect(
-            lambda: self.modified.emit(self.isModified())
-        )
 
     @Slot(int)
     def _onSelectionChanged(self, index: int):
