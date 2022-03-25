@@ -1,5 +1,5 @@
 # Standard Library
-from typing import Any, Generic
+from typing import Any, Generic, Type
 
 # Framework imports
 from PySide6.QtCore import QMargins, Qt, Signal
@@ -49,6 +49,11 @@ class Input(Generic[T], QWidget, ObjectMixin):
                 parameterize(objectName or "", "_").lower(),
             )
         )
+        
+        # TODO Get list of all subclasses of this instance to
+        # generate object name
+        # https://stackoverflow.com/questions/1401661/list-all-base-classes-in-a-hierarchy-of-given-class
+        # "How to get the entire inheritance tree"
 
         self._layout = QHBoxLayout()
         self._layout.setAlignment(Qt.AlignTop)
@@ -56,7 +61,7 @@ class Input(Generic[T], QWidget, ObjectMixin):
         self._layout.setSpacing(WIDGET_SPACING)
 
         self._input = component
-        self._boundObject: Model | None = None
+        self._boundObject: Type[Model] | None = None
         self._boundProperty: str | None = None
         self._updateProperty: str | None = None
 
@@ -116,13 +121,13 @@ class Input(Generic[T], QWidget, ObjectMixin):
 
     def setBinding(
         self,
-        object: Model,
+        object: Type[Model],
         property: str,
         updateProperty: str | None = None,
     ) -> None:
         raise NotImplementedError
 
-    def setUpdateBinding(self, object: Model, property: str):
+    def setUpdateBinding(self, object: Type[Model], property: str):
         self._boundUpdateObject = object
         self._boundUpdateProperty = property
 
@@ -132,7 +137,7 @@ class Input(Generic[T], QWidget, ObjectMixin):
             "_boundUpdateObject"
         )
 
-    def updateBoundObject(self, updateObject: Model, value: Any):
+    def updateBoundObject(self, updateObject: Type[Model], value: Any):
         assert self._boundObject is not None
         value = value if value != None else ""
 

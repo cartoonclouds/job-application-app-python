@@ -1,26 +1,22 @@
-# Third party imports
-from orator import orm
-
 # Application imports
 from app.gui.services.StatusBarService import StatusBarServiceProvider
 from app.models.Action import Action
 from app.repositories.DBRepository import DBRepository
-from app.utils.CollectionUtility import CollectionUtility
 
 
-class ActionRepository(DBRepository[Action]):
+class _ActionRepository(DBRepository[Action]):
     """A repository which helps dealing with Actions."""
 
-    def __init__(self, data: dict[str, Action] | None = None) -> None:
-        super().__init__(data or self.loadAll())
+    def __init__(self) -> None:
+        super().__init__(Action)
 
-    def loadAll(self) -> DBRepository[Action]:
+    def load_all(self):
         StatusBarServiceProvider.message("Loading Actions ...")
 
-        actions: orm.collection.Collection = Action.all()
-
-        keyedActions = CollectionUtility.keyBy("id", actions)
+        actions = super().load_all()
 
         StatusBarServiceProvider.message("Loading Actions ... Done!")
 
-        return dict(keyedActions)  # type: ignore
+        return actions
+
+ActionRepository = _ActionRepository()

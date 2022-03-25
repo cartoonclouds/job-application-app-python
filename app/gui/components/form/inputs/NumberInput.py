@@ -1,4 +1,5 @@
 # Framework imports
+from typing import Type
 from PySide6.QtCore import Slot
 from PySide6.QtWidgets import QDoubleSpinBox
 
@@ -20,7 +21,7 @@ class NumberInput(Input[QDoubleSpinBox]):
 
     def setBinding(
         self,
-        object: Model,
+        object: Type[Model],
         property: str,
         updateProperty: str | None = None,
     ):

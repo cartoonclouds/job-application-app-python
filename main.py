@@ -64,9 +64,7 @@ class MainWindow(QMainWindow):
         from app.repositories.JobApplicationRepository import JobApplicationRepository
 
         # TODO Utility function to create JAA/empty tab, given JAA ID/random
-        jobApplicationRepo = JobApplicationRepository()
-
-        testJaa = jobApplicationRepo.getAtIndex(1)
+        testJaa = JobApplicationRepository.items()[0]
         assert isinstance(testJaa, JobApplication)
         testJaaTab = JobApplicationTab(
             f"{testJaa.title}, {testJaa.company.name} (ID {testJaa.id})",

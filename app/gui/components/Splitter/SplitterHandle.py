@@ -16,7 +16,7 @@ class SplitterHandle(QSplitterHandle):
     def __init__(self, orientation: Qt.Orientation, parent: QSplitter) -> None:
         super(SplitterHandle, self).__init__(orientation, parent)
 
-    def paintEvent(self, event: QPaintEvent) -> None:
+    def paintEvent(self, event: QPaintEvent) -> None: # type: ignore[override]
         return super().paintEvent(event)
       
         # painter = QPainter(self)

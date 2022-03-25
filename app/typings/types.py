@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QWidget
 
-from typing import Any, Sequence, TypeVar, Generic, TypeAlias
+from typing import Any, Iterable, Sequence, Type, TypeVar, Generic, TypeAlias
 
 from app.models.Model import Model
 from PySide6.QtCore import QAbstractTableModel

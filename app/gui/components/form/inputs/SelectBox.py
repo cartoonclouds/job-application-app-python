@@ -1,5 +1,5 @@
 # Standard Library
-from typing import Sequence
+from typing import Sequence, Type
 
 # Framework imports
 from PySide6.QtCore import Qt, Slot
@@ -42,7 +42,7 @@ class SelectBox(Input[QComboBox]):
 
     def setBinding(
         self,
-        object: Model,
+        object: Type[Model],
         property: str,
         updateProperty: str | None = None,
     ) -> None:

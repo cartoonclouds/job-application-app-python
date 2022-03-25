@@ -78,7 +78,7 @@ class DatabaseSeeder(Seeder):
         # print(ja.getTableName())
 
     # @Slot(Model)
-    # def eventHappened(self, m: Model):
+    # def eventHappened(self, m: Type[Model]):
     #     debug(m)
 
     # print(JobApplication.first().get_table_column_count())

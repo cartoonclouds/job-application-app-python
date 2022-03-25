@@ -1,26 +1,23 @@
-# Third party imports
-from orator import orm
-
 # Application imports
 from app.gui.services.StatusBarService import StatusBarServiceProvider
 from app.models.JobApplication import JobApplication
 from app.repositories.DBRepository import DBRepository
-from app.utils.CollectionUtility import CollectionUtility
 
 
-class JobApplicationRepository(DBRepository[JobApplication]):
+class _JobApplicationRepository(DBRepository[JobApplication]):
     """A repository which helps dealing with Job Applications."""
 
-    def __init__(self, data: dict[str, JobApplication] | None = None) -> None:
-        super().__init__(data or self.loadAll())
+    def __init__(self) -> None:
+        super().__init__(JobApplication)
 
-    def loadAll(self) -> DBRepository[JobApplication]:
+    def load_all(self):
         StatusBarServiceProvider.message("Loading Job Applications ...")
 
-        jobApplications: orm.collection.Collection = JobApplication.all()
-
-        keyedJobApplications = CollectionUtility.keyBy("id", jobApplications)
+        jobApplications = super().load_all()
 
         StatusBarServiceProvider.message("Loading Job Applications ... Done!")
 
-        return dict(keyedJobApplications)  # type: ignore
+        return jobApplications
+
+
+JobApplicationRepository = _JobApplicationRepository()

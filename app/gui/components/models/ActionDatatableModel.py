@@ -1,6 +1,6 @@
 # Standard Library
 import datetime
-from typing import Any, Mapping, Sequence
+from typing import Any, Mapping, Sequence, Type
 
 # Framework imports
 from PySide6.QtCore import QModelIndex, QPersistentModelIndex, Qt
@@ -31,12 +31,13 @@ class ActionDatatableModel(DatatableModel[Action]):
             )
         )
 
-        actionRepo = ActionRepository()
-        data: Sequence[Action] = actionRepo.values()
+        data = ActionRepository.items()
 
         super().__init__(data, columnHeaders)
 
-    def data(self, index: QModelIndex | QPersistentModelIndex, role: int) -> Any:
+    def data(
+        self, index: QModelIndex | QPersistentModelIndex, role: int = Qt.DisplayRole
+    ) -> Any:
         modelData = self.getModelData(index)
 
         match role:
@@ -55,7 +56,7 @@ class ActionDatatableModel(DatatableModel[Action]):
 
     def _handleDisplayRole(self, modelData: ModelData) -> Any:
         assert isinstance(modelData.model, Action)
-        model: Action = modelData.model
+        model: Type[Action] = modelData.model
 
         # Perform per-type checks and render accordingly.
         if isinstance(modelData.value, datetime.datetime):

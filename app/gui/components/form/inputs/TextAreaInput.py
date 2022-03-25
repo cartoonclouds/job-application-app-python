@@ -1,5 +1,6 @@
 
 # Framework imports
+from typing import Type
 from PySide6.QtCore import QMargins, Slot
 from PySide6.QtGui import QFontMetrics, QTextDocument
 from PySide6.QtWidgets import QPlainTextEdit
@@ -18,7 +19,7 @@ class TextAreaInput(Input[QPlainTextEdit]):
 
     def setBinding(
         self,
-        object: Model,
+        object: Type[Model],
         property: str,
         updateProperty: str | None = None,
     ):

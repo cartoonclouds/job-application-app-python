@@ -39,12 +39,13 @@ class JobApplicationDatatableModel(DatatableModel[JobApplication]):
             )
         )
 
-        jobApplicationRepo = JobApplicationRepository()
-        data: Sequence[JobApplication] = jobApplicationRepo.values()
+        data = JobApplicationRepository.items()
 
         super().__init__(data, columnHeaders)
 
-    def data(self, index: QModelIndex | QPersistentModelIndex, role: int) -> Any:
+    def data(
+        self, index: QModelIndex | QPersistentModelIndex, role: int = Qt.DisplayRole
+    ) -> Any:
         modelData = self.getModelData(index)
 
         match role:

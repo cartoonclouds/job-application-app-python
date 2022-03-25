@@ -1,4 +1,5 @@
 # Framework imports
+from typing import Type
 from PySide6.QtCore import QDateTime, Slot
 from PySide6.QtWidgets import QDateTimeEdit
 
@@ -25,7 +26,7 @@ class DateTimeInput(Input[QDateTimeEdit]):
 
     def setBinding(
         self,
-        object: Model,
+        object: Type[Model],
         property: str,
         updateProperty: str | None = None,
     ):

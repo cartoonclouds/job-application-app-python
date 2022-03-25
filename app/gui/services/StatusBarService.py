@@ -1,16 +1,18 @@
-from typing import Type
+from typing import Type, TypeVar
 from typing_extensions import Self
 from PySide6.QtWidgets import QMainWindow, QStatusBar
 from pendulum import Pendulum
 
 from app.utils.Metaclasses.Singleton import Singleton
 
+S = TypeVar("S", bound="StatusBarServiceProvider")
+
 
 class StatusBarServiceProvider(metaclass=Singleton):
     statusBar: QStatusBar
 
     @classmethod
-    def init(cls, window: QMainWindow) -> Type["StatusBarServiceProvider"]:
+    def init(cls: Type[S], window: QMainWindow) -> Type[S]:
         cls.statusBar = window.statusBar()
 
         # Adding a temporary message

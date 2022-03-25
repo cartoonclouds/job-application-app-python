@@ -1,5 +1,5 @@
 # Standard Library
-from typing import TypeAlias
+from typing import Type, TypeAlias
 
 # Framework imports
 from PySide6.QtCore import Qt, Signal
@@ -38,7 +38,7 @@ from inflection import parameterize
 class Form(QFrame):
     modified = Signal(bool, QFrame)
 
-    def __init__(self, name: str, model: Model, title: str) -> None:
+    def __init__(self, name: str, model: Type[Model], title: str) -> None:
         super(Form, self).__init__()
 
         self.setObjectName(
@@ -132,7 +132,7 @@ class Form(QFrame):
         self._title = title
         self.title.setText(title)
 
-    def paintEvent(self, painter: QPaintEvent) -> None:
+    def paintEvent(self, painter: QPaintEvent) -> None:  # type: ignore[override]
         maxWidth = 0
 
         for input in self.inputs():

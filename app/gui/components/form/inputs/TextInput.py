@@ -1,4 +1,5 @@
 # Framework imports
+from typing import Type
 from PySide6.QtCore import Qt, Slot
 from PySide6.QtGui import QPaintEvent
 from PySide6.QtWidgets import QLabel, QLineEdit
@@ -22,7 +23,7 @@ class TextInput(Input[QLineEdit]):
 
     def setBinding(
         self,
-        object: Model,
+        object: Type[Model],
         property: str,
         updateProperty: str | None = None,
     ):
@@ -117,7 +118,7 @@ class TextInput(Input[QLineEdit]):
         self._suffixLabel.setMaximumWidth(width)
         self._suffixLabel.move(suffixPos)
 
-    def paintEvent(self, painter: QPaintEvent) -> None:
+    def paintEvent(self, painter: QPaintEvent) -> None:  # type: ignore[override]
         self.updatePrefix()
         self.updateSuffix()
 

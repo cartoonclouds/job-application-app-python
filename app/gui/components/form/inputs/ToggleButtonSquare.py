@@ -1,4 +1,5 @@
 # Framework imports
+from typing import Type
 from PySide6.QtCore import Qt, Slot
 from PySide6.QtWidgets import QPushButton
 
@@ -29,7 +30,7 @@ class ToggleButtonSquare(Input[QPushButton]):
 
     def setBinding(
         self,
-        object: Model,
+        object: Type[Model],
         property: str,
         updateProperty: str | None = None,
     ):

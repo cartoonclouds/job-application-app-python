@@ -1,6 +1,6 @@
-    # Standard Library
+# Standard Library
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, Mapping, Sequence, TypeAlias, TypeVar
+from typing import TYPE_CHECKING, Any, Mapping, Sequence, TypeAlias, TypeVar, cast
 
 # Framework imports
 from PySide6.QtCore import QObject, Signal
@@ -117,6 +117,12 @@ class Model(oratorModel):
     def all(cls, columns: Sequence[str] | None = None) -> orm.collection.Collection:
         return super().all(columns)
 
+    def get_key(self) -> str:
+        """
+        Get the value of the model's primary key.
+        """
+        return cast(str, super().get_key())
+
     # Scopes
 
     # @utils.scope
@@ -141,6 +147,3 @@ class Model(oratorModel):
 
     # https://wiki.qt.io/Qt_for_Python_Signals_and_Slots#New_syntax:_Signal.28.29_and_Slot.28.29
     # https://www.pythonguis.com/tutorials/pyside6-signals-slots-events/
-
-
-

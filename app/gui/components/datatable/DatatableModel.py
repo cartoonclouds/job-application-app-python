@@ -1,9 +1,15 @@
 # Standard Library
 from dataclasses import dataclass
-from typing import Any, Generic, Mapping, Sequence
+from typing import Any, Generic, Mapping, Sequence, Type
 
 # Framework imports
-from PySide6.QtCore import QAbstractTableModel, QModelIndex, QPersistentModelIndex, Qt, Signal
+from PySide6.QtCore import (
+    QAbstractTableModel,
+    QModelIndex,
+    QPersistentModelIndex,
+    Qt,
+    Signal,
+)
 
 # Application imports
 from app.models.Model import Model
@@ -13,7 +19,7 @@ from app.typings.types import M
 @dataclass(frozen=True)
 class ModelData:
     column: str
-    model: Model
+    model: Type[Model]
     value: Any
 
 
@@ -132,7 +138,7 @@ class DatatableModel(Generic[M], QAbstractTableModel):
     #     self.beginInsertColumns(QModelIndex(), 0, len(items)-1)
     #     self.endInsertColumns()
 
-    # def addRow(self, data: Model):
+    # def addRow(self, data: Type[Model]):
     #     """
     #     Accepts data to add to the data model.
 

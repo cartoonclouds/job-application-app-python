@@ -1,4 +1,5 @@
 # Framework imports
+from typing import Type
 from PySide6.QtCore import QEasingCurve, QPoint, QPropertyAnimation, QRect, Qt, Slot
 from PySide6.QtGui import QColor, QFont, QPainter, QPaintEvent
 from PySide6.QtWidgets import QCheckBox
@@ -32,7 +33,7 @@ class ToggleButton(Input[QCheckBox]):
 
     def setBinding(
         self,
-        object: Model,
+        object: Type[Model],
         property: str,
         updateProperty: str | None = None,
     ):
@@ -74,7 +75,7 @@ class ToggleButton(Input[QCheckBox]):
     def hitButton(self, pos: QPoint):
         return self.contentsRect().contains(pos)
 
-    def paintEvent(self, painter: QPaintEvent):
+    def paintEvent(self, painter: QPaintEvent):  # type: ignore[override]
         p = QPainter(self)
         p.setRenderHint(QPainter.Antialiasing)
         p.setFont(QFont("Segoe UI", 9))

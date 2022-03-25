@@ -27,6 +27,8 @@ from app.gui.services.SettingsService import SettingsServiceProvider
 from app.gui.services.StatusBarService import StatusBarServiceProvider
 from app.gui.services.TabService import TabServiceProvider
 from app.constants import WINDOW_WIDTH, WINDOW_HEIGHT
+from app.repositories.ActionRepository import ActionRepository
+from app.repositories.JobApplicationRepository import JobApplicationRepository
 from app.utils.IconUtility import IconUtility
 from app.utils.object_functions import formatObjectName
 from app.utils.ui_functions import UIFunctions
@@ -58,6 +60,9 @@ class UI_MainWindow:
         # SETUP STATUSBAR
         # ///////////////////////////////////////////////////////////////
         StatusBarServiceProvider.init(window)
+
+        JobApplicationRepository.load_all()
+        ActionRepository.load_all()
 
         # ADD CENTRAL WIDGET
         # ///////////////////////////////////////////////////////////////

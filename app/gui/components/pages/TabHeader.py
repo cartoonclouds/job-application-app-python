@@ -65,7 +65,7 @@ class TabHeader(QWidget):
             label = EditableLabel(text, icon=self._icon)
 
             # connect our custom signal
-            label.textChanged.connect(lambda t: self.textChanged.emit(t))
+            label.modified.connect(lambda t: self.textChanged.emit(t))
         else:
             label = QLabel(text)
 

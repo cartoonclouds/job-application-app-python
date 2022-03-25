@@ -1,12 +1,13 @@
 # Standard Library
-from typing import Any, Sequence
+from abc import ABC, ABCMeta, abstractmethod
+from typing import Any, Generic, TypeVar, ClassVar, Type, Sequence, cast
 
 # Third party imports
 import pendulum
 
 # Application imports
-from app.gui.services.StatusBarService import StatusBarServiceProvider
-from app.typings.types import M
+from app.interfaces.repository import IRepository, Id, ModelEntity
+from app.utils.CollectionUtility import CollectionUtility
 from app.utils.Metaclasses.Singleton import Singleton
 
 # ChainMap(class) Self
@@ -22,82 +23,86 @@ from app.utils.Metaclasses.Singleton import Singleton
 # https://github.com/sdispater/backpack
 
 
-class DBRepository(dict[str, M], metaclass=Singleton):
-    def __init__(self, data: dict[str, M]) -> None:
-        """Constructs the job application repository.
+class GenericABCMeta(ABCMeta):
+    pass
 
-        Args:
-           data dict[str, types.M]: [description].
+
+class DBRepository(IRepository[ModelEntity], metaclass=Singleton):
+    """
+    Repository serves as a collection of entites (get, add, update, remove) with underlying
+    persistence layer. Via its factory class, it knows how to construct an instance of the entity,
+    serialize it and get its id.
+    Developers of repos for concrete entites are encouraged to subclass and put a meaningful
+    query and command methods along the basic ones.
+    """
+
+    def __init__(self, factory: Type[ModelEntity]):
+        self.factory = factory
+        self.container: dict[str, ModelEntity] = {}
+
+    def load_all(self) -> dict[str, ModelEntity]:
         """
-        super().__init__(data)
+        Loads all models from the database.
 
-    @classmethod
-    def loadAll(cls) -> Any:
-        """Loads all models from the database.
-
-        NOTE: This will clear any models already present!
-
-        Returns:
-            (bool) The success of loading from the database
+        NB: This will clear any existing models
         """
-        pass
+        entities = self.factory.all()
 
-    def count(self) -> int:
-        """Returns the number of loaded Job Applications
+        if len(entities) > 0:
+            keys: Sequence[str] = entities.model_keys()  # type: ignore
 
-        Returns:
-            count (int)
+            self.container = dict(zip(keys, entities))
+
+        return self.container
+
+    def items(self) -> list[ModelEntity]:
+        return list(self.container.values())
+
+    def keys(self) -> list[Id]:
+        """Loads all models from the database."""
+        return list(self.container.keys())
+
+    def find(self, id_: Id) -> ModelEntity | None:
+        """Returns object of given id or None"""
+        return self.container.get(id_)
+
+    def contains(self, id_: Id) -> bool:
+        """Checks whether an entity of given id is in the repo."""
+        return id_ in self.container
+
+    def create(self, **kwargs: Any) -> ModelEntity:
         """
-        return len(self)
+        Creates an object compatible with this repo. Uses repo's factory.
 
-    def values(self) -> Sequence[M]:  # type: ignore
-        """Returns values only of keyed dictionary.
-
-        Returns:
-            Sequencetypes.[M]
+        NB: Does not inserts the object to the repo. Use `create_and_add` method for that.
         """
-        return list(super().values())
+        entity = self.factory(**kwargs)
 
-    def getAtIndex(self, index: int) -> M | bool:
-        """Gets the model at index. If there's nothing at index, False is returned.
+        entity.save()
+        entity.push()
 
-        Returns:
-            Model | bool: A model
-        """
-        modelList = self.values()
+        return entity
 
-        try:
-            model = modelList[index]
-        except:
-            return False
+    def create_and_add(self, **kwargs: Any) -> ModelEntity:
+        """Creates an object compatible with this repo and adds it to the collection."""
+        entity = self.create(**kwargs)
 
-        return model
+        self.add(entity)
 
-    def getColumns(self) -> list[str]:
-        """Returns an array of column names for the model of this repository.
+        return entity
 
-        Returns:
-            list[str]: The list of columns
-        """
-        model = self.getAtIndex(0)
+    def add(self, entity: ModelEntity) -> Id:
+        """Adds the object to the repo to the underlying persistence layer via its DAO."""
+        entityId = entity.get_key()
 
-        if not isinstance(model, bool):
-            return model.getTableColumns()
+        self.container[entityId] = entity
 
-        return []
+        return entityId
 
-    def saveAll(self):
-        """
-        Saves all changes made to the model instances
+    def update(self, entity: ModelEntity) -> None:
+        """Updates the object in the repo."""
+        self.container[entity.get_key()] = entity
 
-        TODO Put onto a separate thread
-        """
-        modifiedModels = [model for model in self.values()]
-
-        if len(modifiedModels) > 0:
-            for model in modifiedModels:
-                model.push()  # type: ignore
-
-            StatusBarServiceProvider.message(
-                "Last Saved " + str(pendulum.Pendulum.now().to_time_string()), False
-            )
+    def remove(self, entity: ModelEntity) -> None:
+        """Removes the object from the underlying persistence layer via DAO."""
+        self.container.pop(entity.get_key())
