@@ -13,7 +13,7 @@
 # ///////////////////////////////////////////////////////////////
 
 # Framework imports
-from PySide6.QtGui import QAction, QIcon, QKeySequence
+from PySide6.QtGui import QIcon, QKeySequence
 from PySide6.QtWidgets import QMainWindow
 from PySide6.QtCore import QMetaObject
 
@@ -23,13 +23,13 @@ import qtawesome as qta
 # Application imports
 from app.gui.components.pages.SummaryTab import SummaryTab
 from app.gui.components.tabs.TabBar import TabBar
-from app.gui.services.SettingsService import SettingsServiceProvider
-from app.gui.services.StatusBarService import StatusBarServiceProvider
-from app.gui.services.TabService import TabServiceProvider
+from app.gui.services.settings_service import SettingsServiceProvider
+from app.gui.services.statusbar_service import StatusBarServiceProvider
+from app.gui.services.tab_service import TabServiceProvider
 from app.constants import WINDOW_WIDTH, WINDOW_HEIGHT
-from app.repositories.ActionRepository import ActionRepository
-from app.repositories.JobApplicationRepository import JobApplicationRepository
-from app.utils.IconUtility import IconUtility
+from app.repositories.action_repository import ActionRepository
+from app.repositories.job_application_repository import JobApplicationRepository
+from app.utils.icon_utility import IconUtility
 from app.utils.object_functions import formatObjectName
 from app.utils.ui_functions import UIFunctions
 
@@ -90,7 +90,7 @@ class UI_MainWindow:
         # Uncomment to disable native menubar on Mac
         # menubar().setNativeMenuBar(False)
 
-        exitAction = UIFunctions.createNewAction(
+        exitAction = UIFunctions.create_new_action(
             "&Exit",
             "Exit this program",
             "Exit this program",

@@ -1,5 +1,8 @@
-# Framework imports
+# Standard Library
+from enum import Enum, auto
 from typing import Type
+
+# Framework imports
 from PySide6.QtCore import Qt, Slot
 from PySide6.QtGui import QPaintEvent
 from PySide6.QtWidgets import QLabel, QLineEdit
@@ -10,124 +13,122 @@ from app.gui.components.form.inputs.Input import Input
 from app.models.Model import Model
 
 
+class AffixLocation(Enum):
+    PREFIX = auto()
+    SUFFIX = auto()
+
+
 class TextInput(Input[QLineEdit]):
     # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QLineEdit.html
+
     def __init__(self, label: str | None = None):
-        super(TextInput, self).__init__(QLineEdit(), label or "")
+        super(TextInput, self).__init__(QLineEdit(), label)
 
-        self._prefix: str | None = None
-        self._suffix: str | None = None
+        self._prefix: QLabel | None = None
+        self._suffix: QLabel | None = None
 
-        if label is not None:
-            self.setLabel(label)
+        self._autoRemoveAffix: bool = False
 
     def setBinding(
         self,
-        object: Type[Model],
+        object: Model,
         property: str,
         updateProperty: str | None = None,
     ):
-        self._boundObject = object
-        self._boundProperty = property
-        self._updateProperty = updateProperty
+        super().setBinding(object, property, updateProperty)
 
-        self._input.setText(str(getattr(self._boundObject, self._boundProperty)))
+        self.baseWidget.setText(str(self.boundValue()))
 
-        self._input.textEdited.connect(self._onTextChanged)
+        self.baseWidget.textEdited.connect(self._onTextChanged)
 
     @Slot(str)
     def _onTextChanged(self):
-        self._removePreSuffixes()
-
         assert self._boundObject is not None
-        self.updateBoundObject(self._boundObject, self._input.text())
 
-    def _removePreSuffixes(self):
+        text = self.baseWidget.text()
+
+        if self._autoRemoveAffix:
+            text = self._removeAffixFromInput()
+
+        self.updateBoundObject(text)
+
+    def setAutoRemoveAffix(self, autoRemoveAffix: bool):
+        self._autoRemoveAffix = autoRemoveAffix
+
+    def setPrefix(self, text: str):
+        self._prefix = self._setAffix(AffixLocation.PREFIX, text)
+
+    def setSuffix(self, text: str):
+        self._suffix = self._setAffix(AffixLocation.SUFFIX, text)
+
+    def _setAffix(self, affix: AffixLocation, text: str):
+        affixLabel = QLabel(text, self)
+        affixLabel.setBuddy(self.baseWidget)
+        affixLabel.setAlignment(Qt.AlignCenter)
+        affixLabel.setStyleSheet(
+            "background-color: #e9ecef; border-"
+            + ("right" if affix == AffixLocation.PREFIX else "left")
+            + ":1px solid #ababab"
+        )
+
+        if self._autoRemoveAffix:
+            self._removeAffixFromInput()
+
+        affixLabel.show()
+
+        return affixLabel
+
+    def _removeAffixFromInput(self) -> str:
+        text = self.baseWidget.text()
+
         # If the prefix was entered, remove it
-        if self._prefix is not None and self._input.text().startswith(self._prefix):
-            self._input.setText(self._input.text().replace(self._prefix, ""))
+        if self._prefix is not None and text.startswith(self._prefix.text()):
+            text = text.replace(self._prefix.text(), "")
 
         # If the suffix was entered, remove it
-        if self._suffix is not None and self._input.text().endswith(self._suffix):
-            self._input.setText(self._input.text().replace(self._suffix, ""))
+        if self._suffix is not None and text.endswith(self._suffix.text()):
+            text = text.replace(self._suffix.text(), "")
 
-    def setPrefix(self, prefix: str):
-        self._prefix = prefix
+        self.baseWidget.setText(text)
 
-        self._prefixLabel = QLabel(self._prefix, self)
-        self._prefixLabel.setBuddy(self._input)
-        self._prefixLabel.setAlignment(Qt.AlignCenter)
-        self._prefixLabel.setStyleSheet(
-            "background-color: #e9ecef; border-right:1px solid #ababab"
-        )
+        return text
 
-        self._removePreSuffixes()
-        self._prefixLabel.show()
-
-    def updatePrefix(self):
-        if self._prefix is None:
+    def _updateAffix(self, affix: AffixLocation, affixLabel: QLabel | None):
+        if affixLabel is None:
             return
 
-        inputFont = self._input.font()
-        self._prefixLabel.setFont(inputFont)
+        inputFont = self.baseWidget.font()
+        affixLabel.setFont(inputFont)
 
-        height = self._input.sizeHint().height() - 2
+        height = self.baseWidget.sizeHint().height() - 2
         width = max(
-            self._prefixLabel.sizeHint().width() + (WIDGET_SPACING * 2),
+            affixLabel.sizeHint().width() + (WIDGET_SPACING * 2),
             height,
         )
 
-        prefixPos = self._input.pos()
-        prefixPos.setX(prefixPos.x() + 1)
+        prefixPos = self.baseWidget.pos()
+        prefixPosX = prefixPos.x() + 1
+
+        if affix == AffixLocation.SUFFIX:
+            prefixPosX = prefixPosX + self.baseWidget.width() - width - 2
+
+        prefixPos.setX(prefixPosX)
         prefixPos.setY(prefixPos.y() + 1)
 
-        self._prefixLabel.setMaximumHeight(height)
-        self._prefixLabel.setMaximumWidth(width)
-        self._prefixLabel.move(prefixPos)
-
-    def setSuffix(self, suffix: str):
-        self._suffix = suffix
-
-        self._suffixLabel = QLabel(self._suffix, self)
-        self._suffixLabel.setAlignment(Qt.AlignCenter)
-        self._suffixLabel.setStyleSheet(
-            "background-color: #e9ecef; border-left:1px solid #ababab"
-        )
-
-        self._removePreSuffixes()
-        self._suffixLabel.show()
-
-    def updateSuffix(self):
-        if self._suffix is None:
-            return
-
-        inputFont = self._input.font()
-        self._suffixLabel.setFont(inputFont)
-
-        height = self._input.sizeHint().height() - 2
-        width = max(
-            self._suffixLabel.sizeHint().width() + (WIDGET_SPACING * 2),
-            height,
-        )
-
-        suffixPos = self._input.pos()
-        suffixPos.setX(suffixPos.x() + self._input.width() - width - 1)
-        suffixPos.setY(suffixPos.y() + 1)
-
-        self._suffixLabel.setMaximumHeight(height)
-        self._suffixLabel.setMaximumWidth(width)
-        self._suffixLabel.move(suffixPos)
+        affixLabel.setMaximumHeight(height)
+        affixLabel.setMaximumWidth(width)
+        affixLabel.move(prefixPos)
 
     def paintEvent(self, painter: QPaintEvent) -> None:  # type: ignore[override]
-        self.updatePrefix()
-        self.updateSuffix()
+        self._updateAffix(AffixLocation.PREFIX, self._prefix)
+        self._updateAffix(AffixLocation.SUFFIX, self._suffix)
 
-        inputMargins = self._input.contentsMargins()
+        inputMargins = self.baseWidget.contentsMargins()
         if self._prefix is not None:
-            inputMargins.setLeft(self._prefixLabel.maximumWidth() + WIDGET_SPACING)
+            inputMargins.setLeft(self._prefix.maximumWidth() + WIDGET_SPACING)
 
         if self._suffix is not None:
-            inputMargins.setRight(self._suffixLabel.maximumWidth() + WIDGET_SPACING)
-        self._input.setTextMargins(inputMargins)
+            inputMargins.setRight(self._suffix.maximumWidth() + WIDGET_SPACING)
+        self.baseWidget.setTextMargins(inputMargins)
 
         return super().paintEvent(painter)

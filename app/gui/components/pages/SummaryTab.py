@@ -17,9 +17,9 @@ from app.gui.components.pages.JobApplicationTab import JobApplicationTab
 from app.gui.components.pages.TabHeader import TabHeader
 from app.gui.components.statistics.StatisticGroup import StatisticGroup
 from app.gui.components.tabs.Tab import Tab
-from app.gui.services.TabService import TabServiceProvider
+from app.gui.services.tab_service import TabServiceProvider
 from app.models.JobApplication import JobApplication
-from app.utils.IconUtility import IconUtility
+from app.utils.icon_utility import IconUtility
 
 
 class SummaryTab(Tab):

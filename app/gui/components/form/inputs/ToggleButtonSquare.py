@@ -13,7 +13,7 @@ class ToggleButtonSquare(Input[QPushButton]):
     _uncheckedStyles = "background-color: lightgrey"
 
     def __init__(self, checkedText: str, uncheckedText: str | None = None):
-        super(ToggleButtonSquare, self).__init__(QPushButton(), checkedText)
+        super(ToggleButtonSquare, self).__init__(QPushButton())
 
         self._checkedText: str = checkedText
         self._uncheckedText: str = checkedText
@@ -21,27 +21,25 @@ class ToggleButtonSquare(Input[QPushButton]):
         if uncheckedText is not None:
             self._uncheckedText = uncheckedText
 
-        self._input.setCheckable(True)
-        self._input.setCursor(Qt.PointingHandCursor)
-        self._input.setText(checkedText)
-        self._input.setStyleSheet(ToggleButtonSquare._uncheckedStyles)
+        self.baseWidget.setCheckable(True)
+        self.baseWidget.setCursor(Qt.PointingHandCursor)
+        self.baseWidget.setText(checkedText)
+        self.baseWidget.setStyleSheet(ToggleButtonSquare._uncheckedStyles)
 
         # TOOLTIP "#36373d", "#8a95aa"
 
     def setBinding(
         self,
-        object: Type[Model],
+        object: Model,
         property: str,
         updateProperty: str | None = None,
     ):
-        self._boundObject = object
-        self._boundProperty = property
-        self._updateProperty = updateProperty
+        super().setBinding(object, property, updateProperty)
 
-        self._input.setChecked(bool(getattr(self._boundObject, self._boundProperty)))
+        self.baseWidget.setChecked(self.boundValue())
         self._updateButton()
 
-        self._input.clicked.connect(self._onButtonToggled)
+        self.baseWidget.clicked.connect(self._onButtonToggled)
 
     def _hasUpdatingText(self) -> bool:
         return self._uncheckedText is not None
@@ -49,18 +47,18 @@ class ToggleButtonSquare(Input[QPushButton]):
     @Slot(str)
     def _onButtonToggled(self):
         assert self._boundObject is not None
-        self.updateBoundObject(self._boundObject, self._input.isChecked())
+        self.updateBoundObject(self.baseWidget.isChecked())
 
         if self._hasUpdatingText():
             self._updateButton()
 
     def _updateButton(self):
-        if self._input.isChecked():
-            self._input.setText(self._checkedText)
-            self._input.setStyleSheet(ToggleButtonSquare._checkedStyles)
+        if self.baseWidget.isChecked():
+            self.baseWidget.setText(self._checkedText)
+            self.baseWidget.setStyleSheet(ToggleButtonSquare._checkedStyles)
         else:
-            self._input.setText(self._uncheckedText)
-            self._input.setStyleSheet(ToggleButtonSquare._uncheckedStyles)
+            self.baseWidget.setText(self._uncheckedText)
+            self.baseWidget.setStyleSheet(ToggleButtonSquare._uncheckedStyles)
 
     # https://github.com/Wanderson-Magalhaes/PyOneDark_Qt_Widgets_Modern_GUI/blob/7a58b37247870f5b0425a5c1c633dfdef56e73ae/gui/widgets/py_icon_button/py_icon_button.py#L228
     # MOUSE OVER

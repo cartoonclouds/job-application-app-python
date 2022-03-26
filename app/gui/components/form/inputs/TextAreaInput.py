@@ -1,4 +1,3 @@
-
 # Framework imports
 from typing import Type
 from PySide6.QtCore import QMargins, Slot
@@ -12,40 +11,37 @@ from app.models.Model import Model
 
 class TextAreaInput(Input[QPlainTextEdit]):
     def __init__(self, label: str | None = None):
-        super(TextAreaInput, self).__init__(QPlainTextEdit(), str(label))
-
-        if label is not None:
-            self.setLabel(label)
+        super(TextAreaInput, self).__init__(QPlainTextEdit(), label)
 
     def setBinding(
         self,
-        object: Type[Model],
+        object: Model,
         property: str,
         updateProperty: str | None = None,
     ):
-        self._boundObject = object
-        self._boundProperty = property
+        super().setBinding(object, property, updateProperty)
 
-        self._input.insertPlainText(getattr(self._boundObject, self._boundProperty))
-        self._input.document().setModified(False)
+        self.baseWidget.insertPlainText(self.boundValue())
+        self.baseWidget.document().setModified(False)
 
-        self._input.textChanged.connect(self._onTextChanged)
+        self.baseWidget.textChanged.connect(self._onTextChanged)
 
     @Slot(str)
     def _onTextChanged(self):
         assert self._boundObject is not None
-        self.updateBoundObject(self._boundObject, self._input.document().toPlainText())
+
+        self.updateBoundObject(self.baseWidget.document().toPlainText())
 
     def setHeight(self, rows: int):
-        document: QTextDocument = self._input.document()
-        fontMetrics: QFontMetrics = self._input.fontMetrics()
-        margins: QMargins = self._input.contentsMargins()
+        document: QTextDocument = self.baseWidget.document()
+        fontMetrics: QFontMetrics = self.baseWidget.fontMetrics()
+        margins: QMargins = self.baseWidget.contentsMargins()
 
         height = (
             fontMetrics.lineSpacing() * rows
-            + (document.documentMargin() + self._input.frameWidth()) * 2
+            + (document.documentMargin() + self.baseWidget.frameWidth()) * 2
             + margins.top()
             + margins.bottom()
         )
 
-        self._input.setFixedHeight(int(height))
+        self.baseWidget.setFixedHeight(int(height))

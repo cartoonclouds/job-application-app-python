@@ -13,22 +13,25 @@
 # ///////////////////////////////////////////////////////////////
 
 # Standard Library
-import sys
 import logging
+import sys
 
 # Framework imports
-from PySide6.QtWidgets import QApplication, QMainWindow
 from PySide6.QtCore import ClassInfo
-from PySide6.QtGui import QFontDatabase, QFont
-
+from PySide6.QtGui import QFont, QFontDatabase
+from PySide6.QtWidgets import QApplication, QMainWindow
 
 # Application imports
+from app.gui.components.pages.JobApplicationTab import JobApplicationTab
+from app.gui.services.tab_service import TabServiceProvider
+from app.models.JobApplication import JobApplication
+from app.repositories.job_application_repository import JobApplicationRepository
 from app.ui_main import UI_MainWindow
-from app.utils.IconUtility import IconUtility
+from app.utils.icon_utility import IconUtility
+
 
 # MAIN WINDOW
 # ///////////////////////////////////////////////////////////////
-# @ClassInfo(Author="CHRIS TUDHOPE", URL="http://www.website.com")
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -58,11 +61,6 @@ class MainWindow(QMainWindow):
         self.show()
 
     def openTestTab(self):
-        from app.gui.components.pages.JobApplicationTab import JobApplicationTab
-        from app.gui.services.TabService import TabServiceProvider
-        from app.models.JobApplication import JobApplication
-        from app.repositories.JobApplicationRepository import JobApplicationRepository
-
         # TODO Utility function to create JAA/empty tab, given JAA ID/random
         testJaa = JobApplicationRepository.items()[0]
         assert isinstance(testJaa, JobApplication)
@@ -142,7 +140,7 @@ if __name__ == "__main__":
     # ]
     # debug(properties, methods)
 
-    sys.exit(app.exec())
+    sys.exit(app.exec_())
 
 
 # app.setStyle("Plastique")

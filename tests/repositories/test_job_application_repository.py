@@ -1,7 +1,7 @@
 from seeds.factories import factory
 import pytest
 
-from app.repositories.JobApplicationRepository import JobApplicationRepository
+from app.repositories.job_application_repository import JobApplicationRepository
 from app.models.JobApplication import JobApplication
 
 

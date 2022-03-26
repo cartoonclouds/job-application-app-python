@@ -14,7 +14,7 @@ from typing import Any
 
 # Application imports
 from app.gui.components.tabs.Tab import Tab
-from app.gui.services.TabService import TabServiceProvider
+from app.gui.services.tab_service import TabServiceProvider
 from app.utils.object_functions import formatObjectName
 
 

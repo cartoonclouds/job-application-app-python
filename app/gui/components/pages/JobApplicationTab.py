@@ -6,7 +6,6 @@ from app.gui.components.datatable.Datatable import Datatable
 from app.gui.components.form.CompanyForm import CompanyForm
 from app.gui.components.form.Form import Form
 from app.gui.components.form.JobForm import JobForm
-from app.gui.components.form.inputs.TextInput import TextInput
 from app.gui.components.form.inputs.ToggleButton import ToggleButton
 from app.gui.components.form.inputs.ToggleButtonSquare import ToggleButtonSquare
 from app.gui.components.models.ActionDatatableModel import ActionDatatableModel
@@ -24,12 +23,12 @@ from PySide6.QtWidgets import (
     QMainWindow,
 )
 from PySide6.QtCore import Qt, QSize, Slot
-from PySide6.QtGui import QPaintEvent, QFontMetrics
+from PySide6.QtGui import QFontMetrics
 from app.constants import WIDGET_SPACING, WIDGET_MARGINS, ZERO_MARGINS
 from app.models.JobApplication import JobApplication
 from app.utils.ui_functions import UIFunctions
 
-from app.utils.IconUtility import IconUtility
+from app.utils.icon_utility import IconUtility
 
 # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QTabWidget.html
 # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QTabBar.html

@@ -1,3 +1,17 @@
+# ///////////////////////////////////////////////////////////////
+#
+# BY: CHRIS TUDHOPE
+# V: 1.0.0
+#
+# This project can be used freely for all uses, as long as they
+# maintain the respective credits.
+#
+# There are limitations on Qt licenses if you want to use your products
+# commercially, I recommend reading them on the official website:
+# https://doc.qt.io/qtforpython/licenses.html
+#
+# ///////////////////////////////////////////////////////////////
+
 # https://stackoverflow.com/questions/26804421/python-project-directory-structure-pytest-trouble
 # https://github.com/Seanny123/derpland
 # https://gist.github.com/nicoddemus/6abbc43236dd042fd053

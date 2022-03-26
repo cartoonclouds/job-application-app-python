@@ -1,6 +1,4 @@
-from PySide6.QtWidgets import QWidget
-
-from typing import Any, Iterable, Sequence, Type, TypeVar, Generic, TypeAlias
+from typing import Any, Iterable, Sequence, Type, TypeVar, Generic, TypeAlias, Union
 
 from app.models.Model import Model
 from PySide6.QtCore import QAbstractTableModel
@@ -11,8 +9,29 @@ from app.models.Action import Action
 from app.models.Company import Company
 from app.models.JobApplication import JobApplication
 
+from PySide6.QtWidgets import (
+    QWidget,
+    QLabel,
+    QLineEdit,
+    QDateTimeEdit,
+    QDoubleSpinBox,
+    QComboBox,
+    QPlainTextEdit,
+    QCheckBox,
+    QPushButton,
+)
 
-T = TypeVar("T", bound=QWidget, covariant=True)
+PySide6Input = TypeVar(
+    "PySide6Input",
+    QWidget,
+    QLineEdit,
+    QDateTimeEdit,
+    QDoubleSpinBox,
+    QComboBox,
+    QPlainTextEdit,
+    QCheckBox,
+    QPushButton,
+)
 M = TypeVar("M", bound=Model, covariant=True)
 DTM = TypeVar("DTM", bound=QAbstractTableModel, covariant=True)
 

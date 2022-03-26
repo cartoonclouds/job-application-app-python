@@ -8,7 +8,7 @@ from app.gui.components.form.inputs.TextInput import TextInput
 from app.gui.components.form.PayOptions import PayOptions
 from app.gui.components.models.ProfessionListModel import ProfessionListModel
 from app.models.Job import Job
-from app.utils.mixins.Logger import LoggerMixin
+from app.utils.mixins.logger import LoggerMixin
 
 # https://docs.python.org/3/library/datetime.html#strftime-and-strptime-format-codes
 

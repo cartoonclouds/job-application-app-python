@@ -16,35 +16,24 @@ class DateTimeInput(Input[QDateTimeEdit]):
     """
 
     def __init__(self, label: str | None = None):
-        super(DateTimeInput, self).__init__(QDateTimeEdit(), str(label))
+        super(DateTimeInput, self).__init__(QDateTimeEdit(), label)
 
-        self._input.setCalendarPopup(True)
-        self._input.setDisplayFormat(DATE_FORMAT_1)
-
-        if label is not None:
-            self.setLabel(label)
+        self.baseWidget.setCalendarPopup(True)
+        self.baseWidget.setDisplayFormat(DATE_FORMAT_1)
 
     def setBinding(
         self,
-        object: Type[Model],
+        object: Model,
         property: str,
         updateProperty: str | None = None,
     ):
-        self._boundObject = object
-        self._boundProperty = property
-        self._updateProperty = updateProperty
+        super().setBinding(object, property, updateProperty)
 
-        initialDateTime = getattr(
-            self._boundObject,
-            self._boundProperty,
-            QDateTime.currentDateTime().date(),
-        )
+        self.baseWidget.setDateTime(self.boundValue(QDateTime.currentDateTime().date()))
 
-        self._input.setDateTime(initialDateTime)
-
-        self._input.dateTimeChanged.connect(self._onDateTimeChanged)
+        self.baseWidget.dateTimeChanged.connect(self._onDateTimeChanged)
 
     @Slot(str)
     def _onDateTimeChanged(self, datetime: QDateTime):
         assert self._boundObject is not None
-        self.updateBoundObject(self._boundObject, datetime.toPython())
+        self.updateBoundObject(datetime.toPython())

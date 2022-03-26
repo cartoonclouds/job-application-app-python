@@ -1,7 +1,7 @@
 # Application imports
-from app.gui.services.StatusBarService import StatusBarServiceProvider
+from app.gui.services.statusbar_service import StatusBarServiceProvider
 from app.models.Action import Action
-from app.repositories.DBRepository import DBRepository
+from app.repositories.db_repository import DBRepository
 
 
 class _ActionRepository(DBRepository[Action]):

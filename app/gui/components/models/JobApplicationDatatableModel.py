@@ -9,7 +9,7 @@ from PySide6.QtCore import QModelIndex, QPersistentModelIndex, Qt
 # Application imports
 from app.gui.components.datatable.DatatableModel import DatatableModel, ModelData
 from app.models.JobApplication import JobApplication
-from app.repositories.JobApplicationRepository import JobApplicationRepository
+from app.repositories.job_application_repository import JobApplicationRepository
 
 
 class JobApplicationDatatableModel(DatatableModel[JobApplication]):

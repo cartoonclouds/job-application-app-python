@@ -1,6 +1,6 @@
 from copy import copy, deepcopy
 from app.models.JobApplication import JobApplication
-from app.repositories.DBRepository import DBRepository
+from app.repositories.db_repository import DBRepository
 from seeds.factories import factory
 import pytest
 

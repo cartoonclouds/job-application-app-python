@@ -20,43 +20,38 @@ class SelectBox(Input[QComboBox]):
         label: str | None = None,
         dataModel=None,
     ):
-        super(SelectBox, self).__init__(QComboBox(), str(label or ""))
+        super(SelectBox, self).__init__(QComboBox(), label)
 
-        self._inputModel = None
-        self._input.setInsertPolicy(QComboBox.InsertAtTop)
-
-        if label:
-            self.setLabel(label)
+        self.baseWidgetModel = None
+        self.baseWidget.setInsertPolicy(QComboBox.InsertAtTop)
 
         if dataModel:
             self.setModel(dataModel)
 
     def addItems(self, texts: Sequence[str]):
-        self._input.addItems(texts)
+        self.baseWidget.addItems(texts)
 
     def setEditable(self, editable: bool):
-        self._input.setEditable(editable)
+        self.baseWidget.setEditable(editable)
 
     def findText(self, text: str, flags: Qt.MatchFlags) -> int:
-        return self._input.findText(text, flags)
+        return self.baseWidget.findText(text, flags)
 
     def setBinding(
         self,
-        object: Type[Model],
+        object: Model,
         property: str,
         updateProperty: str | None = None,
     ) -> None:
-        self._boundObject = object
-        self._boundProperty = property
-        self._updateProperty = updateProperty
+        super().setBinding(object, property, updateProperty)
 
-        propertyValue = getattr(self._boundObject, self._boundProperty)
-        self._initialPropertyIndex = self._input.findText(propertyValue)
+        propertyValue = self.boundValue()
+        propertyIndex = self.baseWidget.findText(propertyValue)
 
-        self._input.setCurrentText(propertyValue)
-        self._input.setCurrentIndex(self._initialPropertyIndex)
+        self.baseWidget.setCurrentText(propertyValue)
+        self.baseWidget.setCurrentIndex(propertyIndex)
 
-        self._input.currentIndexChanged.connect(self._onSelectionChanged)
+        self.baseWidget.currentIndexChanged.connect(self._onSelectionChanged)
 
     @Slot(int)
     def _onSelectionChanged(self, index: int):
@@ -65,18 +60,18 @@ class SelectBox(Input[QComboBox]):
         if self.hasModel():
             assert self._updateProperty is not None
 
-            indexModel = self._inputModel.getAt(index)
+            indexModel = self.baseWidgetModel.getAt(index)
 
             self.updateBoundObject(
                 indexModel,
                 getattr(indexModel, self._updateProperty),
             )
         else:
-            self.updateBoundObject(self._boundObject, self._input.itemText(index))
+            self.updateBoundObject(self.baseWidget.itemText(index))
 
     def hasModel(self) -> bool:
-        return self._inputModel is not None
+        return self.baseWidgetModel is not None
 
     def setModel(self, model):
-        self._inputModel = model
-        self._input.setModel(model)
+        self.baseWidgetModel = model
+        self.baseWidget.setModel(model)

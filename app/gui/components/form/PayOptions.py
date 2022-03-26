@@ -1,6 +1,6 @@
 # Standard Library
 from functools import partial
-from typing import cast
+from typing import TypeVar, cast
 
 # Framework imports
 from PySide6.QtCore import Qt, Signal
@@ -21,6 +21,7 @@ from app.gui.components.form.inputs.NumberInput import NumberInput
 from app.gui.components.form.inputs.SelectBox import SelectBox
 from app.gui.components.form.inputs.TextInput import TextInput
 from app.models.Job import Job
+from app.typings.types import PySide6Input
 
 
 class PayOptions(Input[QWidget]):
@@ -31,7 +32,7 @@ class PayOptions(Input[QWidget]):
     ) -> None:
         self._model = model
         self._initialOption = initialOption
-        self._emittingInputs: list[QWidget] = list()
+        self._emittingInputs: list[Input[PySide6Input]] = list()
 
         stackWidget = self._setupStacks()
         self._stacks = cast(QStackedLayout, stackWidget.layout())

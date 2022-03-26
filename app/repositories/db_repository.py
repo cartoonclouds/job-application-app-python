@@ -7,7 +7,6 @@ import pendulum
 
 # Application imports
 from app.interfaces.repository import IRepository, Id, ModelEntity
-from app.utils.CollectionUtility import CollectionUtility
 from app.utils.Metaclasses.Singleton import Singleton
 
 # ChainMap(class) Self

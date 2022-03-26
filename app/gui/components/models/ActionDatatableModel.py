@@ -8,7 +8,7 @@ from PySide6.QtCore import QModelIndex, QPersistentModelIndex, Qt
 # Application imports
 from app.gui.components.datatable.DatatableModel import DatatableModel, ModelData
 from app.models.Action import Action
-from app.repositories.ActionRepository import ActionRepository
+from app.repositories.action_repository import ActionRepository
 
 
 class ActionDatatableModel(DatatableModel[Action]):

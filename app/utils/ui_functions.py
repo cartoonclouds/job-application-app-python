@@ -1,7 +1,9 @@
-from typing import Union, Callable, Any
+from itertools import islice
+from typing import Callable, Any
 from PySide6.QtWidgets import QApplication, QMainWindow, QMenuBar
 from PySide6.QtGui import QAction, QKeySequence
 from PySide6.QtCore import QKeyCombination
+from app.utils.iter_functions import first_where
 
 from app.utils.object_functions import formatObjectName
 from inflection import parameterize
@@ -11,23 +13,21 @@ from inflection import parameterize
 
 class UIFunctions:
     @classmethod
-    def findMainWindow(cls) -> Union[QMainWindow, None]:
+    def findMainWindow(cls) -> QMainWindow | None:
         # Global function to find the (open) QMainWindow in application
-        app = QApplication.instance()
-        for widget in app.topLevelWidgets():
-            if isinstance(widget, QMainWindow):
-                return widget
-        return None
+        app: QApplication | None = QApplication.instance()
+        if app is None:
+            return None
+
+        return first_where(app.topLevelWidgets(), lambda w: isinstance(w, QMainWindow))
 
     @classmethod
-    def createNewAction(
+    def create_new_action(
         cls,
         name: str,
         tooltip: str,
         statusTip: str,
-        shortcut: Union[
-            QKeySequence, QKeyCombination, QKeySequence.StandardKey, str, int
-        ],
+        shortcut: QKeySequence | QKeyCombination | QKeySequence.StandardKey | str | int,
         slot: Callable[..., Any],
         menubar: QMenuBar,
     ):
