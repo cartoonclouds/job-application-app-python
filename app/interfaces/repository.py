@@ -1,10 +1,13 @@
 from typing import Any, Generic, TypeAlias, TypeVar, Iterable
 from app.models.Model import Model
 
+T = TypeVar("T")
 Id: TypeAlias = str
 Ids = Iterable[Id]
 
-ModelEntity = TypeVar("ModelEntity", bound=Model)
+ModelEntity = TypeVar("ModelEntity", bound=Model, covariant=True)
+
+# Memoization https://python-course.eu/advanced-python/memoization-decorators.php
 
 
 class IRepository(Generic[ModelEntity]):

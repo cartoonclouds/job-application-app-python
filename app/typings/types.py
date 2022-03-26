@@ -23,14 +23,16 @@ from PySide6.QtWidgets import (
 
 PySide6Input = TypeVar(
     "PySide6Input",
-    QWidget,
-    QLineEdit,
-    QDateTimeEdit,
-    QDoubleSpinBox,
-    QComboBox,
-    QPlainTextEdit,
-    QCheckBox,
-    QPushButton,
+    bound=Union[
+        QWidget,
+        QLineEdit,
+        QDateTimeEdit,
+        QDoubleSpinBox,
+        QComboBox,
+        QPlainTextEdit,
+        QCheckBox,
+        QPushButton,
+    ],
 )
 M = TypeVar("M", bound=Model, covariant=True)
 DTM = TypeVar("DTM", bound=QAbstractTableModel, covariant=True)

@@ -1,16 +1,36 @@
-from typing import Any, Type
+# Standard Library
+from typing import Any
 
+# Framework imports
+from PySide6.QtCore import Signal
+
+# Application imports
 from app.models.Model import Model
 
 
 class Bindable:
+    modified = Signal(bool)
+
     def __init__(self):
+        super().__init__()
+
         self._boundObject: Model | None = None
         self._boundProperty: str | None = None
         self._updateProperty: str | None = None
 
         self._boundUpdateObject: Model | None = None
         self._boundUpdateProperty: str | None = None
+
+    @property
+    def isPropertyBound(self) -> bool:
+        return self._boundProperty is not None and self._boundObject is not None
+
+    @property
+    def isUpdatePropertyBound(self) -> bool:
+        return (
+            self._boundUpdateProperty is not None
+            and self._boundUpdateObject is not None
+        )
 
     def setBinding(
         self,
@@ -31,16 +51,11 @@ class Bindable:
 
         return self._boundObject.is_dirty()  # type: ignore
 
-    @property
-    def isPropertyBound(self) -> bool:
-        return self._boundProperty is not None and self._boundObject is not None
-
-    @property
-    def isUpdatePropertyBound(self) -> bool:
-        return (
-            self._boundUpdateProperty is not None
-            and self._boundUpdateObject is not None
-        )
+    def boundValue(self, default: Any = None) -> Any:
+        if self.isPropertyBound:
+            return getattr(self._boundObject, self._boundProperty, default)
+        else:
+            return default
 
     def updateBoundObject(self, value: Any):
         value = value if value != None else ""
@@ -58,10 +73,6 @@ class Bindable:
 
         setattr(updateObject, updateProperty, value)
 
-        debug(updateObject, dict(zip([updateProperty], [value])))
+        self.modified.emit(self.isModified())
 
-    def boundValue(self, default: Any = None) -> Any:
-        if self.isPropertyBound:
-            return getattr(self._boundObject, self._boundProperty, default)
-        else:
-            return default
+        debug(updateObject, dict(zip([updateProperty], [value])))

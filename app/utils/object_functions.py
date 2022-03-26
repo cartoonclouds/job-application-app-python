@@ -1,6 +1,6 @@
 from app.utils.string_functions import rreplace
 
-def formatObjectName(*args: str, separator: str = ":") -> str:
+def format_object_name(*args: str, separator: str = ":") -> str:
     """Constructs a formatted string with hierarchical component names to name an object.
 
     Args:

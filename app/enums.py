@@ -49,6 +49,8 @@ class NoDuplicateEnum(Enum):
 # https://www.reddit.com/r/programming/comments/1gy49/python_attributes_and_methods/
 # https://docs.python.org/3/tutorial/datastructures.html#more-on-lists
 
+# Generic enums https://github.com/python/typing/issues/535
+
 
 class EnumByIndexMeta(EnumMeta):
     def __getitem__(self, __i: int | slice) -> str:
@@ -80,10 +82,10 @@ class BaseEnum(str, Enum):
         return self.name, self.value
 
     @classmethod
-    def index(cls: Type[E], type: E) -> int: # type: ignore Thinks Enum type is str with this overloading str.index
+    def index(cls: Type[E], type: E) -> int:  # type: ignore Thinks Enum type is str with this overloading str.index
         return cls.VALUES().index(type)
 
-    @classmethod    
+    @classmethod
     def MEMBERS(cls: Type[E]) -> Mapping[str, E]:
         return dict(cls.__members__.items())
 

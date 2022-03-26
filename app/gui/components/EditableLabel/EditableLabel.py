@@ -3,7 +3,7 @@ import typing
 from PySide6 import QtCore, QtGui, QtWidgets
 
 from app.constants import ZERO_MARGINS, WIDGET_SPACING
-from app.utils.object_functions import formatObjectName
+from app.utils.object_functions import format_object_name
 from inflection import parameterize
 
 
@@ -47,7 +47,7 @@ class EditableLabel(QtWidgets.QWidget):
         QtWidgets.QWidget.__init__(self, parent=parent)
 
         self.setObjectName(
-            formatObjectName(
+            format_object_name(
                 "Form",
                 __class__.__name__,
                 parameterize(text or "", "_").lower(),

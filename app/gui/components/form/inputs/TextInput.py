@@ -1,6 +1,5 @@
 # Standard Library
 from enum import Enum, auto
-from typing import Type
 
 # Framework imports
 from PySide6.QtCore import Qt, Slot
@@ -18,11 +17,14 @@ class AffixLocation(Enum):
     SUFFIX = auto()
 
 
-class TextInput(Input[QLineEdit]):
+class TextInput(QLineEdit, Input[QLineEdit]):
     # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QLineEdit.html
 
     def __init__(self, label: str | None = None):
-        super(TextInput, self).__init__(QLineEdit(), label)
+        # https://stackoverflow.com/questions/222877/what-does-super-do-in-python-difference-between-super-init-and-expl/33469090#33469090
+        # https://stackoverflow.com/questions/9575409/calling-parent-class-init-with-multiple-inheritance-whats-the-right-way
+        super().__init__()
+        Input.__init__(self, self, label)
 
         self._prefix: QLabel | None = None
         self._suffix: QLabel | None = None
@@ -37,15 +39,15 @@ class TextInput(Input[QLineEdit]):
     ):
         super().setBinding(object, property, updateProperty)
 
-        self.baseWidget.setText(str(self.boundValue()))
+        self.setText(str(self.boundValue()))
 
-        self.baseWidget.textEdited.connect(self._onTextChanged)
+        self.textEdited.connect(self._onTextChanged)
 
     @Slot(str)
     def _onTextChanged(self):
         assert self._boundObject is not None
 
-        text = self.baseWidget.text()
+        text = self.text()
 
         if self._autoRemoveAffix:
             text = self._removeAffixFromInput()
@@ -63,7 +65,7 @@ class TextInput(Input[QLineEdit]):
 
     def _setAffix(self, affix: AffixLocation, text: str):
         affixLabel = QLabel(text, self)
-        affixLabel.setBuddy(self.baseWidget)
+        affixLabel.setBuddy(self)
         affixLabel.setAlignment(Qt.AlignCenter)
         affixLabel.setStyleSheet(
             "background-color: #e9ecef; border-"
@@ -79,7 +81,7 @@ class TextInput(Input[QLineEdit]):
         return affixLabel
 
     def _removeAffixFromInput(self) -> str:
-        text = self.baseWidget.text()
+        text = self.text()
 
         # If the prefix was entered, remove it
         if self._prefix is not None and text.startswith(self._prefix.text()):
@@ -89,7 +91,7 @@ class TextInput(Input[QLineEdit]):
         if self._suffix is not None and text.endswith(self._suffix.text()):
             text = text.replace(self._suffix.text(), "")
 
-        self.baseWidget.setText(text)
+        self.setText(text)
 
         return text
 
@@ -97,20 +99,20 @@ class TextInput(Input[QLineEdit]):
         if affixLabel is None:
             return
 
-        inputFont = self.baseWidget.font()
+        inputFont = self.font()
         affixLabel.setFont(inputFont)
 
-        height = self.baseWidget.sizeHint().height() - 2
+        height = self.sizeHint().height() - 2
         width = max(
             affixLabel.sizeHint().width() + (WIDGET_SPACING * 2),
             height,
         )
 
-        prefixPos = self.baseWidget.pos()
+        prefixPos = self.pos()
         prefixPosX = prefixPos.x() + 1
 
         if affix == AffixLocation.SUFFIX:
-            prefixPosX = prefixPosX + self.baseWidget.width() - width - 2
+            prefixPosX = prefixPosX + self.width() - width - 2
 
         prefixPos.setX(prefixPosX)
         prefixPos.setY(prefixPos.y() + 1)
@@ -123,12 +125,12 @@ class TextInput(Input[QLineEdit]):
         self._updateAffix(AffixLocation.PREFIX, self._prefix)
         self._updateAffix(AffixLocation.SUFFIX, self._suffix)
 
-        inputMargins = self.baseWidget.contentsMargins()
+        inputMargins = self.contentsMargins()
         if self._prefix is not None:
             inputMargins.setLeft(self._prefix.maximumWidth() + WIDGET_SPACING)
 
         if self._suffix is not None:
             inputMargins.setRight(self._suffix.maximumWidth() + WIDGET_SPACING)
-        self.baseWidget.setTextMargins(inputMargins)
+        self.setTextMargins(inputMargins)
 
         return super().paintEvent(painter)

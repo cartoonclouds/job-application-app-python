@@ -2,7 +2,7 @@ from typing import Optional
 from PySide6.QtWidgets import QWidget, QTabWidget
 from PySide6.QtGui import QIcon, QPixmap
 
-from app.utils.object_functions import formatObjectName
+from app.utils.object_functions import format_object_name
 from inflection import parameterize
 
 
@@ -19,7 +19,7 @@ class Tab(QWidget):
     ) -> None:
         super().__init__()
         self.setObjectName(
-            formatObjectName(
+            format_object_name(
                 __class__.__name__,
                 type(self).__name__,
                 parameterize(label or "", "_").lower(),

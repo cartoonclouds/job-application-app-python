@@ -5,7 +5,7 @@ from PySide6.QtGui import QAction, QKeySequence
 from PySide6.QtCore import QKeyCombination
 from app.utils.iter_functions import first_where
 
-from app.utils.object_functions import formatObjectName
+from app.utils.object_functions import format_object_name
 from inflection import parameterize
 
 # from main import MainWindow
@@ -34,7 +34,7 @@ class UIFunctions:
         action = QAction(name, menubar)
 
         action.setObjectName(
-            formatObjectName(
+            format_object_name(
                 "Action",
                 parameterize(name or "", "_").lower(),
             )

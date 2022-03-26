@@ -15,7 +15,7 @@ from app.utils.mixins.logger import LoggerMixin
 
 class JobForm(Form, LoggerMixin):
     def __init__(self, model: Job) -> None:
-        super(JobForm, self).__init__("JobInfo", model, "Job Information")
+        super().__init__("JobInfo", model, "Job Information")
 
         # -------------------------- #
         # -- insert form elements -- #

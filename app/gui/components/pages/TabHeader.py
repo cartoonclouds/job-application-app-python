@@ -20,7 +20,7 @@ from PySide6.QtWidgets import (
 # Application imports
 from app.gui.components.EditableLabel.EditableLabel import EditableLabel
 from app.constants import WIDGET_SPACING, WIDGET_MARGINS, ZERO_MARGINS
-from app.utils.object_functions import formatObjectName
+from app.utils.object_functions import format_object_name
 from inflection import parameterize
 
 
@@ -32,7 +32,7 @@ class TabHeader(QWidget):
     ) -> None:
         super().__init__()
         self.setObjectName(
-            formatObjectName(
+            format_object_name(
                 __class__.__name__,
                 parameterize(text or "", "_").lower(),
             )

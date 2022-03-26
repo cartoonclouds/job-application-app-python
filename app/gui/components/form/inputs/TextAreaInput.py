@@ -1,6 +1,5 @@
 # Framework imports
-from typing import Type
-from PySide6.QtCore import QMargins, Slot
+from PySide6.QtCore import Slot
 from PySide6.QtGui import QFontMetrics, QTextDocument
 from PySide6.QtWidgets import QPlainTextEdit
 
@@ -9,9 +8,10 @@ from app.gui.components.form.inputs.Input import Input
 from app.models.Model import Model
 
 
-class TextAreaInput(Input[QPlainTextEdit]):
+class TextAreaInput(QPlainTextEdit, Input[QPlainTextEdit]):
     def __init__(self, label: str | None = None):
-        super(TextAreaInput, self).__init__(QPlainTextEdit(), label)
+        super().__init__()
+        Input.__init__(self, self, label)
 
     def setBinding(
         self,
@@ -21,27 +21,27 @@ class TextAreaInput(Input[QPlainTextEdit]):
     ):
         super().setBinding(object, property, updateProperty)
 
-        self.baseWidget.insertPlainText(self.boundValue())
-        self.baseWidget.document().setModified(False)
+        self.insertPlainText(self.boundValue())
+        self.document().setModified(False)
 
-        self.baseWidget.textChanged.connect(self._onTextChanged)
+        self.textChanged.connect(self._onTextChanged)
 
     @Slot(str)
     def _onTextChanged(self):
         assert self._boundObject is not None
 
-        self.updateBoundObject(self.baseWidget.document().toPlainText())
+        self.updateBoundObject(self.document().toPlainText())
 
     def setHeight(self, rows: int):
-        document: QTextDocument = self.baseWidget.document()
-        fontMetrics: QFontMetrics = self.baseWidget.fontMetrics()
-        margins: QMargins = self.baseWidget.contentsMargins()
+        document: QTextDocument = self.document()
+        fontMetrics: QFontMetrics = self.fontMetrics()
+        # margins: QMargins = self.contentsMargins()
+        # + margins.top()
+        # + margins.bottom()
 
         height = (
             fontMetrics.lineSpacing() * rows
-            + (document.documentMargin() + self.baseWidget.frameWidth()) * 2
-            + margins.top()
-            + margins.bottom()
+            + (document.documentMargin() + self.frameWidth()) * 2
         )
 
-        self.baseWidget.setFixedHeight(int(height))
+        self.setFixedHeight(int(height))

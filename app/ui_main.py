@@ -30,13 +30,13 @@ from app.constants import WINDOW_WIDTH, WINDOW_HEIGHT
 from app.repositories.action_repository import ActionRepository
 from app.repositories.job_application_repository import JobApplicationRepository
 from app.utils.icon_utility import IconUtility
-from app.utils.object_functions import formatObjectName
+from app.utils.object_functions import format_object_name
 from app.utils.ui_functions import UIFunctions
 
 
 class UI_MainWindow:
     def __init__(self, window: QMainWindow):
-        window.setObjectName(formatObjectName(__class__.__name__))
+        window.setObjectName(format_object_name(__class__.__name__))
 
         # LOAD SETTINGS
         # ///////////////////////////////////////////////////////////////
@@ -63,6 +63,8 @@ class UI_MainWindow:
 
         JobApplicationRepository.load_all()
         ActionRepository.load_all()
+        
+        
 
         # ADD CENTRAL WIDGET
         # ///////////////////////////////////////////////////////////////

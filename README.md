@@ -261,3 +261,16 @@ self.setStyleSheet(
 https://doc.qt.io/qtforpython/overviews/resources.html
 https://doc.qt.io/qtforpython/tutorials/basictutorial/qrcfiles.html
 https://www.pythonguis.com/tutorials/pyside-qresource-system/
+
+# GREAT RESOURCES
+
+- https://python-course.eu/
+-
+-
+-
+-
+-
+
+#
+
+dict info https://blog.teclado.com/python-dictionary-merge-update-operators/

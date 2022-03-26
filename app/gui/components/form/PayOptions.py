@@ -24,15 +24,19 @@ from app.models.Job import Job
 from app.typings.types import PySide6Input
 
 
-class PayOptions(Input[QWidget]):
+class PayOptions(QWidget, Input[QWidget]):
     modified = Signal(bool)
 
     def __init__(
         self, label: str, model: Job, initialOption: PayTypes = PayTypes.SALARY
     ) -> None:
+
+        super().__init__()
+        Input.__init__(self, self, label or "")
+
         self._model = model
         self._initialOption = initialOption
-        self._emittingInputs: list[Input[PySide6Input]] = list()
+        self._emittingInputs = list()
 
         stackWidget = self._setupStacks()
         self._stacks = cast(QStackedLayout, stackWidget.layout())
@@ -41,8 +45,6 @@ class PayOptions(Input[QWidget]):
         optionsLayout = QVBoxLayout()
         optionsLayout.setContentsMargins(0, int(WIDGET_SPACING / 2), 0, 0)
         optionsStack = self._setupOptions()
-        optionsFrame = QWidget()
-        optionsFrame.setLayout(optionsLayout)
 
         optionsLayout.addWidget(optionsStack)
         optionsLayout.addWidget(stackWidget)
@@ -52,10 +54,16 @@ class PayOptions(Input[QWidget]):
         # optionsStack.setStyleSheet("border: 2px solid green;")
         # stackWidget.setStyleSheet("border: 2px solid blue;")
 
-        super(PayOptions, self).__init__(optionsFrame, label or "")
+        # super().__init__()
+        # Input.__init__(self, self, label)
+
+        # optionsFrame = QWidget()
+        # optionsFrame.setLayout(optionsLayout)
+
+        self.setLayout(optionsLayout)
 
         if label is not None:
-            self.setLabel(label)
+            self.set_label(label)
 
     def _setupOptions(self):
         layout = QHBoxLayout()
@@ -111,7 +119,6 @@ class PayOptions(Input[QWidget]):
         label.setContentsMargins(labelMargin)
 
         unitInput = SelectBox("Rate Units")
-        unitInput.setAlignment(Qt.AlignBottom)
         unitInput.addItems(PayUnits.VALUES())
         unitInput.setBinding(self._model, "rate_unit")
 

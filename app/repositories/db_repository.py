@@ -1,12 +1,24 @@
 # Standard Library
 from abc import ABC, ABCMeta, abstractmethod
-from typing import Any, Generic, TypeVar, ClassVar, Type, Sequence, cast
+from collections import defaultdict
+from typing import (
+    Any,
+    Generic,
+    MutableMapping,
+    MutableSequence,
+    TypeAlias,
+    TypeVar,
+    ClassVar,
+    Type,
+    Sequence,
+    cast,
+)
 
 # Third party imports
 import pendulum
 
 # Application imports
-from app.interfaces.repository import IRepository, Id, ModelEntity
+from app.interfaces.repository import T, IRepository, Id, ModelEntity
 from app.utils.Metaclasses.Singleton import Singleton
 
 # ChainMap(class) Self
@@ -20,10 +32,6 @@ from app.utils.Metaclasses.Singleton import Singleton
 
 
 # https://github.com/sdispater/backpack
-
-
-class GenericABCMeta(ABCMeta):
-    pass
 
 
 class DBRepository(IRepository[ModelEntity], metaclass=Singleton):
@@ -45,12 +53,10 @@ class DBRepository(IRepository[ModelEntity], metaclass=Singleton):
 
         NB: This will clear any existing models
         """
-        entities = self.factory.all()
+        entities = self.factory.allKeyedBy("id")
 
         if len(entities) > 0:
-            keys: Sequence[str] = entities.model_keys()  # type: ignore
-
-            self.container = dict(zip(keys, entities))
+            self.container = entities
 
         return self.container
 
@@ -94,7 +100,7 @@ class DBRepository(IRepository[ModelEntity], metaclass=Singleton):
         """Adds the object to the repo to the underlying persistence layer via its DAO."""
         entityId = entity.get_key()
 
-        self.container[entityId] = entity
+        self.container |= [(entityId, entity)]
 
         return entityId
 

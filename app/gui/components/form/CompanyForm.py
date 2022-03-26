@@ -10,7 +10,7 @@ from app.models.Company import Company
 
 class CompanyForm(Form):
     def __init__(self, model: Company) -> None:
-        super(CompanyForm, self).__init__("CompanyInfo", model, "Company Information")
+        super().__init__("CompanyInfo", model, "Company Information")
 
         # -------------------------- #
         # -- insert form elements -- #

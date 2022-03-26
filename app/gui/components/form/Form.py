@@ -16,7 +16,7 @@ from app.gui.components.form.inputs.TextInput import TextInput
 from app.gui.components.form.inputs.ToggleButtonSquare import ToggleButtonSquare
 from app.gui.components.form.PayOptions import PayOptions
 from app.models.Model import Model
-from app.utils.object_functions import formatObjectName
+from app.utils.object_functions import format_object_name
 
 InputT: TypeAlias = (
     EditableLabel
@@ -38,11 +38,11 @@ from inflection import parameterize
 class Form(QFrame):
     modified = Signal(bool, QFrame)
 
-    def __init__(self, name: str, model: Type[Model], title: str) -> None:
-        super(Form, self).__init__()
+    def __init__(self, name: str, model: Model, title: str) -> None:
+        super().__init__()
 
         self.setObjectName(
-            formatObjectName(
+            format_object_name(
                 __class__.__name__,
                 type(self).__name__,
                 parameterize(title or "", "_").lower(),
@@ -113,7 +113,7 @@ class Form(QFrame):
 
                 # Set columns > 1 label right aligned
                 if index > 0:
-                    field.getLabel().setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+                    field.get_label().setAlignment(Qt.AlignRight | Qt.AlignVCenter)
 
             self._layout.addRow(row)
 
@@ -126,7 +126,7 @@ class Form(QFrame):
         if hasattr(field, "modified"):
             field.modified.connect(lambda: self.modified.emit(self.isModified(), self))
 
-        layout.addRow(field.getLabel(), field)
+        layout.addRow(field.get_label(), field)
 
     def setTitle(self, title: str):
         self._title = title
@@ -136,9 +136,9 @@ class Form(QFrame):
         maxWidth = 0
 
         for input in self.inputs():
-            maxWidth = max(maxWidth, input.getLabel().width())
+            maxWidth = max(maxWidth, input.get_label().width())
 
         for input in self.inputs():
-            input.getLabel().setMinimumWidth(maxWidth)
+            input.get_label().setMinimumWidth(maxWidth)
 
         return super().paintEvent(painter)

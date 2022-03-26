@@ -1,5 +1,4 @@
 # Framework imports
-from typing import Type
 from PySide6.QtCore import QEasingCurve, QPoint, QPropertyAnimation, QRect, Qt, Slot
 from PySide6.QtGui import QColor, QFont, QPainter, QPaintEvent
 from PySide6.QtWidgets import QCheckBox
@@ -9,9 +8,13 @@ from app.gui.components.form.inputs.Input import Input
 from app.models.Model import Model
 
 
-class ToggleButton(Input[QCheckBox]):
+class ToggleButton(QCheckBox, Input[QCheckBox]):
     def __init__(self, checkedText: str, uncheckedText: str | None = None):
-        super(ToggleButton, self).__init__(QCheckBox())
+
+        debug(checkedText, uncheckedText)
+
+        super().__init__()
+        Input.__init__(self, self, checkedText)
 
         self._checkedText: str = checkedText
         self._uncheckedText: str = checkedText
@@ -19,8 +22,9 @@ class ToggleButton(Input[QCheckBox]):
         if uncheckedText is not None:
             self._uncheckedText = uncheckedText
 
-        self.baseWidget.setCheckable(True)
-        self.baseWidget.setCursor(Qt.PointingHandCursor)
+        self.setCheckable(True)
+        self.setCursor(Qt.PointingHandCursor)
+
         self.animation = QPropertyAnimation(self, b"position")
         self.animation.setEasingCurve(QEasingCurve.OutBounce)
         self.animation.setDuration(500)
@@ -39,14 +43,15 @@ class ToggleButton(Input[QCheckBox]):
     ):
         super().setBinding(object, property, updateProperty)
 
-        self.baseWidget.setChecked(self.boundValue())
+        self.setChecked(self.boundValue())
 
-        self.baseWidget.stateChanged.connect(self.setup_animation)
-        self.baseWidget.stateChanged.connect(self._onButtonToggled)
+        self.stateChanged.connect(self.setup_animation)
+        self.stateChanged.connect(self._onButtonToggled)
 
     @Slot(bool)
     def _onButtonToggled(self, value: bool):
         assert self._boundObject is not None
+
         self.updateBoundObject(value)
 
     # https://raw.githubusercontent.com/Wanderson-Magalhaes/PyOneDark_Qt_Widgets_Modern_GUI/master/gui/widgets/py_toggle/py_toggle.py
@@ -84,7 +89,7 @@ class ToggleButton(Input[QCheckBox]):
         # DRAW RECT
         rect = QRect(0, 0, self.sizeHint().width(), self.sizeHint().height())
 
-        if not self.baseWidget.isChecked():
+        if not self.isChecked():
             p.setBrush(QColor(self._bg_color))
             p.drawRoundedRect(0, 0, rect.width(), 28, 14, 14)
             p.setBrush(QColor(self._circle_color))

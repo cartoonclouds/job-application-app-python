@@ -40,6 +40,8 @@ class ActionDatatableModel(DatatableModel[Action]):
     ) -> Any:
         modelData = self.getModelData(index)
 
+        # https://blog.teclado.com/python-match-case/
+        # https://www.python.org/dev/peps/pep-0634/
         match role:
             case Qt.DisplayRole:
                 return self._handleDisplayRole(modelData)

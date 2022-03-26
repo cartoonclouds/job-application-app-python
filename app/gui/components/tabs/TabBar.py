@@ -15,7 +15,7 @@ from typing import Any
 # Application imports
 from app.gui.components.tabs.Tab import Tab
 from app.gui.services.tab_service import TabServiceProvider
-from app.utils.object_functions import formatObjectName
+from app.utils.object_functions import format_object_name
 
 
 class TabBar(QTabBar):
@@ -27,7 +27,7 @@ class TabBar(QTabBar):
 
     def __init__(self) -> None:
         super(TabBar, self).__init__()
-        self.setObjectName(formatObjectName(__class__.__name__))
+        self.setObjectName(format_object_name(__class__.__name__))
         self.setTabsClosable(True)
         self.setDocumentMode(True)
         self.setMovable(True)

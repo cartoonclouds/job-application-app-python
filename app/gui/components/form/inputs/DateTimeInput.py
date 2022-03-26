@@ -1,5 +1,4 @@
 # Framework imports
-from typing import Type
 from PySide6.QtCore import QDateTime, Slot
 from PySide6.QtWidgets import QDateTimeEdit
 
@@ -7,19 +6,21 @@ from PySide6.QtWidgets import QDateTimeEdit
 from app.constants import DATE_FORMAT_1
 from app.gui.components.form.inputs.Input import Input
 from app.models.Model import Model
+from abc import ABC, abstractmethod, abstractproperty
 
 
-class DateTimeInput(Input[QDateTimeEdit]):
+class DateTimeInput(QDateTimeEdit, Input[QDateTimeEdit]):
     """
     URL: https://doc.qt.io/qtforpython/PySide6/QtWidgets/QDateTimeEdit.html
          https://doc.qt.io/qtforpython/PySide6/QtCore/QDateTime.html
     """
 
-    def __init__(self, label: str | None = None):
-        super(DateTimeInput, self).__init__(QDateTimeEdit(), label)
+    def __init__(self, label: str | None = None, **kwargs):
+        super().__init__()
+        Input.__init__(self, self, label)
 
-        self.baseWidget.setCalendarPopup(True)
-        self.baseWidget.setDisplayFormat(DATE_FORMAT_1)
+        self.setCalendarPopup(True)
+        self.setDisplayFormat(DATE_FORMAT_1)
 
     def setBinding(
         self,
@@ -29,11 +30,12 @@ class DateTimeInput(Input[QDateTimeEdit]):
     ):
         super().setBinding(object, property, updateProperty)
 
-        self.baseWidget.setDateTime(self.boundValue(QDateTime.currentDateTime().date()))
+        self.setDateTime(self.boundValue(QDateTime.currentDateTime().date()))
 
-        self.baseWidget.dateTimeChanged.connect(self._onDateTimeChanged)
+        self.dateTimeChanged.connect(self._onDateTimeChanged)
 
     @Slot(str)
     def _onDateTimeChanged(self, datetime: QDateTime):
         assert self._boundObject is not None
+
         self.updateBoundObject(datetime.toPython())

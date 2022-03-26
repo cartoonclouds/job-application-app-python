@@ -1,5 +1,7 @@
 # Standard Library
-from typing import Any, Generic
+from abc import ABC, abstractmethod, abstractproperty
+import inspect
+from typing import Any, Dict, Generic, Type, overload
 
 # Framework imports
 from PySide6.QtCore import QMargins, Qt, Signal
@@ -12,79 +14,87 @@ from inflection import parameterize
 from app.constants import WIDGET_SPACING, ZERO_MARGINS
 from app.typings.types import PySide6Input
 from app.utils.mixins.bindable import Bindable
-from app.utils.object_functions import formatObjectName
+from app.utils.object_functions import format_object_name
 
 
-# https://stackoverflow.com/questions/4821104/dynamic-instantiation-from-string-name-of-a-class-in-dynamically-imported-module
-class Input(Generic[PySide6Input], QWidget, Bindable):
+class InputAbstract(ABC):
+    pass
+
+
+class Input(Generic[PySide6Input], Bindable):
+    # https://stackoverflow.com/questions/9575409/calling-parent-class-init-with-multiple-inheritance-whats-the-right-way
     modified = Signal(bool)
 
-    # make ABC
+    # @overload
+    # def __init__(self, base_input: PySide6Input) -> None:
+    #     pass
 
-    def __init__(self, baseWidget: PySide6Input, label: str | None = None):
-        super(Input, self).__init__()
-        self.setObjectName(
-            formatObjectName(
-                __class__.__name__,
-                type(self).__name__,
-                type(baseWidget).__name__,
-                parameterize(label or "", "_").lower(),
-            )
-        )
+    # @overload
+    # def __init__(self, base_input: PySide6Input, label: str) -> None:
+    #     pass
 
-        # TODO Get list of all subclasses of this instance to
-        # generate object name
-        # https://stackoverflow.com/questions/1401661/list-all-base-classes-in-a-hierarchy-of-given-class
-        # "How to get the entire inheritance tree"
+    # @overload
+    # def __init__(self, base_input: PySide6Input, label: str | None = None) -> None:
+    #     pass
 
-        self._baseWidget = baseWidget
+    def __init__(self, base_input: PySide6Input, label: str | None = None) -> None:
+        super().__init__()
 
-        self._label: QLabel | None = None
+        # self.setObjectName(
+        #     formatObjectName(
+        #         __class__.__name__,
+        #         type(self).__name__,
+        #         type(baseWidget).__name__,
+        #         parameterize(name or "", "_").lower(),
+        #     )
+        # )
+        #         # self._layout.setAlignment(Qt.AlignTop)
+        #         # self._layout.setContentsMargins(ZERO_MARGINS)
+        #         # self._layout.setSpacing(WIDGET_SPACING)
+        if base_input is not None:
+            self.base_input = base_input
+
+        # self._label: QLabel | None = None
 
         if label is not None:
-            self.setLabel(label)
-
-        self._layout = QHBoxLayout()
-        self._layout.setAlignment(Qt.AlignTop)
-        self._layout.setContentsMargins(ZERO_MARGINS)
-        self._layout.setSpacing(WIDGET_SPACING)
-        self._layout.addWidget(self.baseWidget)
-
-        self.setLayout(self._layout)
+            self.label = label
 
     @property
-    def baseWidget(self) -> PySide6Input:
-        return self._baseWidget
+    def base_input(self) -> PySide6Input:
+        return self._base_input
 
-    def setAlignment(self, alignment: Qt.Alignment):
-        self._layout.setAlignment(alignment)
+    @base_input.setter
+    def base_input(self, input: PySide6Input):
+        self._base_input = input
 
-    def contentsMargins(self) -> QMargins:
-        return self._layout.contentsMargins()
-
-    def setContentsMargins(self, margins: QMargins) -> None:  # type: ignore[override]
-        return self._layout.setContentsMargins(margins)
-
-    def updateBoundObject(self, value: Any):
-        super().updateBoundObject(value)
-
-        self.modified.emit(self.isModified())
-
-    def setLabel(self, label: str):
-        if self._label is None:
-            self._label = self.createLabel(label)
-            self._label.setParent(self)
-        else:
-            self._label.setText(label)
-
-        self._label.show()
-
-    def getLabel(self) -> QLabel | None:
+    @property
+    def label(self) -> QLabel:
         return self._label
 
-    def createLabel(self, text: str) -> QLabel:
+    @label.setter
+    def label(self, label: QLabel | str):
+        if isinstance(label, QLabel):
+            self._label = label
+        else:
+            self._label = self.set_label(label)
+
+    def set_label(self, label: str):
+        if isinstance(label, QLabel):
+            self.label.setText(label)
+        else:
+            self.label = self.create_label(label)
+            self.label.setParent(self.base_input)
+
+        self.label.show()
+
+        return self.label
+
+    def get_label(self) -> QLabel | None:
+        return self._label
+
+    def create_label(self, text: str) -> QLabel:
         label = QLabel(text)
-        label.setBuddy(self)
+        label.setBuddy(self.base_input)
         labelFont = label.font()
         # labelFont.setPointSize(FORM_LABEL_SIZE)
         # labelFont.setCapitalization(QFont.SmallCaps)
@@ -92,22 +102,14 @@ class Input(Generic[PySide6Input], QWidget, Bindable):
 
         return label
 
-    # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QDataWidgetMapper.html
-    #
-    # TODO Use QDataWidgetMapper to map
-
     # #### TOFIX Not available for all
-    def setPlaceholderText(self, text: str):
-        self.baseWidget.setPlaceholderText(text)
-
     def setCompleter(self, completer: QCompleter):
         completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
         completer.setFilterMode(Qt.MatchContains)
-        self.baseWidget.setCompleter(completer)
+        self.base_input.setCompleter(completer)
 
-    def setInputMask(self, mask: str):
-        # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QLineEdit.html#PySide6.QtWidgets.PySide6.QtWidgets.QLineEdit.setInputMask
-        self.baseWidget.setInputMask(mask)
+    # def setInputMask(self, mask: str):
+    # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QLineEdit.html#PySide6.QtWidgets.PySide6.QtWidgets.QLineEdit.setInputMask
 
     def setValidator(self, v):
         pass
@@ -119,3 +121,13 @@ class Input(Generic[PySide6Input], QWidget, Bindable):
         # self._baseWidget.setValidator(validator)
 
         # self.qle.editingFinished.connect(self.onEditingFinished)
+
+
+#         # TODO Get list of all subclasses of this instance to
+#         # generate object name
+#         # https://stackoverflow.com/questions/1401661/list-all-base-classes-in-a-hierarchy-of-given-class
+#         # "How to get the entire inheritance tree"
+
+#     # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QDataWidgetMapper.html
+#     #
+#     # TODO Use QDataWidgetMapper to map

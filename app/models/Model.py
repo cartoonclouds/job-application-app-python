@@ -1,6 +1,6 @@
 # Standard Library
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, Mapping, Sequence, TypeAlias, TypeVar, cast
+from typing import TYPE_CHECKING, Any, Mapping, Sequence, Type, TypeAlias, TypeVar, cast
 
 # Framework imports
 from PySide6.QtCore import QObject, Signal
@@ -114,8 +114,8 @@ class Model(oratorModel):
         )
 
     @classmethod
-    def all(cls, columns: Sequence[str] | None = None) -> orm.collection.Collection:
-        return super().all(columns)
+    def allKeyedBy(cls, key: str = oratorModel.__primary_key__) -> dict[str, "Model"]:
+        return dict(map(lambda x: (getattr(x, key), x), super().all().items))
 
     def get_key(self) -> str:
         """
