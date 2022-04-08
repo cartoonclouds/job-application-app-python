@@ -10,7 +10,7 @@ from PySide6.QtCore import (
     Property,
     QRect,
 )
-from PySide6.QtGui import QPainter, QPalette, QLinearGradient, QGradient
+from PySide6.QtGui import QPainter, QPalette, QLinearGradient, QGradient, QColor, QBrush
 from PySide6.QtWidgets import (
     QAbstractButton,
     QApplication,
@@ -18,6 +18,7 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QLabel,
 )
+from pygments import highlight
 
 
 class SwitchPrivate(QObject):
@@ -82,35 +83,62 @@ class SwitchPrivate(QObject):
 
         painter.setPen(Qt.NoPen)
 
-        self.gradient.setColorAt(0, shadow.darker(130))
-        self.gradient.setColorAt(1, light.darker(130))
-        self.gradient.setStart(0, widgetHeight)
-        self.gradient.setFinalStop(0, 0)
+        solidColor = True
 
-        painter.setBrush(self.gradient)
-        painter.drawRoundedRect(widgetRect, widgetHeight / 2, widgetHeight / 2)
+        if solidColor:
+            # Solid color
+            solidBrush = QBrush(QColor(13, 110, 253))
+            whiteBrush = QBrush(Qt.white)
 
-        self.gradient.setColorAt(0, shadow.darker(140))
-        self.gradient.setColorAt(1, light.darker(160))
-        self.gradient.setStart(0, 0)
-        self.gradient.setFinalStop(0, widgetHeight)
+            painter.setBrush(solidBrush)
+            painter.drawRoundedRect(widgetRect, widgetHeight / 2, widgetHeight / 2)
 
-        painter.setBrush(self.gradient)
-        painter.drawRoundedRect(
-            widgetRect.adjusted(margin, margin, -margin, -margin),
-            widgetHeight / 2,
-            widgetHeight / 2,
-        )
+            painter.setBrush(whiteBrush)
+            x: float = widgetHeight / 2.0 + self._position * (
+                widgetWidth - widgetHeight
+            )
 
-        self.gradient.setColorAt(0, button.darker(130))
-        self.gradient.setColorAt(1, button)
+            painter.drawEllipse(
+                QPointF(x, widgetHeight / 2),
+                widgetHeight / 2 - margin,
+                widgetHeight / 2 - margin,
+            )
 
-        painter.setBrush(self.gradient)
+        else:
+            # Draw background
+            self.gradient.setColorAt(0, shadow.darker(130))
+            self.gradient.setColorAt(1, light.darker(130))
+            self.gradient.setStart(0, widgetHeight)
+            self.gradient.setFinalStop(0, 0)
 
-        x: float = widgetHeight / 2.0 + self._position * (widgetWidth - widgetHeight)
+            painter.setBrush(self.gradient)
+            painter.drawRoundedRect(widgetRect, widgetHeight / 2, widgetHeight / 2)
 
-        painter.drawEllipse(
-            QPointF(x, widgetHeight / 2),
-            widgetHeight / 2 - margin,
-            widgetHeight / 2 - margin,
-        )
+            # # Draw border
+            self.gradient.setColorAt(0, shadow.darker(140))
+            self.gradient.setColorAt(1, light.darker(160))
+            self.gradient.setStart(0, 0)
+            self.gradient.setFinalStop(0, widgetHeight)
+
+            painter.setBrush(self.gradient)
+            painter.drawRoundedRect(
+                widgetRect.adjusted(margin, margin, -margin, -margin),
+                widgetHeight / 2,
+                widgetHeight / 2,
+            )
+
+            # Draw handle
+            self.gradient.setColorAt(0, button.darker(130))
+            self.gradient.setColorAt(1, button)
+
+            painter.setBrush(self.gradient)
+
+            x: float = widgetHeight / 2.0 + self._position * (
+                widgetWidth - widgetHeight
+            )
+
+            painter.drawEllipse(
+                QPointF(x, widgetHeight / 2),
+                widgetHeight / 2 - margin,
+                widgetHeight / 2 - margin,
+            )
