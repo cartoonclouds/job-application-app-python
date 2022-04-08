@@ -54,7 +54,7 @@ class MainWindow(QMainWindow):
         # self.settings = settings.items
 
         # TESTING - AUTO-OPEN JAA
-        self.openTestTab()
+        # self.openTestTab()
 
         # SHOW MAIN WINDOW
         # ///////////////////////////////////////////////////////////////

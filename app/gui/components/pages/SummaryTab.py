@@ -16,6 +16,7 @@ from app.gui.components.models.JobApplicationDatatableModel import (
 )
 from app.gui.components.pages.JobApplicationTab import JobApplicationTab
 from app.gui.components.pages.TabHeader import TabHeader
+from app.gui.components.search_input.search_input import SearchInput
 from app.gui.components.statistics.StatisticGroup import StatisticGroup
 from app.gui.components.tabs.Tab import Tab
 from app.gui.services.tab_service import TabServiceProvider
@@ -40,9 +41,23 @@ class SummaryTab(Tab):
         # Setup table
         self.datatable = self._setupTable()
 
+        # Setup searching and filters
+        searchInput = self._setupSearchAndFilters()
+        searchInput.updateSearch.connect(self._searchDatatable)
+
         self.mainLayout.addWidget(header)
         self.mainLayout.addWidget(self.statisticsSection)
+        self.mainLayout.addWidget(searchInput)
         self.mainLayout.addWidget(self.datatable)
+
+    def _setupSearchAndFilters(self):
+        searchInput = SearchInput()
+
+        return searchInput
+
+    @Slot(str)
+    def _searchDatatable(self, text: str):
+        debug(text)
 
     def _setupTable(self):
         frame = QFrame()
