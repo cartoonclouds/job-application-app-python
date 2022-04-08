@@ -101,3 +101,4 @@ class JobApplicationDatatableModel(DatatableModel[JobApplication]):
                     else ""
                 )
 
+        return getattr(jobApplication, column)

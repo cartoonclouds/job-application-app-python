@@ -62,10 +62,6 @@ class UI_MainWindow:
         # ///////////////////////////////////////////////////////////////
         StatusBarServiceProvider.init(window)
 
-        JobApplicationRepository.load_all()
-        ProfessionRepository.load_all()
-        ActionRepository.load_all()
-
         # ADD CENTRAL WIDGET
         # ///////////////////////////////////////////////////////////////
         self.__setupTabs()

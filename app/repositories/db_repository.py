@@ -46,9 +46,9 @@ class DBRepository(IRepository[M], metaclass=Singleton):
 
     def __init__(self, factory: Type[M]):
         self.factory = factory
-        self.container: dict[str, Type[M]] = {}
+        self.container: dict[str, M] = {}
 
-    def load_all(self) -> dict[str, Type[M]]:
+    def load_all(self) -> dict[str, M]:
         entities = self.factory.allKeyedBy("id")
 
         if len(entities) > 0:
@@ -59,7 +59,7 @@ class DBRepository(IRepository[M], metaclass=Singleton):
     def count(self) -> int:
         return len(self.container)
 
-    def items(self) -> list[Type[M]]:
+    def items(self) -> list[M]:
         if self.count() == 0:
             self.load_all()
 
@@ -71,7 +71,7 @@ class DBRepository(IRepository[M], metaclass=Singleton):
 
         return list(self.container.keys())
 
-    def find(self, id_: Id) -> Type[M] | None:
+    def find(self, id_: Id) -> M | None:
         return self.container.get(id_)
 
     def contains(self, id_: Id) -> bool:

@@ -20,7 +20,7 @@ class IRepository(Generic[T]):
     query and command methods along the basic ones.
     """
 
-    def load_all(self) -> Mapping[str, Type[T]]:
+    def load_all(self) -> Mapping[str, T]:
         """
         Loads all Ts from the database.
 
@@ -28,7 +28,7 @@ class IRepository(Generic[T]):
         """
         raise NotImplementedError
 
-    def items(self) -> Sequence[Type[T]]:
+    def items(self) -> Sequence[T]:
         """Loads all Ts from the database."""
         raise NotImplementedError
 
@@ -36,7 +36,7 @@ class IRepository(Generic[T]):
         """Loads all Ts from the database."""
         raise NotImplementedError
 
-    def find(self, id_: Id) -> Type[T] | None:
+    def find(self, id_: Id) -> T | None:
         """Returns object of given id or None"""
         raise NotImplementedError
 

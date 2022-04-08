@@ -15,7 +15,7 @@ class ListModel(Generic[M], QAbstractListModel):
     ):
         super(ListModel, self).__init__(*args, **kwargs)
 
-        self._data: Sequence[M] = data
+        self._data = data
         self._parentWidget: SelectBox = parentWidget
 
     def setParentList(self, parentWidget: SelectBox):
