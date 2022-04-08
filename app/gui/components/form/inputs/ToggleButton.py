@@ -1,38 +1,40 @@
 # Framework imports
-from PySide6.QtCore import QEasingCurve, QPoint, QPropertyAnimation, QRect, Qt, Slot
-from PySide6.QtGui import QColor, QFont, QPainter, QPaintEvent
-from PySide6.QtWidgets import QCheckBox
+from typing import overload
+from PySide6.QtCore import (
+    QEasingCurve,
+    QPoint,
+    QPropertyAnimation,
+    QRect,
+    Qt,
+    Slot,
+    QSize,
+)
+from PySide6.QtGui import QColor, QFont, QPainter, QResizeEvent, QPaintEvent
+from PySide6.QtWidgets import QAbstractButton
 
 # Application imports
 from app.gui.components.form.inputs.Input import Input
+from app.gui.components.form.inputs.SwitchPrivate import SwitchPrivate
 from app.models.Model import Model
 
 
-class ToggleButton(Input[QCheckBox], QCheckBox):
+class ToggleButton(Input[QAbstractButton], QAbstractButton):
     def __init__(self, checkedText: str, uncheckedText: str | None = None):
-        super().__init__(checkedText)
+        super().__init__()
 
         self._checkedText: str = checkedText
         self._uncheckedText: str = checkedText
 
+        self.setSize(84, 42)
+
         if uncheckedText is not None:
             self._uncheckedText = uncheckedText
 
+        self.switch = SwitchPrivate(self)
         self.setCheckable(True)
         self.setCursor(Qt.PointingHandCursor)
-        self.setText(checkedText)
 
-        # COLORS
-        self._position = 3
-        self._bg_color = "#777"
-        self._circle_color = "#DDD"
-        self._active_color = "#00BCFF"
-
-        self.animation = QPropertyAnimation(self, b"position")
-        self.animation.setEasingCurve(QEasingCurve.OutBounce)
-        self.animation.setDuration(500)
-
-        self.stateChanged.connect(self.setup_animation)
+        self.clicked.connect(self.switch.animate)
 
     def setBinding(
         self,
@@ -44,7 +46,7 @@ class ToggleButton(Input[QCheckBox], QCheckBox):
 
         self.setChecked(self.boundValue())
 
-        self.stateChanged.connect(self._onButtonToggled)
+        self.clicked.connect(self._onButtonToggled)
 
     @Slot(bool)
     def _onButtonToggled(self, value: bool):
@@ -52,50 +54,36 @@ class ToggleButton(Input[QCheckBox], QCheckBox):
 
         self.updateBoundObject(value)
 
-    # https://raw.githubusercontent.com/Wanderson-Magalhaes/PyOneDark_Qt_Widgets_Modern_GUI/master/gui/widgets/py_toggle/py_toggle.py
-    @property
-    def position(self):
-        return self._position
+    def setChecked(self, checked: bool) -> None:  # type: ignore[override]
+        self.switch.animate(checked)
+        return super().setChecked(checked)
 
-    @position.setter
-    def position(self, pos):
-        self._position = pos
+    @overload
+    def setSize(self, width: int, height: int):
+        pass
+
+    @overload
+    def setSize(self, width: QSize):
+        pass
+
+    def setSize(self, width: int | QSize, height: None | int = None):
+        if isinstance(width, QSize):
+            height = width.height()
+            width = width.width()
+
+        self._width = width
+        self._height = height
+
+    def sizeHint(self):
+        return QSize(self._width, self._height)
+
+    def paintEvent(self, event: QPaintEvent):  # type: ignore[override]
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.Antialiasing)
+        self.switch.draw(painter)
+
+    def resizeEvent(self, event: QResizeEvent):
         self.update()
 
-    # START STOP ANIMATION
-    def setup_animation(self, value: bool):
-        self.animation.stop()
-
-        if value:
-            self.animation.setEndValue(self.width() - 26)
-        else:
-            self.animation.setEndValue(4)
-
-        self.animation.start()
-
-    def hitButton(self, pos: QPoint):
-        return self.contentsRect().contains(pos)
-
-    def paintEvent(self, painter: QPaintEvent):  # type: ignore[override]
-        p = QPainter(self)
-        p.setRenderHint(QPainter.Antialiasing)
-        p.setFont(QFont("Segoe UI", 9))
-
-        # SET PEN
-        p.setPen(Qt.NoPen)
-
-        # DRAW RECT
-        rect = QRect(0, 0, self.width(), self.height())
-
-        if not self.isChecked():
-            p.setBrush(QColor(self._bg_color))
-            p.drawRoundedRect(0, 0, rect.width(), 28, 14, 14)
-            p.setBrush(QColor(self._circle_color))
-            p.drawEllipse(self._position, 3, 22, 22)
-        else:
-            p.setBrush(QColor(self._active_color))
-            p.drawRoundedRect(0, 0, rect.width(), 28, 14, 14)
-            p.setBrush(QColor(self._circle_color))
-            p.drawEllipse(self._position, 3, 22, 22)
-
-        p.end()
+    def __del__(self):
+        del self.switch
