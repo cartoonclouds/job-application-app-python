@@ -1,4 +1,5 @@
 # Framework imports
+from typing import Any
 from PySide6.QtCore import QModelIndex, QPersistentModelIndex, Qt, Signal
 from PySide6.QtGui import QAction, QContextMenuEvent, QCursor, QMouseEvent, QResizeEvent
 from PySide6.QtWidgets import QAbstractItemView, QMenu, QStyledItemDelegate, QTableView
@@ -6,6 +7,7 @@ from PySide6.QtWidgets import QAbstractItemView, QMenu, QStyledItemDelegate, QTa
 # Application imports
 from app.config.App import Sizing
 from app.gui.components.datatable.DatatableModel import DatatableModel
+from app.gui.components.datatable.DatatableSortModel import DatatableSortModel
 from app.models.Model import Model
 from app.typings.types import M, Models
 
@@ -32,7 +34,7 @@ class Datatable(QTableView):
 
     def __init__(
         self,
-        datatableModel: DatatableModel[Models],
+        datatableModel: DatatableModel[Models] | DatatableSortModel,
         datatableItemDelegate: QStyledItemDelegate | None = None,
     ) -> None:
         super().__init__()
@@ -45,7 +47,7 @@ class Datatable(QTableView):
         self.verticalHeader().hide()
         self.verticalHeader().setMinimumSectionSize(50)
         self.setShowGrid(False)
-        # self.setSortingEnabled(True)
+        self.setSortingEnabled(True)
 
         # https://doc.qt.io/qtforpython/overviews/stylesheet-examples.html#customizing-qtabwidget-and-qtabbar
         # self.setStyleSheet(
@@ -65,14 +67,20 @@ class Datatable(QTableView):
 
         self.setModel(datatableModel)
 
-        datatableModel.dataUpdated.connect(self.resizeEvent())
+        self.model().dataChanged.connect(self.resizeEvent())
 
         if datatableItemDelegate is not None:
             self.setItemDelegate(datatableItemDelegate)
             datatableItemDelegate.setParent(self)
 
-    def model(self) -> DatatableModel[Models]:
-        return super().model()
+    def model(self) -> Any:
+        # TODO Fix return typing DatatableSortModel | DatatableModel[Models]:
+        dataModel = super().model()
+
+        if isinstance(dataModel, DatatableSortModel):
+            return dataModel.sourceModel()
+        else:
+            return dataModel
 
     def _getModelAtSelection(self):
         index = self.selectionModel().currentIndex()

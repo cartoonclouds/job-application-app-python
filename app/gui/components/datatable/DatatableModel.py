@@ -1,6 +1,7 @@
 # Standard Library
 from dataclasses import dataclass
-from typing import Any, Generic, Mapping, Sequence, Type
+from datetime import datetime
+from typing import Any, Generic, Mapping, Sequence, Type, cast
 
 # Framework imports
 from PySide6.QtCore import (
@@ -36,13 +37,14 @@ class DatatableModel(Generic[M], QAbstractTableModel):
         AttributeError
     """
 
-    dataUpdated = Signal()
-
     def __init__(self, data: list[M], columnHeaders: Mapping[str, str]) -> None:
         super().__init__()
 
         # Set instance variables
         self._data: list[M] = data
+
+        self._columns = ()
+        self._headers = ()
 
         self.setHeaders(list(columnHeaders.values()))
         self.setColumns(list(columnHeaders.keys()))
@@ -53,11 +55,15 @@ class DatatableModel(Generic[M], QAbstractTableModel):
 
     def setHeaders(self, headers: Sequence[str]):
         self._headers = headers
-        self.dataUpdated.emit()
+        self.dataChanged.emit(
+            self.index(0, 0), self.index(self.columnCount(), self.rowCount())
+        )
 
     def setColumns(self, columns: Sequence[str]):
         self._columns = columns
-        self.dataUpdated.emit()
+        self.dataChanged.emit(
+            self.index(0, 0), self.index(self.columnCount(), self.rowCount())
+        )
 
     def headerData(self, section: int, orientation: Qt.Orientation, role: int) -> Any:
         """
@@ -82,17 +88,6 @@ class DatatableModel(Generic[M], QAbstractTableModel):
         Return the column count.
         """
         return len(self._columns)
-
-    # def data(self, index: QModelIndex | QPersistentModelIndex, role: int) -> Any:
-    #     match role:
-    #         case Qt.DisplayRole:
-    #         case Qt.DecorationRole:
-    #         case Qt.EditRole:
-    #         case Qt.ToolTipRole:
-    #         case Qt.StatusTipRole:
-    #         case Qt.WhatsThisRole:
-    #         case Qt.TextAlignmentRole:
-    #         case Qt.SizeHintRole:
 
     def modelAtIndex(self, index: QModelIndex | QPersistentModelIndex) -> M:
         """Finds the Model of row at the given index.
@@ -119,6 +114,61 @@ class DatatableModel(Generic[M], QAbstractTableModel):
         colName = self._columns[colIdx]
 
         return ModelData(colName, rowModel, getattr(rowModel, colName))
+
+    def data(
+        self, index: QModelIndex | QPersistentModelIndex, role: int = Qt.DisplayRole
+    ) -> Any:
+        modelData = self.getModelData(index)
+
+        match role:
+            case Qt.DisplayRole:
+                return self._handleDisplayRole(modelData)
+
+            case Qt.TextAlignmentRole:
+                return self._handleTextAlignmentRole(modelData)
+
+            # case Qt.DecorationRole:
+            # case Qt.SizeHintRole:
+            # case Qt.EditRole:
+            # case Qt.ToolTipRole:
+            # case Qt.StatusTipRole:
+            # case Qt.WhatsThisRole:
+
+    def _handleDisplayRole(self, modelData: ModelData) -> Any:
+        # Perform per-type checks and render accordingly.
+        if isinstance(modelData.value, datetime):
+            # Render time to YYY-MM-DD.
+            return modelData.value.strftime("%Y-%m-%d")
+
+        if isinstance(modelData.value, float):
+            # Render float to 2 dp
+            # return "%.2f" % value
+            return modelData.value
+
+        if isinstance(modelData.value, bool):
+            return  # Boolean display be handled by the ItemDelegate
+
+        return modelData.value
+
+    def _handleTextAlignmentRole(self, modelData: ModelData) -> Any:
+        if modelData.column == "id":
+            return Qt.AlignCenter
+
+        if type(modelData.value) == bool:
+            return Qt.AlignCenter
+
+        if isinstance(modelData.value, datetime):
+            return Qt.AlignVCenter + Qt.AlignRight
+
+    def sort(
+        self, column: int, order: Qt.SortOrder = Qt.SortOrder.AscendingOrder
+    ) -> None:
+        self._data.sort(
+            key=lambda j: getattr(j, self._columns[column]),
+            reverse=order == Qt.SortOrder.DescendingOrder,
+        )
+
+        self.layoutChanged.emit()
 
     # def setHeaders(self, items):
     #     """

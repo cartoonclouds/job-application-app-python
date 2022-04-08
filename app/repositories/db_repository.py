@@ -14,11 +14,12 @@ from typing import (
     cast,
 )
 
-# Third party imports
-import pendulum
-
 # Application imports
-from app.interfaces.repository import T, IRepository, Id, ModelEntity
+from app.interfaces.repository import T, IRepository, Id
+from app.models.Model import Model
+from app.typings.types import M
+
+# from app.Ms.M import M
 from app.utils.Metaclasses.Singleton import Singleton
 
 # ChainMap(class) Self
@@ -34,7 +35,7 @@ from app.utils.Metaclasses.Singleton import Singleton
 # https://github.com/sdispater/backpack
 
 
-class DBRepository(IRepository[ModelEntity], metaclass=Singleton):
+class DBRepository(IRepository[M], metaclass=Singleton):
     """
     Repository serves as a collection of entites (get, add, update, remove) with underlying
     persistence layer. Via its factory class, it knows how to construct an instance of the entity,
@@ -43,16 +44,11 @@ class DBRepository(IRepository[ModelEntity], metaclass=Singleton):
     query and command methods along the basic ones.
     """
 
-    def __init__(self, factory: Type[ModelEntity]):
+    def __init__(self, factory: Type[M]):
         self.factory = factory
-        self.container: dict[str, ModelEntity] = {}
+        self.container: dict[str, Type[M]] = {}
 
-    def load_all(self) -> dict[str, ModelEntity]:
-        """
-        Loads all models from the database.
-
-        NB: This will clear any existing models
-        """
+    def load_all(self) -> dict[str, Type[M]]:
         entities = self.factory.allKeyedBy("id")
 
         if len(entities) > 0:
@@ -60,27 +56,28 @@ class DBRepository(IRepository[ModelEntity], metaclass=Singleton):
 
         return self.container
 
-    def items(self) -> list[ModelEntity]:
+    def count(self) -> int:
+        return len(self.container)
+
+    def items(self) -> list[Type[M]]:
+        if self.count() == 0:
+            self.load_all()
+
         return list(self.container.values())
 
     def keys(self) -> list[Id]:
-        """Loads all models from the database."""
+        if self.count() == 0:
+            self.load_all()
+
         return list(self.container.keys())
 
-    def find(self, id_: Id) -> ModelEntity | None:
-        """Returns object of given id or None"""
+    def find(self, id_: Id) -> Type[M] | None:
         return self.container.get(id_)
 
     def contains(self, id_: Id) -> bool:
-        """Checks whether an entity of given id is in the repo."""
         return id_ in self.container
 
-    def create(self, **kwargs: Any) -> ModelEntity:
-        """
-        Creates an object compatible with this repo. Uses repo's factory.
-
-        NB: Does not inserts the object to the repo. Use `create_and_add` method for that.
-        """
+    def create(self, **kwargs: Any) -> M:
         entity = self.factory(**kwargs)
 
         entity.save()
@@ -88,26 +85,22 @@ class DBRepository(IRepository[ModelEntity], metaclass=Singleton):
 
         return entity
 
-    def create_and_add(self, **kwargs: Any) -> ModelEntity:
-        """Creates an object compatible with this repo and adds it to the collection."""
+    def create_and_add(self, **kwargs: Any) -> M:
         entity = self.create(**kwargs)
 
         self.add(entity)
 
         return entity
 
-    def add(self, entity: ModelEntity) -> Id:
-        """Adds the object to the repo to the underlying persistence layer via its DAO."""
+    def add(self, entity: Model) -> Id:
         entityId = entity.get_key()
 
         self.container |= [(entityId, entity)]
 
         return entityId
 
-    def update(self, entity: ModelEntity) -> None:
-        """Updates the object in the repo."""
+    def update(self, entity: Model) -> None:
         self.container[entity.get_key()] = entity
 
-    def remove(self, entity: ModelEntity) -> None:
-        """Removes the object from the underlying persistence layer via DAO."""
+    def remove(self, entity: Model) -> None:
         self.container.pop(entity.get_key())

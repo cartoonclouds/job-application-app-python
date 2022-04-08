@@ -2,11 +2,12 @@
 from typing import Any
 
 # Framework imports
-from PySide6.QtCore import Slot
+from PySide6.QtCore import Slot, Qt
 from PySide6.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout
 
 # Application imports
 from app.gui.components.datatable.Datatable import Datatable
+from app.gui.components.datatable.DatatableSortModel import DatatableSortModel
 from app.gui.components.datatable.JobApplicationDatatableItemDelegate import (
     JobApplicationDatatableItemDelegate,
 )
@@ -60,10 +61,6 @@ class SummaryTab(Tab):
 
         datatableModel = JobApplicationDatatableModel()
         datatable = Datatable(datatableModel, JobApplicationDatatableItemDelegate())
-
-        # proxyModel = CustomSortModel()
-        # proxyModel.setSourceModel(dataTableModel)
-        # self.table = DataTable(dataTableModel)
 
         # TABLE EDITING
         # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QItemEditorFactory.html

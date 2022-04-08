@@ -1,16 +1,16 @@
-from typing import Any, Generic, TypeAlias, TypeVar, Iterable
-from app.models.Model import Model
+from typing import Any, Generic, Mapping, Sequence, TypeAlias, TypeVar, Iterable, Type
+
+# from app.Ts.T import T
 
 T = TypeVar("T")
 Id: TypeAlias = str
 Ids = Iterable[Id]
 
-ModelEntity = TypeVar("ModelEntity", bound=Model, covariant=True)
 
 # Memoization https://python-course.eu/advanced-python/memoization-decorators.php
 
 
-class IRepository(Generic[ModelEntity]):
+class IRepository(Generic[T]):
     """
     Repository serves as a collection of entites (with methods such as get, add, update, remove)
     with underlying persistence layer. Should know how to construct an instance, serialize it
@@ -20,19 +20,23 @@ class IRepository(Generic[ModelEntity]):
     query and command methods along the basic ones.
     """
 
-    def load_all(self) -> dict[str, ModelEntity]:
-        """Loads all models from the database."""
+    def load_all(self) -> Mapping[str, Type[T]]:
+        """
+        Loads all Ts from the database.
+
+        NB: This will clear any existing Ts
+        """
         raise NotImplementedError
 
-    def items(self) -> list[ModelEntity]:
-        """Loads all models from the database."""
+    def items(self) -> Sequence[Type[T]]:
+        """Loads all Ts from the database."""
         raise NotImplementedError
 
-    def keys(self) -> list[Id]:
-        """Loads all models from the database."""
+    def keys(self) -> Sequence[Id]:
+        """Loads all Ts from the database."""
         raise NotImplementedError
 
-    def find(self, id_: Id) -> ModelEntity | None:
+    def find(self, id_: Id) -> Type[T] | None:
         """Returns object of given id or None"""
         raise NotImplementedError
 
@@ -40,7 +44,11 @@ class IRepository(Generic[ModelEntity]):
         """Checks whether an entity of given id is in the repo."""
         raise NotImplementedError
 
-    def create(self, **kwargs: Any) -> ModelEntity:
+    def count(self) -> int:
+        """Returns a count of all loaded objects in the repo."""
+        raise NotImplementedError
+
+    def create(self, **kwargs: Any) -> T:
         """
         Creates an object compatible with this repo. Uses repo's factory
         or the klass iff factory not present.
@@ -49,18 +57,18 @@ class IRepository(Generic[ModelEntity]):
         """
         raise NotImplementedError
 
-    def create_and_add(self, **kwargs: Any) -> ModelEntity:
+    def create_and_add(self, **kwargs: Any) -> T:
         """Creates an object compatible with this repo and adds it to the collection."""
         raise NotImplementedError
 
-    def add(self, entity: ModelEntity) -> Id:
+    def add(self, entity: T) -> Id:
         """Adds the object to the repo to the underlying persistence layer via its DAO."""
         raise NotImplementedError
 
-    def update(self, entity: ModelEntity) -> None:
+    def update(self, entity: T) -> None:
         """Updates the object in the repo."""
         raise NotImplementedError
 
-    def remove(self, entity: ModelEntity) -> None:
+    def remove(self, entity: T) -> None:
         """Removes the object from the underlying persistence layer via DAO."""
         raise NotImplementedError

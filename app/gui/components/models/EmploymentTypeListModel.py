@@ -8,20 +8,21 @@ from PySide6.QtCore import QModelIndex, QPersistentModelIndex, Qt
 from app.gui.components.form.inputs.SelectBox import SelectBox
 from app.gui.components.models.ListModel import ListModel
 from app.models.Profession import Profession
+from app.repositories.profession_repository import ProfessionRepository
 
 
 class EmploymentTypeListModel(ListModel[Profession]):
     def __init__(self, parentWidget: SelectBox, *args: Any, **kwargs: Any):
-        professions: Sequence[Profession] = (
-            Profession.order_by("profession").get().all()
-        )
+        data = ProfessionRepository.items()
 
         super(EmploymentTypeListModel, self).__init__(
-            parentWidget, professions, *args, **kwargs
+            parentWidget, data, *args, **kwargs
         )
 
-    def data(self, index: QModelIndex | QPersistentModelIndex, role: int) -> Any:
-        profession = self._data[index.row()]
+    def data(
+        self, index: QModelIndex | QPersistentModelIndex, role: int = Qt.DisplayRole
+    ) -> Any:
+        profession = self._data[index.row() + 1]
 
         match role:
             case Qt.DisplayRole:

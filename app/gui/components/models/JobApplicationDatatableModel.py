@@ -1,6 +1,6 @@
 # Standard Library
 from copy import copy, deepcopy
-import datetime
+from datetime import datetime
 from typing import Any, Mapping, Sequence
 
 # Framework imports
@@ -48,51 +48,56 @@ class JobApplicationDatatableModel(DatatableModel[JobApplication]):
     ) -> Any:
         modelData = self.getModelData(index)
 
-        match role:
-            case Qt.DisplayRole:
-                return self._handleDisplayRole(modelData)
+        if role == Qt.DisplayRole:
+            return self._handleDisplayRole(modelData)
 
-            case Qt.TextAlignmentRole:
-                return self._handleTextAlignmentRole(modelData)
-
-            # case Qt.DecorationRole:
-            # case Qt.SizeHintRole:
-            # case Qt.EditRole:
-            # case Qt.ToolTipRole:
-            # case Qt.StatusTipRole:
-            # case Qt.WhatsThisRole:
+        return super().data(index, role)
 
     def _handleDisplayRole(self, modelData: ModelData) -> Any:
         assert isinstance(modelData.model, JobApplication)
         model: JobApplication = modelData.model
 
-        # Perform per-type checks and render accordingly.
-        if isinstance(modelData.value, datetime.datetime):
-            # Render time to YYY-MM-DD.
-            return modelData.value.strftime("%Y-%m-%d")
+        match modelData.column:
+            case "job":
+                return (
+                    model.job.displayLabel()
+                    if hasattr(model.job, "displayLabel")
+                    else ""
+                )
 
-        if isinstance(modelData.value, float):
-            # Render float to 2 dp
-            # return "%.2f" % value
-            return modelData.value
+            case "company":
+                return (
+                    model.company.displayLabel()
+                    if hasattr(model.company, "displayLabel")
+                    else ""
+                )
 
-        if type(modelData.value) == bool:
-            return
+        return super()._handleDisplayRole(modelData)
 
-        if modelData.column == "job":
-            return model.job.displayLabel()
+    def sort(
+        self, column: int, order: Qt.SortOrder = Qt.SortOrder.AscendingOrder
+    ) -> None:
+        self._data.sort(
+            key=lambda j: self._sortFn(j, self._columns[column]),
+            reverse=order == Qt.SortOrder.DescendingOrder,
+        )
 
-        if modelData.column == "company":
-            return model.company.displayLabel()
+        self.layoutChanged.emit()
 
-        return modelData.value
+    def _sortFn(self, jobApplication: JobApplication, column: str) -> str | bool | int:
 
-    def _handleTextAlignmentRole(self, modelData: ModelData) -> Any:
-        if modelData.column == "id":
-            return Qt.AlignCenter
+        match column:
+            case "job":
+                return (
+                    jobApplication.job.displayLabel()
+                    if hasattr(jobApplication.job, "displayLabel")
+                    else ""
+                )
 
-        if type(modelData.value) == bool:
-            return Qt.AlignCenter
+            case "company":
+                return (
+                    jobApplication.company.displayLabel()
+                    if hasattr(jobApplication.company, "displayLabel")
+                    else ""
+                )
 
-        if isinstance(modelData.value, datetime.datetime):
-            return Qt.AlignVCenter + Qt.AlignRight

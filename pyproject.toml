@@ -1,0 +1,17 @@
+# Global options:
+
+# https://toml.io/en/v1.0.0
+# https://www.python.org/dev/peps/pep-0518/
+
+
+# mypy global options:
+[tool.mypy]
+# https://mypy.readthedocs.io/en/stable/config_file.html
+# https://mypy.readthedocs.io/en/stable/config_file.html#using-a-pyproject-toml-file
+ignore_missing_imports = true
+show_error_codes = true # https://mypy.readthedocs.io/en/stable/error_codes.html
+
+# mypy per-module options:
+[[tool.mypy.overrides]]
+module = ['orator', 'orator.*']
+follow_imports_for_stubs = false
