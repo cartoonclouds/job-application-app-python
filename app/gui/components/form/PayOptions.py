@@ -29,7 +29,7 @@ class PayOptions(Input[QWidget], QWidget):
     def __init__(
         self, label: str, model: Job, initialOption: PayTypes = PayTypes.SALARY
     ) -> None:
-        super().__init__(label)
+        super().__init__()
 
         self._model = model
         self._initialOption = initialOption
@@ -39,25 +39,14 @@ class PayOptions(Input[QWidget], QWidget):
         self._stacks = cast(QStackedLayout, stackWidget.layout())
         self._stacks.setCurrentIndex(PayTypes.index(initialOption))
 
-        optionsLayout = QVBoxLayout()
-        optionsLayout.setContentsMargins(0, int(WIDGET_SPACING / 2), 0, 0)
+        layout = QVBoxLayout()
+        layout.setContentsMargins(0, int(WIDGET_SPACING / 2), 0, 0)
         optionsStack = self._setupOptions()
 
-        optionsLayout.addWidget(optionsStack)
-        optionsLayout.addWidget(stackWidget)
+        layout.addWidget(optionsStack)
+        layout.addWidget(stackWidget)
 
-        # self._label.setStyleSheet("border: 2px solid red;")
-        # optionsFrame.setStyleSheet("border: 2px solid red;")
-        # optionsStack.setStyleSheet("border: 2px solid green;")
-        # stackWidget.setStyleSheet("border: 2px solid blue;")
-
-        # super().__init__()
-        # Input.__init__(self, self, label)
-
-        # optionsFrame = QWidget()
-        # optionsFrame.setLayout(optionsLayout)
-
-        self.setLayout(optionsLayout)
+        self.setLayout(layout)
 
         if label is not None:
             self.set_label(label)
@@ -65,6 +54,7 @@ class PayOptions(Input[QWidget], QWidget):
     def _setupOptions(self):
         layout = QHBoxLayout()
         layout.setContentsMargins(ZERO_MARGINS)
+
         frame = QWidget()
         frame.setLayout(layout)
 
@@ -103,25 +93,24 @@ class PayOptions(Input[QWidget], QWidget):
         rateWidget = QWidget()
         rateWidget.setLayout(layout)
 
-        rateInput = NumberInput("Rate")
+        rateInput = NumberInput()  # "Rate"
         rateInput.setBinding(self._model, "rate")
         # rateInput.setPrefix("$")
         rateInput.setDecimals(2)
         rateInput.setSingleStep(0.01)
 
         label = QLabel("per")
-        label.setAlignment(Qt.AlignBottom)
+        label.setFixedWidth(
+            label.fontMetrics().horizontalAdvance(label.text()) + (WIDGET_SPACING * 2)
+        )
+        label.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
         labelMargin = label.contentsMargins()
-        labelMargin.setBottom(6)  # TODO Make dynamic to text height
+        # labelMargin.setBottom(6)  # TODO Make dynamic to text height
         label.setContentsMargins(labelMargin)
 
-        unitInput = SelectBox("Rate Units")
+        unitInput = SelectBox()  # "Rate Units"
         unitInput.addItems(PayUnits.VALUES())
         unitInput.setBinding(self._model, "rate_unit")
-
-        unitInputMargin = unitInput.contentsMargins()
-        unitInputMargin.setBottom(0)  # TODO Make dynamic to text height
-        unitInput.setContentsMargins(unitInputMargin)
 
         layout.addWidget(rateInput)
         layout.addWidget(label)

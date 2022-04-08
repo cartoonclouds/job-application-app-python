@@ -23,7 +23,6 @@ class TextInput(Input[QLineEdit], QLineEdit):
     def __init__(self, label: str | None = None):
         # https://stackoverflow.com/questions/222877/what-does-super-do-in-python-difference-between-super-init-and-expl/33469090#33469090
         # https://stackoverflow.com/questions/9575409/calling-parent-class-init-with-multiple-inheritance-whats-the-right-way
-        # QLineEdit.__init__(self)
         super().__init__(label)
 
         self._prefix: QLabel | None = None
@@ -102,35 +101,38 @@ class TextInput(Input[QLineEdit], QLineEdit):
         inputFont = self.font()
         affixLabel.setFont(inputFont)
 
-        height = self.sizeHint().height() - 2
+        height = self.height() - 2
         width = max(
-            affixLabel.sizeHint().width() + (WIDGET_SPACING * 2),
+            affixLabel.fontMetrics().horizontalAdvance(affixLabel.text())
+            + (WIDGET_SPACING * 2),
             height,
         )
 
-        prefixPos = self.pos()
-        prefixPosX = prefixPos.x() + 1
+        affixPos = self.pos()
+        affixPos.setY(1)
+        affixPos.setX(1)
 
         if affix == AffixLocation.SUFFIX:
-            prefixPosX = prefixPosX + self.width() - width - 2
+            affixPos.setX(affixPos.x() + self.width() - width - 2)
 
-        prefixPos.setX(prefixPosX)
-        prefixPos.setY(prefixPos.y() + 1)
-
+        affixLabel.move(affixPos)
         affixLabel.setMaximumHeight(height)
+        affixLabel.setMinimumHeight(height)
         affixLabel.setMaximumWidth(width)
-        affixLabel.move(prefixPos)
+        affixLabel.setMinimumWidth(width)
 
     def paintEvent(self, painter: QPaintEvent) -> None:  # type: ignore[override]
         self._updateAffix(AffixLocation.PREFIX, self._prefix)
         self._updateAffix(AffixLocation.SUFFIX, self._suffix)
 
         inputMargins = self.contentsMargins()
+
         if self._prefix is not None:
             inputMargins.setLeft(self._prefix.maximumWidth() + WIDGET_SPACING)
 
         if self._suffix is not None:
             inputMargins.setRight(self._suffix.maximumWidth() + WIDGET_SPACING)
+
         self.setTextMargins(inputMargins)
 
         return super().paintEvent(painter)

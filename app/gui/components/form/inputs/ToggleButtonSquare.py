@@ -6,8 +6,6 @@ from PySide6.QtWidgets import QPushButton
 from app.gui.components.form.inputs.Input import Input
 from app.models.Model import Model
 
-# https://github.com/eyllanesc/RaspberryPi/blob/master/pyqt/lib/GUI/Switch.py
-
 
 class ToggleButtonSquare(Input[QPushButton], QPushButton):
     _checkedStyles = "background-color: lightblue"

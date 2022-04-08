@@ -40,9 +40,10 @@ class CompanyForm(Form):
         mobileInput.setInputMask("999 999 999")
 
         websiteInput = TextInput("Website")
+        websiteInput.setPrefix("www")
+        websiteInput.setSuffix(".com")
         websiteInput.setBinding(self._model, "website")
         websiteInput.setPlaceholderText("www.job-application.com")
-        websiteInput.setPrefix("www")
 
         # address
         addressLine1Input = TextInput("Address 1")

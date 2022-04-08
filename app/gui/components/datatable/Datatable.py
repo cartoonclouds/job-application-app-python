@@ -58,6 +58,7 @@ class Datatable(QTableView):
         self.verticalHeader().setMinimumSectionSize(50)
         self.setShowGrid(False)
         self.setSortingEnabled(True)
+        self.sortByColumn(0, Qt.SortOrder.AscendingOrder)
 
         # https://doc.qt.io/qtforpython/overviews/stylesheet-examples.html#customizing-qtabwidget-and-qtabbar
         # self.setStyleSheet(
@@ -112,12 +113,11 @@ class Datatable(QTableView):
 
         return super().mouseDoubleClickEvent(event)
 
-    # TODO Set context menu on sub-class JobApplicationDatatable?
-
     @property
     def indexAtCursor(self) -> QModelIndex | QPersistentModelIndex:
         return self.indexAt(self.viewport().mapFromGlobal(QCursor.pos()))
 
+    # TODO Set context menu on sub-class JobApplicationDatatable?
     def contextMenuEvent(self, event: QContextMenuEvent) -> None:
         index = self.indexAt(event.pos())
 
@@ -157,7 +157,7 @@ class Datatable(QTableView):
         """
         datatableModel = self.model()
         tableWidth = self.width()
-        colWidths = 0
+        totalColsWidth = 0
 
         fitByContents = [
             "id",
@@ -166,19 +166,20 @@ class Datatable(QTableView):
             "updated_at",
         ]
 
-        for index, column in enumerate(fitByContents):
-            if not hasattr(datatableModel.columns, column):
+        for column in fitByContents:
+            if column not in datatableModel.columns:
                 continue
 
             index = datatableModel.columns.index(column)
 
             self.resizeColumnToContents(index)
-            colWidth = self.columnWidth(index) + TABLE_X_PADDING
+            padding = 0 if column == "requires_followup" else TABLE_X_PADDING
+            colWidth = self.columnWidth(index) + padding
             self.setColumnWidth(index, colWidth)
 
-            colWidths += colWidth
+            totalColsWidth = totalColsWidth + colWidth
 
-        remainingColumnSpace = tableWidth - colWidths
+        remainingColumnSpace = tableWidth - totalColsWidth
         remainingColumns = [
             col for col in datatableModel.columns if col not in fitByContents
         ]
@@ -195,4 +196,4 @@ class Datatable(QTableView):
             self.setColumnWidth(colIndex, int(colWidth))
 
         # TODO Work out why exactly 40 pixels
-        self.setColumnWidth(1, self.columnWidth(1) - 40)
+        self.setColumnWidth(1, self.columnWidth(1) - (TABLE_X_PADDING * 2))

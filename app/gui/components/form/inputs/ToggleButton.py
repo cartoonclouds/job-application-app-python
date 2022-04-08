@@ -20,16 +20,19 @@ class ToggleButton(Input[QCheckBox], QCheckBox):
 
         self.setCheckable(True)
         self.setCursor(Qt.PointingHandCursor)
-
-        self.animation = QPropertyAnimation(self, b"position")
-        self.animation.setEasingCurve(QEasingCurve.OutBounce)
-        self.animation.setDuration(500)
+        self.setText(checkedText)
 
         # COLORS
         self._position = 3
         self._bg_color = "#777"
         self._circle_color = "#DDD"
         self._active_color = "#00BCFF"
+
+        self.animation = QPropertyAnimation(self, b"position")
+        self.animation.setEasingCurve(QEasingCurve.OutBounce)
+        self.animation.setDuration(500)
+
+        self.stateChanged.connect(self.setup_animation)
 
     def setBinding(
         self,
@@ -41,7 +44,6 @@ class ToggleButton(Input[QCheckBox], QCheckBox):
 
         self.setChecked(self.boundValue())
 
-        self.stateChanged.connect(self.setup_animation)
         self.stateChanged.connect(self._onButtonToggled)
 
     @Slot(bool)
@@ -52,11 +54,11 @@ class ToggleButton(Input[QCheckBox], QCheckBox):
 
     # https://raw.githubusercontent.com/Wanderson-Magalhaes/PyOneDark_Qt_Widgets_Modern_GUI/master/gui/widgets/py_toggle/py_toggle.py
     @property
-    def position(self) -> QPoint:
+    def position(self):
         return self._position
 
     @position.setter
-    def position(self, pos: QPoint):
+    def position(self, pos):
         self._position = pos
         self.update()
 
@@ -65,7 +67,7 @@ class ToggleButton(Input[QCheckBox], QCheckBox):
         self.animation.stop()
 
         if value:
-            self.animation.setEndValue(self.sizeHint().width() - 26)
+            self.animation.setEndValue(self.width() - 26)
         else:
             self.animation.setEndValue(4)
 
@@ -83,7 +85,7 @@ class ToggleButton(Input[QCheckBox], QCheckBox):
         p.setPen(Qt.NoPen)
 
         # DRAW RECT
-        rect = QRect(0, 0, self.sizeHint().width(), self.sizeHint().height())
+        rect = QRect(0, 0, self.width(), self.height())
 
         if not self.isChecked():
             p.setBrush(QColor(self._bg_color))

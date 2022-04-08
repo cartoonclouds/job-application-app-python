@@ -52,22 +52,22 @@ addopts = '-s'
 [tool.mypy]
 # https://mypy.readthedocs.io/en/stable/config_file.html
 # https://mypy.readthedocs.io/en/stable/config_file.html#using-a-pyproject-toml-file
-ignore_missing_imports = true
-show_error_codes = true # https://mypy.readthedocs.io/en/stable/error_codes.html
+ignore_missing_imports = 'true'
+show_error_codes = 'true' # https://mypy.readthedocs.io/en/stable/error_codes.html
 mypy_path = 'src'
-show_column_numbers = true
-check_untyped_defs = true
-warn_redundant_casts = true
-warn_unused_ignores = true
+show_column_numbers = 'true'
+check_untyped_defs = 'true'
+warn_redundant_casts = 'true'
+warn_unused_ignores = 'true'
 
 # Ignore the following imports because they have no types available.
 [mypy-pytest]
-ignore_missing_imports = true
+ignore_missing_imports = 'true'
 
 # mypy per-module options:
 [[tool.mypy.overrides]]
 module = ['orator', 'orator.*']
-follow_imports_for_stubs = false
+follow_imports_for_stubs = 'false'
 
 
 [tool.pyright]
@@ -79,7 +79,7 @@ root = ['app']
 include = ["app"]
 exclude = ["**/node_modules", "**/__pycache__"]
 
-useLibraryCodeForTypes = true
+useLibraryCodeForTypes = 'true'
 
 reportMissingImports = "information"
 reportMissingTypeStubs = "information"

@@ -30,11 +30,6 @@ class DatatableModel(Generic[M], QAbstractTableModel):
     URL: https://doc.qt.io/qtforpython/PySide6/QtCore/QAbstractTableModel.html
          https://doc.qt.io/qtforpython/PySide6/QtCore/QAbstractItemModel.html
          https://doc.qt.io/qtforpython/PySide6/QtWidgets/QTableWidgetItem.html
-
-    Raises:
-        ValueError
-        TypeError
-        AttributeError
     """
 
     def __init__(self, data: list[M], columnHeaders: Mapping[str, str]) -> None:
@@ -55,17 +50,15 @@ class DatatableModel(Generic[M], QAbstractTableModel):
 
     def setHeaders(self, headers: Sequence[str]):
         self._headers = headers
-        self.dataChanged.emit(
-            self.index(0, 0), self.index(self.columnCount(), self.rowCount())
-        )
+        self._emitDataChanged()
 
     def setColumns(self, columns: Sequence[str]):
         self._columns = columns
-        self.dataChanged.emit(
-            self.index(0, 0), self.index(self.columnCount(), self.rowCount())
-        )
+        self._emitDataChanged()
 
-    def headerData(self, section: int, orientation: Qt.Orientation, role: int) -> Any:
+    def headerData(
+        self, section: int, orientation: Qt.Orientation, role: int = Qt.DisplayRole
+    ) -> Any:
         """
         Sets the header data based on our header key list.
         """
@@ -114,6 +107,11 @@ class DatatableModel(Generic[M], QAbstractTableModel):
         colName = self._columns[colIdx]
 
         return ModelData(colName, rowModel, getattr(rowModel, colName))
+
+    def _emitDataChanged(self):
+        self.dataChanged.emit(
+            self.index(0, 0), self.index(self.columnCount(), self.rowCount())
+        )
 
     def data(
         self, index: QModelIndex | QPersistentModelIndex, role: int = Qt.DisplayRole

@@ -85,7 +85,6 @@ class JobApplicationDatatableModel(DatatableModel[JobApplication]):
         self.layoutChanged.emit()
 
     def _sortFn(self, jobApplication: JobApplication, column: str) -> str | bool | int:
-
         match column:
             case "job":
                 return (
