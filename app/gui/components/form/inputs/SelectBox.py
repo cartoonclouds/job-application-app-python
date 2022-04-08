@@ -12,11 +12,10 @@ from app.gui.components.form.inputs.Input import Input
 from app.models.Model import Model
 
 
-class SelectBox(QComboBox, Input[QComboBox]):
+class SelectBox(Input[QComboBox], QComboBox):
     # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QComboBox.html
     def __init__(self, label: str | None = None):
-        super().__init__()
-        Input.__init__(self, self, label)
+        super().__init__(label)
 
         self.baseWidgetModel = None
         self.setInsertPolicy(QComboBox.InsertAtTop)

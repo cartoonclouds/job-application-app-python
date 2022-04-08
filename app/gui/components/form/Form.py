@@ -1,5 +1,5 @@
 # Standard Library
-from typing import Type, TypeAlias
+from typing import Type, TypeAlias, overload
 
 # Framework imports
 from PySide6.QtCore import Qt, Signal
@@ -16,18 +16,8 @@ from app.gui.components.form.inputs.TextInput import TextInput
 from app.gui.components.form.inputs.ToggleButtonSquare import ToggleButtonSquare
 from app.gui.components.form.PayOptions import PayOptions
 from app.models.Model import Model
+from app.typings.types import InputT
 from app.utils.object_functions import format_object_name
-
-InputT: TypeAlias = (
-    EditableLabel
-    | DateTimeInput
-    | SelectBox
-    | TextAreaInput
-    | TextInput
-    | ToggleButtonSquare
-    | PayOptions
-)
-
 
 # Third party imports
 from inflection import parameterize
@@ -93,6 +83,7 @@ class Form(QFrame):
     def addRow(self, *fields: InputT | list[InputT]):
         if len(fields) == 1:
             field = fields[0]
+            assert not isinstance(field, list)
 
             self._addWidget(self._layout, field)
         else:
@@ -118,9 +109,6 @@ class Form(QFrame):
             self._layout.addRow(row)
 
     def _addWidget(self, layout: QFormLayout, field: InputT):
-        if not isinstance(field, QWidget):
-            return
-
         self._inputs.append(field)
 
         if hasattr(field, "modified"):

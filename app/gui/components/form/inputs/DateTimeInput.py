@@ -9,15 +9,14 @@ from app.models.Model import Model
 from abc import ABC, abstractmethod, abstractproperty
 
 
-class DateTimeInput(QDateTimeEdit, Input[QDateTimeEdit]):
+class DateTimeInput(Input[QDateTimeEdit], QDateTimeEdit):
     """
     URL: https://doc.qt.io/qtforpython/PySide6/QtWidgets/QDateTimeEdit.html
          https://doc.qt.io/qtforpython/PySide6/QtCore/QDateTime.html
     """
 
     def __init__(self, label: str | None = None, **kwargs):
-        super().__init__()
-        Input.__init__(self, self, label)
+        super().__init__(label)
 
         self.setCalendarPopup(True)
         self.setDisplayFormat(DATE_FORMAT_1)

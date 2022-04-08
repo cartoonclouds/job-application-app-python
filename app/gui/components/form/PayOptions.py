@@ -21,22 +21,19 @@ from app.gui.components.form.inputs.NumberInput import NumberInput
 from app.gui.components.form.inputs.SelectBox import SelectBox
 from app.gui.components.form.inputs.TextInput import TextInput
 from app.models.Job import Job
-from app.typings.types import PySide6Input
 
 
-class PayOptions(QWidget, Input[QWidget]):
+class PayOptions(Input[QWidget], QWidget):
     modified = Signal(bool)
 
     def __init__(
         self, label: str, model: Job, initialOption: PayTypes = PayTypes.SALARY
     ) -> None:
-
-        super().__init__()
-        Input.__init__(self, self, label or "")
+        super().__init__(label)
 
         self._model = model
         self._initialOption = initialOption
-        self._emittingInputs = list()
+        self._emittingInputs: list[Input] = list()
 
         stackWidget = self._setupStacks()
         self._stacks = cast(QStackedLayout, stackWidget.layout())

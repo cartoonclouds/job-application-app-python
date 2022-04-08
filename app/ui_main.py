@@ -23,13 +23,10 @@ import qtawesome as qta
 # Application imports
 from app.gui.components.pages.SummaryTab import SummaryTab
 from app.gui.components.tabs.TabBar import TabBar
-from app.gui.services.settings_service import SettingsServiceProvider
+from app.services.settings_service import SettingsServiceProvider
 from app.gui.services.statusbar_service import StatusBarServiceProvider
 from app.gui.services.tab_service import TabServiceProvider
 from app.constants import WINDOW_WIDTH, WINDOW_HEIGHT
-from app.repositories.action_repository import ActionRepository
-from app.repositories.job_application_repository import JobApplicationRepository
-from app.repositories.profession_repository import ProfessionRepository
 from app.utils.icon_utility import IconUtility
 from app.utils.object_functions import format_object_name
 from app.utils.ui_functions import UIFunctions

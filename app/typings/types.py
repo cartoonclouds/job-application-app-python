@@ -1,4 +1,13 @@
 from typing import Any, Iterable, Sequence, Type, TypeVar, Generic, TypeAlias, Union
+from app.gui.components.EditableLabel.EditableLabel import EditableLabel
+from app.gui.components.form.PayOptions import PayOptions
+from app.gui.components.form.inputs.DateTimeInput import DateTimeInput
+from app.gui.components.form.inputs.NumberInput import NumberInput
+from app.gui.components.form.inputs.SelectBox import SelectBox
+from app.gui.components.form.inputs.TextAreaInput import TextAreaInput
+from app.gui.components.form.inputs.TextInput import TextInput
+from app.gui.components.form.inputs.ToggleButton import ToggleButton
+from app.gui.components.form.inputs.ToggleButtonSquare import ToggleButtonSquare
 
 from app.models.Model import Model
 from PySide6.QtCore import QAbstractTableModel
@@ -19,6 +28,36 @@ from PySide6.QtWidgets import (
     QPlainTextEdit,
     QCheckBox,
     QPushButton,
+)
+
+
+InputT: TypeAlias = (
+    DateTimeInput
+    | EditableLabel
+    | NumberInput
+    | PayOptions
+    | SelectBox
+    | TextAreaInput
+    | TextInput
+    | ToggleButton
+    | ToggleButtonSquare
+)
+
+
+InputTVar = TypeVar("InputTVar", bound=QWidget)
+
+InputTTVar = TypeVar(
+    "InputTTVar",
+    DateTimeInput,
+    EditableLabel,
+    NumberInput,
+    PayOptions,
+    SelectBox,
+    TextAreaInput,
+    TextInput,
+    ToggleButton,
+    ToggleButtonSquare,
+    QWidget,
 )
 
 PySide6Input = TypeVar(

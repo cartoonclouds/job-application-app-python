@@ -131,7 +131,7 @@ class JobApplicationTab(Tab):
             metaObject.method(i).signature()
             for i in range(metaObject.methodOffset(), metaObject.methodCount())
         ]
-        debug(metaObject.methodCount())
+        # debug(metaObject.methodCount())
 
         jobForm.modified.connect(self._formModified)
         companyForm.modified.connect(self._formModified)

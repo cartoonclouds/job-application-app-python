@@ -8,13 +8,9 @@ from app.gui.components.form.inputs.Input import Input
 from app.models.Model import Model
 
 
-class ToggleButton(QCheckBox, Input[QCheckBox]):
+class ToggleButton(Input[QCheckBox], QCheckBox):
     def __init__(self, checkedText: str, uncheckedText: str | None = None):
-
-        debug(checkedText, uncheckedText)
-
-        super().__init__()
-        Input.__init__(self, self, checkedText)
+        super().__init__(checkedText)
 
         self._checkedText: str = checkedText
         self._uncheckedText: str = checkedText

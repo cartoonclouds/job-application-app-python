@@ -1,7 +1,5 @@
 from typing import Any, Generic, Mapping, Sequence, TypeAlias, TypeVar, Iterable, Type
 
-# from app.Ts.T import T
-
 T = TypeVar("T")
 Id: TypeAlias = str
 Ids = Iterable[Id]

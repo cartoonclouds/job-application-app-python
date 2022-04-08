@@ -5,11 +5,21 @@ from PySide6.QtGui import QAction, QContextMenuEvent, QCursor, QMouseEvent, QRes
 from PySide6.QtWidgets import QAbstractItemView, QMenu, QStyledItemDelegate, QTableView
 
 # Application imports
-from app.config.App import Sizing
+from app.constants import TABLE_X_PADDING
 from app.gui.components.datatable.DatatableModel import DatatableModel
 from app.gui.components.datatable.DatatableSortModel import DatatableSortModel
 from app.models.Model import Model
-from app.typings.types import M, Models
+from app.typings.types import Models
+
+
+# TABLE EDITING
+# https://doc.qt.io/qtforpython/PySide6/QtWidgets/QItemEditorFactory.html
+# https://doc.qt.io/qtforpython/overviews/qtwidgets-itemviews-coloreditorfactory-example.html
+# https://programmer.group/qt-custom-delegation-draws-control-picture-and-text-in-qtableview.html
+# https://stackoverflow.com/questions/62414356/add-a-checkbox-to-text-in-a-qtableview-cell-using-delegate
+
+# FROZEN COLUMNS
+# https://doc.qt.io/qtforpython/overviews/qtwidgets-itemviews-frozencolumn-example.html
 
 
 class Datatable(QTableView):
@@ -163,7 +173,7 @@ class Datatable(QTableView):
             index = datatableModel.columns.index(column)
 
             self.resizeColumnToContents(index)
-            colWidth = self.columnWidth(index) + Sizing.TABLE_X_PADDING
+            colWidth = self.columnWidth(index) + TABLE_X_PADDING
             self.setColumnWidth(index, colWidth)
 
             colWidths += colWidth
@@ -178,9 +188,7 @@ class Datatable(QTableView):
 
             remainingColumnCount = len(remainingColumns) - index
 
-            colWidth = (
-                remainingColumnSpace / remainingColumnCount
-            ) + Sizing.TABLE_X_PADDING
+            colWidth = (remainingColumnSpace / remainingColumnCount) + TABLE_X_PADDING
 
             remainingColumnSpace = remainingColumnSpace - colWidth
 

@@ -9,13 +9,12 @@ from app.models.Model import Model
 # https://github.com/eyllanesc/RaspberryPi/blob/master/pyqt/lib/GUI/Switch.py
 
 
-class ToggleButtonSquare(QPushButton, Input[QPushButton]):
+class ToggleButtonSquare(Input[QPushButton], QPushButton):
     _checkedStyles = "background-color: lightblue"
     _uncheckedStyles = "background-color: lightgrey"
 
     def __init__(self, checkedText: str, uncheckedText: str | None = None):
-        super().__init__()
-        Input.__init__(self, self, checkedText)
+        super().__init__(checkedText)
 
         self._checkedText: str = checkedText
         self._uncheckedText: str = checkedText

@@ -1,9 +1,14 @@
 # Standard Library
+from distutils import file_util
 import json
 import os
+from collections import defaultdict
+from typing import Any
 
 from app.constants import SETTINGS_FILE_PATH
 from app.utils.Metaclasses.Singleton import Singleton
+from app.utils.dict_wrap import DictWrap
+
 
 # APP SETTINGS
 # ///////////////////////////////////////////////////////////////
@@ -15,11 +20,9 @@ class SettingsServiceProvider(metaclass=Singleton):
 
     # APP PATH
     # ///////////////////////////////////////////////////////////////
-    json_file = SETTINGS_FILE_PATH
-
     app_path = os.path.abspath(os.getcwd())
 
-    settings_path = os.path.normpath(os.path.join(app_path, json_file))
+    settings_path = os.path.normpath(os.path.join(app_path, SETTINGS_FILE_PATH))
 
     if not os.path.isfile(settings_path):
         print(
@@ -31,10 +34,8 @@ class SettingsServiceProvider(metaclass=Singleton):
     def __init__(self):
         super(SettingsServiceProvider, self).__init__()
 
-        # DICTIONARY WITH SETTINGS
-
         # Just to have objects references
-        self.items = {}
+        self.items = DictWrap()
 
         # DESERIALIZE
         self.deserialize()
@@ -44,7 +45,7 @@ class SettingsServiceProvider(metaclass=Singleton):
     def serialize(self):
         # WRITE JSON FILE
         with open(self.settings_path, "w", encoding="utf-8") as write:
-            json.dump(self.items, write, indent=4)
+            write.write(self.items.toJson())
 
     # DESERIALIZE JSON
     # ///////////////////////////////////////////////////////////////
@@ -52,4 +53,7 @@ class SettingsServiceProvider(metaclass=Singleton):
         # READ JSON FILE
         with open(self.settings_path, "r", encoding="utf-8") as reader:
             settings = json.loads(reader.read())
-            self.items = settings
+            self.items = DictWrap(settings)
+
+    def __getattr__(self, name: str) -> Any:
+        return self.items[name]

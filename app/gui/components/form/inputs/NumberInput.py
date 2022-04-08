@@ -7,11 +7,10 @@ from app.gui.components.form.inputs.Input import Input
 from app.models.Model import Model
 
 
-class NumberInput(QDoubleSpinBox, Input[QDoubleSpinBox]):
+class NumberInput(Input[QDoubleSpinBox], QDoubleSpinBox):
     # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QDoubleSpinBox.html
     def __init__(self, label: str | None = None):
-        super().__init__()
-        Input.__init__(self, self, label)
+        super().__init__(label)
 
         self._prefix: str | None = None
         self._suffix: str | None = None

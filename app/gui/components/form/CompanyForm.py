@@ -20,7 +20,7 @@ class CompanyForm(Form):
         titleInput.setPlaceholderText("Company name")
 
         # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QCompleter.html
-        titleInput.setCompleter(QCompleter(list(Company.all().pluck("name"))))
+        titleInput.configureCompleter(QCompleter(list(Company.all().pluck("name"))))
 
         phoneInput = TextInput("Phone")
         phoneInput.setBinding(self._model, "phone")

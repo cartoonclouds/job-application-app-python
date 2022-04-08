@@ -1,3 +1,7 @@
+# Python Packaging 
+https://py-pkgs.org/welcome
+
+
 # Helpful snippets
 
 https://github.com/pytest-dev/pytest-reportlog

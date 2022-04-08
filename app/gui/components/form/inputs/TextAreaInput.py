@@ -8,10 +8,10 @@ from app.gui.components.form.inputs.Input import Input
 from app.models.Model import Model
 
 
-class TextAreaInput(QPlainTextEdit, Input[QPlainTextEdit]):
+class TextAreaInput(Input[QPlainTextEdit], QPlainTextEdit):
     def __init__(self, label: str | None = None):
-        super().__init__()
-        Input.__init__(self, self, label)
+        super().__init__(label)
+        
 
     def setBinding(
         self,

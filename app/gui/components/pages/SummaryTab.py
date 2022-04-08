@@ -44,8 +44,6 @@ class SummaryTab(Tab):
         self.mainLayout.addWidget(self.statisticsSection)
         self.mainLayout.addWidget(self.datatable)
 
-        # self.mainLayout.setStretchFactor(widget, 0)
-
     def _setupTable(self):
         frame = QFrame()
         frame.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)
@@ -61,15 +59,6 @@ class SummaryTab(Tab):
 
         datatableModel = JobApplicationDatatableModel()
         datatable = Datatable(datatableModel, JobApplicationDatatableItemDelegate())
-
-        # TABLE EDITING
-        # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QItemEditorFactory.html
-        # https://doc.qt.io/qtforpython/overviews/qtwidgets-itemviews-coloreditorfactory-example.html
-        # https://programmer.group/qt-custom-delegation-draws-control-picture-and-text-in-qtableview.html
-        # https://stackoverflow.com/questions/62414356/add-a-checkbox-to-text-in-a-qtableview-cell-using-delegate
-
-        # FROZEN COLUMNS
-        # https://doc.qt.io/qtforpython/overviews/qtwidgets-itemviews-frozencolumn-example.html
 
         datatable.openModel.connect(self.openTab)
 

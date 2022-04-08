@@ -17,14 +17,14 @@ class AffixLocation(Enum):
     SUFFIX = auto()
 
 
-class TextInput(QLineEdit, Input[QLineEdit]):
+class TextInput(Input[QLineEdit], QLineEdit):
     # https://doc.qt.io/qtforpython/PySide6/QtWidgets/QLineEdit.html
 
     def __init__(self, label: str | None = None):
         # https://stackoverflow.com/questions/222877/what-does-super-do-in-python-difference-between-super-init-and-expl/33469090#33469090
         # https://stackoverflow.com/questions/9575409/calling-parent-class-init-with-multiple-inheritance-whats-the-right-way
-        super().__init__()
-        Input.__init__(self, self, label)
+        # QLineEdit.__init__(self)
+        super().__init__(label)
 
         self._prefix: QLabel | None = None
         self._suffix: QLabel | None = None

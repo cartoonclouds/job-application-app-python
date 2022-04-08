@@ -97,6 +97,9 @@ class EditableLabel(QtWidgets.QWidget):
         self.mainLayout.addWidget(self.label)
         self.mainLayout.addWidget(self.lineEdit)
 
+    def get_label(self) -> QtWidgets.QLabel:
+        return self.label
+
     def isModified(self) -> bool:
         return self.lineEdit.isModified()
 

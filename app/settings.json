@@ -1,0 +1,20 @@
+{
+    "theme_name": "default",
+    "date_format": "ddd dd MMM, yyyy hh:mm a",
+    "startup_size": [
+        1500,
+        800
+    ],
+    "minimum_size": [
+        960,
+        540
+    ],
+    "font": {
+        "family": "Segoe UI",
+        "title_size": 10,
+        "text_size": 9
+    },
+    "database": {
+        "name": "jaa_database.sqlite"
+    }
+}
