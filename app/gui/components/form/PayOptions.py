@@ -3,7 +3,7 @@ from functools import partial
 from typing import TypeVar, cast
 
 # Framework imports
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import Qt, Signal, QRect
 from PySide6.QtWidgets import (
     QHBoxLayout,
     QLabel,
@@ -11,6 +11,7 @@ from PySide6.QtWidgets import (
     QStackedLayout,
     QVBoxLayout,
     QWidget,
+    QSizePolicy,
 )
 
 # Application imports
@@ -36,17 +37,18 @@ class PayOptions(Input[QWidget], QWidget):
         self._emittingInputs: list[Input] = list()
 
         stackWidget = self._setupStacks()
+
         self._stacks = cast(QStackedLayout, stackWidget.layout())
         self._stacks.setCurrentIndex(PayTypes.index(initialOption))
 
         layout = QVBoxLayout()
         layout.setContentsMargins(0, int(WIDGET_SPACING / 2), 0, 0)
         optionsStack = self._setupOptions()
-
         layout.addWidget(optionsStack)
         layout.addWidget(stackWidget)
 
         self.setLayout(layout)
+        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
 
         if label is not None:
             self.set_label(label)
@@ -74,6 +76,7 @@ class PayOptions(Input[QWidget], QWidget):
     def _setupStacks(self):
         layout = QStackedLayout()
         frame = QWidget()
+        frame.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
 
         salaryInput = self._setupSalary()
         rateWidget = self._setupRate()

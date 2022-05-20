@@ -58,6 +58,11 @@ class JobApplicationTab(Tab):
         splitter.addWidget(leftFrame)
         splitter.addWidget(rightFrame)
 
+        widget = splitter.widget(1)
+        policy = widget.sizePolicy()
+        policy.setHorizontalStretch(10)
+        widget.setSizePolicy(policy)
+
         # Add components to tab
         layout.addWidget(header)
         layout.addWidget(splitter)
@@ -114,8 +119,8 @@ class JobApplicationTab(Tab):
         frame = QFrame()
         frame.setLayout(layout)
 
-        frame.setMinimumWidth(650)
-        frame.setMaximumWidth(650)
+        # frame.setMinimumWidth(650)
+        # frame.setMaximumWidth(650)
 
         self.model
 

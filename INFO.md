@@ -1,6 +1,6 @@
-# Python Packaging 
-https://py-pkgs.org/welcome
+# Python Packaging
 
+https://py-pkgs.org/welcome
 
 # Helpful snippets
 
@@ -154,6 +154,50 @@ self.setStyleSheet(
 https://doc.qt.io/qtforpython/overviews/resources.html
 https://doc.qt.io/qtforpython/tutorials/basictutorial/qrcfiles.html
 https://www.pythonguis.com/tutorials/pyside-qresource-system/
+
+# Graphing
+
+https://doc.qt.io/qtforpython/examples/example_charts__chartthemes.html
+https://doc.qt.io/qtforpython/examples/example_charts__piechart.html
+https://doc.qt.io/qtforpython/examples/example_charts__callout.html
+https://doc.qt.io/qtforpython/examples/example_charts__barchart.html
+https://doc.qt.io/qtforpython/examples/example_charts__dynamicspline.html#
+https://doc.qt.io/qtforpython/examples/example_charts__linechart.html
+https://doc.qt.io/qtforpython/examples/example_charts__donutbreakdown.html
+https://doc.qt.io/qtforpython/examples/example_charts__areachart.html
+
+# Printing
+
+https://doc.qt.io/qtforpython/overviews/dialogs.html
+
+# Sort/Filtering
+
+https://doc.qt.io/qtforpython/overviews/qtwidgets-itemviews-basicsortfiltermodel-example.html
+https://doc.qt.io/qtforpython/overviews/qtwidgets-itemviews-customsortfiltermodel-example.html
+
+# Drag and Drop
+
+https://doc.qt.io/qtforpython/overviews/dnd.html
+
+# Wizard
+
+https://doc.qt.io/qtforpython/overviews/qtwidgets-dialogs-trivialwizard-example.html
+https://doc.qt.io/qtforpython/overviews/qtwidgets-dialogs-classwizard-example.html
+https://doc.qt.io/qtforpython/overviews/qtwidgets-dialogs-licensewizard-example.html
+
+# Preferences
+
+https://doc.qt.io/qtforpython/overviews/qtwidgets-dialogs-tabdialog-example.html#tab-dialog-example
+
+# Table
+
+https://doc.qt.io/qtforpython/overviews/examples-itemviews.html
+https://doc.qt.io/qtforpython/overviews/qtwidgets-itemviews-editabletreemodel-example.html
+
+# Data Mapping
+
+https://doc.qt.io/qtforpython/overviews/qtwidgets-itemviews-simplewidgetmapper-example.html
+https://doc.qt.io/qtforpython/overviews/qtwidgets-itemviews-combowidgetmapper-example.html
 
 # GREAT RESOURCES
 

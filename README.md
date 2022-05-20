@@ -1,5 +1,7 @@
 # job-application-app-python
 
+https://wiki.gnome.org/Apps/Accerciser
+
 !!! https://python-3-patterns-idioms-test.readthedocs.io/en/latest/index.html
 
 ## Packages

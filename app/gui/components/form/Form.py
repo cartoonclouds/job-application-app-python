@@ -4,7 +4,15 @@ from typing import Type, TypeAlias, overload
 # Framework imports
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QPaintEvent
-from PySide6.QtWidgets import QFormLayout, QFrame, QHBoxLayout, QLabel, QWidget
+from PySide6.QtWidgets import (
+    QFormLayout,
+    QFrame,
+    QHBoxLayout,
+    QLabel,
+    QWidget,
+    QSpacerItem,
+    QSizePolicy,
+)
 
 # Application imports
 from app.constants import WIDGET_MARGINS, WIDGET_SPACING, ZERO_MARGINS
@@ -80,6 +88,10 @@ class Form(QFrame):
         """Returns all form input elements"""
         return self._inputs
 
+    def addVerticalExpander(self):
+        spacer = QSpacerItem(1, 1, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self._layout.addItem(spacer)
+
     def addRow(self, *fields: InputT | list[InputT]):
         if len(fields) == 1:
             field = fields[0]
@@ -92,6 +104,7 @@ class Form(QFrame):
 
             row = QWidget()
             row.setLayout(hLayout)
+            row.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
 
             for index, field in enumerate(fields):
                 if not isinstance(field, QWidget):

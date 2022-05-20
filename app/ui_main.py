@@ -48,7 +48,8 @@ class UI_MainWindow:
         # SETUP WINDOW PROPERTIES
         # ///////////////////////////////////////////////////////////////
         window.setWindowTitle("Job Application Tracker [*]")
-        window.resize(WINDOW_WIDTH, WINDOW_HEIGHT)
+        # window.resize(WINDOW_WIDTH, WINDOW_HEIGHT)
+        window.showFullScreen()
 
         fa5_icon: QIcon = qta.icon("fa5.flag")
         window.setWindowIcon(fa5_icon)

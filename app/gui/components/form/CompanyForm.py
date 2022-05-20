@@ -2,6 +2,7 @@
 from PySide6.QtWidgets import QCompleter
 
 # Application imports
+from PySide6 import QtWidgets
 from app.gui.components.form.Form import Form
 from app.gui.components.form.inputs.TextAreaInput import TextAreaInput
 from app.gui.components.form.inputs.TextInput import TextInput
@@ -80,6 +81,7 @@ class CompanyForm(Form):
         self.addRow(stateInput, postcodeInput)
         self.addRow(websiteInput)
         self.addRow(commentsInput)
+
         # -------------------------- #
 
         # indexOfConstructor
